@@ -1,26 +1,38 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 
+const testimonials = [
+  {
+    quote: "AccessIQ provided us with the expertise we needed to understand our legal obligations, and the tools and training we needed to meet them efficiently reducing risk and improving usability for every customer.",
+    name: "Adam Miller",
+    title: "Founder",
+    company: "Globadmin services",
+  },
+  {
+    quote: "The compliance documentation alone saved us thousands in legal consultation fees. AccessIQ made our WCAG 2.1 AA certification process seamless and stress-free.",
+    name: "Michael Chen",
+    title: "Head of Compliance",
+    company: "FinanceHub Inc.",
+  },
+  {
+    quote: "We went from 47% to 98% accessibility compliance in just three months. The real-time monitoring dashboard keeps us on track and ahead of any potential issues.",
+    name: "Emily Rodriguez",
+    title: "Director of Digital",
+    company: "HealthFirst Group",
+  },
+];
+
 const DigitalAccessibility = () => {
-  const industries = [
-    { name: "Healthcare", icon: "🏥", desc: "HIPAA compliant" },
-    { name: "Finance", icon: "🏦", desc: "SOX ready" },
-    { name: "Education", icon: "🎓", desc: "Section 508" },
-    { name: "E-Commerce", icon: "🛒", desc: "ADA compliant" },
-    { name: "Government", icon: "🏛️", desc: "WCAG 2.1 AA" },
-    { name: "Technology", icon: "💻", desc: "Enterprise" },
-    { name: "Media", icon: "📱", desc: "Multi-platform" },
-    { name: "Non-Profit", icon: "🤝", desc: "Inclusive" },
-  ];
+  const [activeTestimonial, setActiveTestimonial] = useState(0);
 
   return (
     <section
       className="relative py-20 md:py-28 overflow-hidden"
       style={{
         background:
-          "linear-gradient(180deg, #060e1a 0%, #0a1628 30%, #0c1a2e 50%, #0a1628 70%, #060e1a 100%)",
+          "linear-gradient(180deg, #020408 0%, #040810 30%, #050a12 50%, #040810 70%, #020408 100%)",
       }}
     >
       {/* Heavy gradient glow: heading area flowing down to bottom-left */}
@@ -271,56 +283,167 @@ const DigitalAccessibility = () => {
           </div>
         </div>
 
-        {/* Trusted By Section */}
-        <div className="text-center mb-14">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4 leading-tight">
-            Trusted by{" "}
-            <span className="gradient-text">industry leaders</span>
-          </h2>
-          <p className="text-gray-400 text-base max-w-2xl mx-auto leading-relaxed">
-            Organizations across industries trust AccessIQ to maintain their accessibility compliance
-          </p>
+        {/* Spreading gradient light between Expert Audit and Testimonial */}
+        <div className="relative pointer-events-none" style={{ height: 0 }}>
+          {/* Core strong glow - top center, spreads down */}
+          <div
+            className="absolute pointer-events-none"
+            style={{
+              right: "-250px",
+              top: "-60px",
+              width: "800px",
+              height: "800px",
+              background: "radial-gradient(circle at 50% 0%, rgba(0,212,170,0.65) 0%, rgba(0,180,216,0.35) 10%, rgba(0,136,204,0.18) 25%, rgba(0,212,170,0.06) 45%, transparent 65%)",
+              filter: "blur(60px)",
+            }}
+          />
+          {/* Mid spread - softer, wider */}
+          <div
+            className="absolute pointer-events-none"
+            style={{
+              right: "-400px",
+              top: "-40px",
+              width: "1200px",
+              height: "1000px",
+              background: "radial-gradient(circle at 50% 0%, rgba(0,212,170,0.3) 0%, rgba(0,180,216,0.12) 20%, rgba(0,136,204,0.04) 40%, transparent 60%)",
+              filter: "blur(100px)",
+            }}
+          />
+          {/* Outer soft wash */}
+          <div
+            className="absolute pointer-events-none"
+            style={{
+              right: "-550px",
+              top: "-20px",
+              width: "1600px",
+              height: "1200px",
+              background: "radial-gradient(circle at 50% 0%, rgba(0,136,204,0.12) 0%, rgba(0,212,170,0.04) 20%, rgba(0,180,216,0.015) 40%, transparent 55%)",
+              filter: "blur(140px)",
+            }}
+          />
         </div>
 
-        {/* Industry Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
-          {industries.map((industry) => (
-            <div
-              key={industry.name}
-              className="rounded-xl p-5 text-center card-hover cursor-default"
-              style={{ background: "linear-gradient(180deg, #111927, #0e1621)", border: "1px solid rgba(255,255,255,0.06)" }}
-            >
-              <div className="text-2xl mb-2">{industry.icon}</div>
-              <div className="text-white text-sm font-medium mb-0.5">{industry.name}</div>
-              <div className="text-gray-500 text-[11px]">{industry.desc}</div>
-            </div>
-          ))}
-        </div>
+        {/* Trusted By - Testimonial Slider */}
+        <div className="relative">
+          {/* removed - glow moved to between sections */}
 
-        {/* Pagination dots */}
-        <div className="flex items-center justify-center gap-2 mb-14">
-          {[0, 1, 2, 3, 4].map((dot) => (
-            <div
-              key={dot}
-              className="rounded-full transition-all"
-              style={dot === 0
-                ? { width: 24, height: 8, background: "linear-gradient(90deg, #00d4aa, #0088cc)" }
-                : { width: 8, height: 8, background: "#4b5563" }
-              }
+          <div className="relative z-10 mb-12">
+            <h2 className="text-3xl md:text-4xl lg:text-[42px] font-bold text-white leading-tight">
+              Trusted by{" "}
+              <span className="gradient-text">industry Leaders</span>
+            </h2>
+          </div>
+
+          {/* Testimonial Layout: Image left, Quote right */}
+          <div className="relative z-10 flex gap-8 lg:gap-10 items-stretch">
+          {/* Left - Person Image (smaller) */}
+          <div className="flex-shrink-0 relative overflow-hidden w-[280px]" style={{ borderRadius: "12px" }}>
+            <Image
+              src="/images/frame-55-person.png"
+              alt={testimonials[activeTestimonial].name}
+              width={280}
+              height={350}
+              className="w-full h-full object-cover"
+              style={{ borderRadius: "12px" }}
             />
-          ))}
+          </div>
+
+          {/* Right - Quote, Name, Navigation */}
+          <div className="flex-1 flex flex-col justify-between">
+            {/* Quote */}
+            <p className="text-gray-300 text-xl md:text-2xl lg:text-[26px] leading-relaxed font-light">
+              &ldquo;{testimonials[activeTestimonial].quote}&rdquo;
+            </p>
+
+            {/* Bottom row: Name left, Arrows right */}
+            <div className="flex items-end justify-between mt-10">
+              {/* Person Info */}
+              <div>
+                <div className="text-white font-bold text-xl md:text-2xl">{testimonials[activeTestimonial].name}</div>
+                <div className="text-gray-400 text-sm mt-1">
+                  {testimonials[activeTestimonial].title}, {testimonials[activeTestimonial].company}
+                </div>
+              </div>
+
+              {/* Navigation Arrows */}
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={() => setActiveTestimonial((prev) => (prev === 0 ? testimonials.length - 1 : prev - 1))}
+                  className="w-12 h-12 rounded-full flex items-center justify-center cursor-pointer transition-opacity hover:opacity-80"
+                  style={{
+                    background: "rgba(255,255,255,0.08)",
+                    border: "1px solid rgba(255,255,255,0.15)",
+                  }}
+                >
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                    <path d="M19 12H5m7-7l-7 7 7 7" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </button>
+                <button
+                  onClick={() => setActiveTestimonial((prev) => (prev === testimonials.length - 1 ? 0 : prev + 1))}
+                  className="w-12 h-12 rounded-full flex items-center justify-center cursor-pointer transition-opacity hover:opacity-80"
+                  style={{
+                    background: "linear-gradient(135deg, #00d4aa, #0088cc)",
+                  }}
+                >
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                    <path d="M5 12h14m-7-7l7 7-7 7" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+          </div>
         </div>
 
-        {/* Divider */}
-        <div className="gradient-line mb-12" />
+        {/* CTA Banner */}
+        <div className="mt-20 md:mt-28 relative">
+          {/* The card */}
+          <div className="relative rounded-2xl overflow-hidden" style={{ border: "1px solid rgba(0,212,170,0.15)" }}>
+            {/* Gradient background - teal to blue */}
+            <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, #0a8a7a 0%, #0c7a8a 20%, #1565a0 50%, #2855a0 70%, #4060b0 100%)" }} />
 
-        {/* Client logos row */}
-        <div className="flex flex-wrap items-center justify-center gap-10 md:gap-16">
-          {["Google", "Microsoft", "Amazon", "Meta", "Apple"].map((brand) => (
-            <span key={brand} className="text-gray-600 text-lg font-semibold tracking-wider hover:text-gray-400 transition-colors cursor-default">
-              {brand}
-            </span>
-          ))}
+            {/* Subtle overlay glows */}
+            <div className="absolute top-0 left-0 w-full h-full pointer-events-none" style={{ background: "radial-gradient(ellipse at 0% 50%, rgba(0,212,170,0.3) 0%, transparent 50%)" }} />
+            <div className="absolute top-0 right-0 w-full h-full pointer-events-none" style={{ background: "radial-gradient(ellipse at 100% 0%, rgba(80,120,200,0.3) 0%, transparent 50%)" }} />
+
+            {/* Bottom center white glow - hard and strong */}
+            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-[75%] pointer-events-none" style={{ background: "radial-gradient(ellipse at 50% 100%, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.6) 8%, rgba(255,255,255,0.35) 18%, rgba(255,255,255,0.15) 32%, rgba(255,255,255,0.05) 48%, transparent 65%)", filter: "blur(8px)" }} />
+            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[60%] h-[45%] pointer-events-none" style={{ background: "radial-gradient(ellipse at 50% 100%, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.4) 20%, rgba(255,255,255,0.1) 45%, transparent 65%)", filter: "blur(5px)" }} />
+
+            {/* Favicon icon - top right corner, rotated */}
+            <div className="absolute -top-6 -right-12 md:-top-4 md:-right-10 pointer-events-none" style={{ opacity: 0.08, transform: "rotate(-30deg)" }}>
+              <Image
+                src="/images/favicon-icon.png"
+                alt=""
+                width={200}
+                height={200}
+                className="w-[160px] h-[160px] md:w-[200px] md:h-[200px]"
+              />
+            </div>
+
+            {/* Content */}
+            <div className="relative z-10 px-8 md:px-16 py-14 md:py-16 text-center">
+              <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-4 leading-tight">
+                Get Your Verified Accessibility
+                <br />
+                Report Today
+              </h2>
+              <p className="text-white/70 text-base max-w-xl mx-auto mb-8">
+                Ensure your site is WCAG ADA compliant and minimizes legal risk.
+              </p>
+              <button className="inline-flex items-center gap-2 bg-white text-[#0b1a2a] font-semibold px-8 py-3.5 rounded-full hover:bg-gray-100 transition-colors text-sm cursor-pointer">
+                Start Your Audit
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                  <path d="M7 17L17 7M17 7H7M17 7v10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          {/* Shadow glow below CTA - full width, max 50px, strong center fading to sides */}
+          <div className="cta-bottom-glow absolute bottom-0 left-0 w-full h-[50px] pointer-events-none" style={{ background: "radial-gradient(ellipse at 50% 0%, rgba(0,212,170,0.8) 0%, rgba(0,180,216,0.5) 10%, rgba(0,136,204,0.25) 25%, rgba(0,180,216,0.1) 45%, rgba(0,136,204,0.03) 65%, transparent 85%)", filter: "blur(8px)", transform: "translateY(100%)" }} />
+          <div className="cta-bottom-glow-2 absolute bottom-0 left-0 w-full h-[40px] pointer-events-none" style={{ background: "radial-gradient(ellipse at 50% 0%, rgba(0,212,170,0.5) 0%, rgba(80,160,220,0.2) 20%, rgba(0,136,204,0.05) 45%, transparent 70%)", filter: "blur(15px)", transform: "translateY(120%)" }} />
         </div>
       </div>
     </section>
