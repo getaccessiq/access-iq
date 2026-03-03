@@ -78,42 +78,15 @@ const DigitalAccessibility = () => {
 
         {/* Main Content - Chart left, Stats right */}
         <div className="grid lg:grid-cols-2 gap-6 items-stretch">
-          {/* Left - Chart Image with glow border */}
-          <div className="relative">
-            {/* Animated gradient glow - bottom-left of image */}
-            <div
-              className="absolute -bottom-20 -left-20 w-[450px] h-[450px] rounded-full pointer-events-none z-0 digital-glow-1"
-              style={{
-                background: "radial-gradient(circle, rgba(0,212,170,0.4) 0%, rgba(0,180,216,0.22) 35%, transparent 70%)",
-                filter: "blur(50px)",
-              }}
+          {/* Left - Chart Image */}
+          <div className="relative flex items-center">
+            <Image
+              src="/images/digital-accessibility-dashboard-new.png"
+              alt="Accessibility Issues Over Time"
+              width={1000}
+              height={650}
+              className="w-full h-auto scale-110 origin-center"
             />
-            {/* Animated gradient glow - bottom-right of image */}
-            <div
-              className="absolute -bottom-12 -right-12 w-[400px] h-[400px] rounded-full pointer-events-none z-0 digital-glow-2"
-              style={{
-                background: "radial-gradient(circle, rgba(0,136,204,0.35) 0%, rgba(0,212,170,0.15) 40%, transparent 70%)",
-                filter: "blur(45px)",
-              }}
-            />
-
-            {/* Image with 5px glow border */}
-            <div className="relative z-10 h-full p-[5px]"
-              style={{
-                borderRadius: "16px",
-                background: "linear-gradient(135deg, rgba(0,212,170,0.6), rgba(0,136,204,0.4), rgba(0,212,170,0.3))",
-                boxShadow: "0 0 20px rgba(0, 212, 170, 0.3), 0 0 40px rgba(0, 136, 204, 0.15)",
-              }}
-            >
-              <Image
-                src="/images/digital-accessibility-dashboard.png"
-                alt="Accessibility Issues Over Time"
-                width={800}
-                height={520}
-                className="w-full h-full object-cover"
-                style={{ borderRadius: "11px" }}
-              />
-            </div>
           </div>
 
           {/* Right - Stat Cards */}
@@ -228,58 +201,15 @@ const DigitalAccessibility = () => {
             </button>
           </div>
 
-          {/* Right - Certificate with glow border */}
+          {/* Right - Certificate image */}
           <div className="relative">
-            {/* Hard bright glow - bottom-left corner */}
-            <div
-              className="absolute -bottom-10 -left-10 w-[250px] h-[250px] rounded-full pointer-events-none z-0 digital-glow-1"
-              style={{
-                background: "radial-gradient(circle, rgba(0,212,170,0.9) 0%, rgba(0,212,170,0.6) 20%, rgba(0,180,216,0.3) 40%, transparent 65%)",
-                filter: "blur(25px)",
-              }}
+            <Image
+              src="/images/cert-image-new.png"
+              alt="Certificate of Accessibility Compliance"
+              width={900}
+              height={630}
+              className="w-full h-auto scale-[1.3] origin-center"
             />
-            {/* Wider soft glow behind bottom-left */}
-            <div
-              className="absolute -bottom-20 -left-20 w-[400px] h-[400px] rounded-full pointer-events-none z-0"
-              style={{
-                background: "radial-gradient(circle, rgba(0,212,170,0.4) 0%, rgba(0,180,216,0.2) 30%, transparent 60%)",
-                filter: "blur(50px)",
-              }}
-            />
-            {/* Hard bright glow - bottom-right corner */}
-            <div
-              className="absolute -bottom-10 -right-10 w-[250px] h-[250px] rounded-full pointer-events-none z-0 digital-glow-2"
-              style={{
-                background: "radial-gradient(circle, rgba(0,180,216,0.85) 0%, rgba(0,136,204,0.55) 20%, rgba(0,212,170,0.25) 40%, transparent 65%)",
-                filter: "blur(25px)",
-              }}
-            />
-            {/* Wider soft glow behind bottom-right */}
-            <div
-              className="absolute -bottom-20 -right-20 w-[400px] h-[400px] rounded-full pointer-events-none z-0"
-              style={{
-                background: "radial-gradient(circle, rgba(0,136,204,0.35) 0%, rgba(0,212,170,0.15) 30%, transparent 60%)",
-                filter: "blur(50px)",
-              }}
-            />
-
-            {/* Certificate with 5px glow border */}
-            <div className="relative z-10 p-[5px]"
-              style={{
-                borderRadius: "16px",
-                background: "linear-gradient(180deg, rgba(0,212,170,0.8) 0%, rgba(0,180,216,0.6) 30%, rgba(0,136,204,0.7) 70%, rgba(0,212,170,0.8) 100%)",
-                boxShadow: "0 0 40px rgba(0, 212, 170, 0.5), 0 0 80px rgba(0, 136, 204, 0.3), 0 0 120px rgba(0, 212, 170, 0.2)",
-              }}
-            >
-              <Image
-                src="/images/cert-image.png"
-                alt="Certificate of Accessibility Compliance"
-                width={700}
-                height={490}
-                className="w-full h-auto"
-                style={{ borderRadius: "11px" }}
-              />
-            </div>
           </div>
         </div>
 

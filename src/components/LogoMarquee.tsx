@@ -10,7 +10,7 @@ const logos = [
   { src: "/images/logos/accenture.svg", alt: "Accenture", width: 130 },
   { src: "/images/logos/vector.svg", alt: "Vector", width: 130 },
   { src: "/images/logos/redbull.svg", alt: "Red Bull", width: 120 },
-  { src: "/images/logos/accessiq.svg", alt: "AccessIQ", width: 120 },
+  { src: "/images/logos/accessiq-logo.png", alt: "AccessIQ", width: 140 },
 ];
 
 const LogoMarquee = () => {
