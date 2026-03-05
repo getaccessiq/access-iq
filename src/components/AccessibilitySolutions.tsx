@@ -141,7 +141,7 @@ const AccessibilitySolutions = () => {
               </a>
               {/* Compliance badges image */}
               <Image
-                src="/images/image-159.png"
+                src="/images/logos/logo.jfif"
                 alt="WCAG 2.1, ADA, SCO Compliance Badges"
                 width={520}
                 height={72}

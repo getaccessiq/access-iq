@@ -120,13 +120,13 @@ const addOns = [
 
 const PricingPageContent = () => {
   return (
-    <section className="relative overflow-hidden bg-[#0a0e1a]">
+    <section className="relative min-h-screen overflow-hidden bg-[#0a0e1a]">
       {/* Single animated gradient background for entire page */}
       <AnimatedGradient />
 
       <div className="relative z-10">
         {/* ====== HERO SECTION ====== */}
-        <div className="pt-[120px] pb-16">
+        <div className="pt-[120px] pb-16 min-h-screen flex items-center">
           <div className="container mx-auto text-center">
             {/* Badge */}
             <ScrollReveal animation="fade-in-up" delay={100}>

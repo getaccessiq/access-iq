@@ -98,7 +98,7 @@ const Footer = () => {
             </div>
 
             {/* CONTACT */}
-            <div>
+            <div className="md:col-span-1 md:min-w-[220px]">
               <h4 className="text-white font-semibold text-xs tracking-widest uppercase mb-5">Contact</h4>
               <ul className="space-y-4">
                 {/* Email */}
