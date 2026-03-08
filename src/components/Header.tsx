@@ -106,14 +106,17 @@ const Header = () => {
                 Sign in
               </button>
             </div>
-            <button
-              className="text-white text-[13px] font-semibold px-5 py-2 rounded-full transition-opacity hover:opacity-90"
+            <a
+              href="https://demo.getaccessiq.de"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-white text-[13px] font-semibold px-5 py-2 rounded-full transition-opacity hover:opacity-90 inline-block"
               style={{
                 background: "linear-gradient(135deg, #00d4aa 0%, #0088cc 100%)",
               }}
             >
               View Live Demo
-            </button>
+            </a>
           </div>
 
           {/* Mobile menu button */}
@@ -142,7 +145,7 @@ const Header = () => {
               <div className="rounded-full p-[1px]" style={{ background: "linear-gradient(135deg, #00d4aa, #0088cc)" }}>
                 <button className="text-gray-200 text-sm font-medium px-5 py-2 rounded-full" style={{ background: "#0b1120" }} onClick={() => { setSignInModalOpen(true); setMobileMenuOpen(false); }}>Sign in</button>
               </div>
-              <button className="text-white text-sm font-semibold px-5 py-2.5 rounded-full" style={{ background: "linear-gradient(135deg, #00d4aa, #0088cc)" }}>View Live Demo</button>
+              <a href="https://demo.getaccessiq.de" target="_blank" rel="noopener noreferrer" className="text-white text-sm font-semibold px-5 py-2.5 rounded-full inline-block text-center" style={{ background: "linear-gradient(135deg, #00d4aa, #0088cc)" }}>View Live Demo</a>
             </div>
           </nav>
         </div>

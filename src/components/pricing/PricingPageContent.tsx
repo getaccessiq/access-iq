@@ -126,61 +126,99 @@ const PricingPageContent = () => {
 
       <div className="relative z-10">
         {/* ====== HERO SECTION ====== */}
-        <div className="pt-[120px] pb-16 min-h-screen flex items-center">
-          <div className="container mx-auto text-center">
-            {/* Badge */}
-            <ScrollReveal animation="fade-in-up" delay={100}>
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[#00d4aa]/20 bg-[#00d4aa]/[0.06] mb-7">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-                  <path d="M12 2L3 7v5c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-9-5z" fill="none" stroke="#00d4aa" strokeWidth="1.5" />
-                  <path d="M9 12l2 2 4-4" stroke="#00d4aa" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-                <span className="text-white text-[13px] font-medium">Transparent Pricing</span>
-              </div>
-            </ScrollReveal>
+        <div className="container mx-auto pt-[120px] pb-20">
+          <div className="grid lg:grid-cols-2 gap-12 items-center min-h-[540px]">
+            {/* Left side - Text content */}
+            <div>
+              {/* Badge */}
+              <ScrollReveal animation="fade-in-up" delay={100}>
+                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[#00d4aa]/20 bg-[#00d4aa]/[0.06] mb-7">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                    <path d="M12 2L3 7v5c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-9-5z" fill="none" stroke="#00d4aa" strokeWidth="1.5" />
+                    <path d="M9 12l2 2 4-4" stroke="#00d4aa" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                  <span className="text-white text-[13px] font-medium">Transparent Pricing</span>
+                </div>
+              </ScrollReveal>
 
-            <ScrollReveal animation="fade-in-up" delay={200}>
-              <h1 className="text-[34px] md:text-[42px] lg:text-[50px] font-bold leading-[1.15] text-white mb-6 tracking-tight max-w-3xl mx-auto">
-                Compliance That Costs{" "}
-                <br className="hidden md:block" />
-                Less Than One Lawsuit
-              </h1>
-            </ScrollReveal>
+              <ScrollReveal animation="fade-in-up" delay={200}>
+                <h1 className="text-[34px] md:text-[42px] lg:text-[50px] font-bold leading-[1.15] text-white mb-6 tracking-tight">
+                  Compliance That Costs{" "}
+                  <br className="hidden md:block" />
+                  Less Than One Lawsuit
+                </h1>
+              </ScrollReveal>
 
-            <ScrollReveal animation="fade-in-up" delay={300}>
-              <p className="text-gray-300 text-base max-w-xl mx-auto mb-10 leading-relaxed">
-                Expert guidance through every accessibility regulation — from federal contracts to Title III lawsuits. Achieve sustainable compliance with comprehensive standards coverage.
-              </p>
-            </ScrollReveal>
+              <ScrollReveal animation="fade-in-up" delay={300}>
+                <p className="text-gray-300 text-[17px] leading-[1.7] mb-8 max-w-[540px]">
+                  Manual accessibility testing and legal-grade compliance for WCAG, ADA, Section 508 and EN 301 549.
+                </p>
+              </ScrollReveal>
 
-            {/* Feature badges */}
-            <ScrollReveal animation="fade-in-up" delay={400}>
-              <div className="flex items-center justify-center gap-4 md:gap-8 flex-wrap">
-                {[
-                  "Manual Testing",
-                  "Real User Scenarios",
-                  "No Overlays",
-                  "No False Scenarios",
-                ].map((label) => (
-                  <div key={label} className="flex items-center gap-2">
-                    <div
-                      className="w-7 h-7 rounded-full flex items-center justify-center"
-                      style={{
-                        background: "linear-gradient(135deg, rgba(0,212,170,0.15), rgba(0,136,204,0.15))",
-                        border: "1px solid rgba(0,212,170,0.2)",
-                      }}
-                    >
-                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
-                        <path d="M5 13l4 4L19 7" stroke="#00d4aa" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-                      </svg>
+              <ScrollReveal animation="fade-in-up" delay={400}>
+                <div className="flex items-center gap-4 mb-10">
+                  <button className="bg-gradient-to-r from-[#00d4aa] to-[#0088cc] text-white text-[14px] font-semibold px-7 py-3.5 rounded-full hover:opacity-90 transition-opacity shadow-lg shadow-[#00d4aa]/20">
+                    Start Free Accessibility Audit
+                  </button>
+                  <a
+                    href="https://demo.getaccessiq.de"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-white text-[14px] font-medium px-7 py-3.5 rounded-full border border-white/20 hover:border-white/40 hover:bg-white/[0.03] transition-all"
+                  >
+                    View Live Demo
+                  </a>
+                </div>
+              </ScrollReveal>
+
+              {/* Feature badges */}
+              <ScrollReveal animation="fade-in-up" delay={500}>
+                <div className="flex items-center gap-4 md:gap-6 flex-wrap">
+                  {[
+                    "Manual Testing",
+                    "Real User Scenarios",
+                    "No Overlays",
+                    "No False Scenarios",
+                  ].map((label) => (
+                    <div key={label} className="flex items-center gap-2">
+                      <div
+                        className="w-7 h-7 rounded-full flex items-center justify-center"
+                        style={{
+                          background: "linear-gradient(135deg, rgba(0,212,170,0.15), rgba(0,136,204,0.15))",
+                          border: "1px solid rgba(0,212,170,0.2)",
+                        }}
+                      >
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+                          <path d="M5 13l4 4L19 7" stroke="#00d4aa" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                      </div>
+                      <span className="text-gray-300 text-sm font-medium">{label}</span>
                     </div>
-                    <span className="text-gray-300 text-sm font-medium">{label}</span>
-                  </div>
-                ))}
+                  ))}
+                </div>
+              </ScrollReveal>
+            </div>
+
+            {/* Right side - Dashboard image */}
+            <ScrollReveal animation="fade-in-right" delay={400} duration={800}>
+              <div className="relative">
+                <div className="absolute -inset-8 bg-[#00d4aa]/[0.04] rounded-3xl blur-3xl" />
+                <div className="relative rounded-2xl overflow-hidden border border-white/[0.08] shadow-2xl shadow-black/40">
+                  <Image
+                    src="/images/dashboard.png"
+                    alt="AccessIQ Dashboard Overview"
+                    width={720}
+                    height={480}
+                    className="w-full h-auto"
+                  />
+                </div>
               </div>
             </ScrollReveal>
           </div>
         </div>
+
+        {/* Bottom spacer */}
+        <div className="h-16" />
 
         {/* ====== PRICING CARDS SECTION ====== */}
         <div className="relative py-20 md:py-28">
