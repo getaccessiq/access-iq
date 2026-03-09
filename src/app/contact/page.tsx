@@ -5,7 +5,7 @@ import Footer from "@/components/Footer";
 export const metadata = {
   title: "Contact Us | AccessIQ",
   description:
-    "Talk to an accessibility compliance expert. Get help with WCAG 2.1 AA, ADA compliance audits, remediation, and continuous monitoring.",
+    "Talk to an accessibility compliance expert. Get help with WCAG 2.2 AA, ADA compliance audits, remediation, and continuous monitoring.",
 };
 
 export default function ContactPage() {
