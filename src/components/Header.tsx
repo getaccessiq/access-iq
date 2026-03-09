@@ -107,7 +107,7 @@ const Header = () => {
               </button>
             </div>
             <a
-              href="https://demo.getaccessiq.com"
+              href="https://accessiq.tech/"
               target="_blank"
               rel="noopener noreferrer"
               className="text-white text-[13px] font-semibold px-5 py-2 rounded-full transition-opacity hover:opacity-90 inline-block"
