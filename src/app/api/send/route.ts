@@ -15,7 +15,7 @@ export async function POST(req: Request) {
 
     const data = await resend.emails.send({
       from: "AccessIQ <noreply@getaccessiq.com>",
-      to: ["ronny@teichgraeber-sport.de"],
+      to: ["support@getaccessiq.com"],
       replyTo: body.email,
       subject: "New Contact Request",
       html: `
