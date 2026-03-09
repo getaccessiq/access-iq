@@ -86,7 +86,7 @@ const HeroSection = () => {
               {/* Description */}
               <ScrollReveal animation="fade-in-up" delay={400}>
               <p className="text-gray-300 text-[17px] leading-[1.7] mb-8 max-w-[540px]">
-                We help businesses achieve WAG 2.1 AA &amp; ADA compliance through expert-led audits, AI-powered analysis, and verified remediation.
+                We help businesses achieve WAG 2.2 AA &amp; ADA compliance through expert-led audits, AI-powered analysis, and verified remediation.
               </p>
               </ScrollReveal>
 
