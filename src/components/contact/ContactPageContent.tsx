@@ -192,7 +192,7 @@ const ContactPageContent = () => {
                           </svg>
                         </div>
                         <span className="text-gray-300 text-sm">
-                          info@getaccessiq.com
+                          support@getaccessiq.com
                         </span>
                       </div>
                     </div>
