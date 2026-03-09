@@ -204,7 +204,7 @@ const handleSubmit = async (e: React.FormEvent) => {
                   {/* Left - Contact Information */}
                   <div className="p-7 md:p-9 lg:border-r lg:border-white/8">
                   <h2 className="text-white text-xl font-bold mb-8">
-                    Contact Information
+                    Contact AccessIQ
                   </h2>
 
                   <div className="space-y-5">
