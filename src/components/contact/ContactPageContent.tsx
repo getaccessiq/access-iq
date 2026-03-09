@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import AnimatedGradient from "../AnimatedGradient";
 import ScrollReveal from "../ScrollReveal";
 
+
 const helpCards = [
   {
     icon: (
@@ -73,7 +74,8 @@ const ContactPageContent = () => {
     service: "",
     message: "",
   });
-
+  const [status, setStatus] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const handleChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
@@ -82,9 +84,49 @@ const ContactPageContent = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-  };
+
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  setIsSubmitting(true);
+  setStatus("");
+
+  try {
+    const response = await fetch("/api/send", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        firstName: formData.firstName,
+        email: formData.email,
+        businessName: formData.businessName,
+        service: formData.service,
+        message: formData.message,
+      }),
+    });
+
+    const result = await response.json();
+
+    if (response.ok) {
+      setStatus("Your inquiry has been sent successfully.");
+      setFormData({
+        firstName: "",
+        email: "",
+        businessName: "",
+        service: "",
+        message: "",
+      });
+    } else {
+      setStatus("Something went wrong. Please try again.");
+      console.error(result);
+    }
+  } catch (error) {
+    setStatus("Failed to send message. Please try again.");
+    console.error(error);
+  } finally {
+    setIsSubmitting(false);
+  }
+};
 
   return (
     <section className="relative overflow-hidden bg-[#0a0e1a]">
@@ -124,7 +166,7 @@ const ContactPageContent = () => {
             {/* Compliance badges */}
             <ScrollReveal animation="fade-in-up" delay={300}>
               <div className="flex items-center justify-center gap-6">
-                {["WCAG 2.1 AA & AA", "ADA"].map((badge) => (
+                {["WCAG 2.2 AA", "ADA"].map((badge) => (
                   <div key={badge} className="flex items-center gap-2">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path fillRule="evenodd" clipRule="evenodd" d="M12.057 1.75C14.248 1.75 15.969 1.75001 17.312 1.93101C18.689 2.11601 19.781 2.50301 20.639 3.36101C21.497 4.21901 21.884 5.31099 22.069 6.68799C22.25 8.03099 22.25 9.75199 22.25 11.943V12.057C22.25 14.248 22.25 15.969 22.069 17.312C21.884 18.689 21.497 19.781 20.639 20.639C19.781 21.497 18.689 21.884 17.312 22.069C15.969 22.25 14.248 22.25 12.057 22.25H11.943C9.75199 22.25 8.03099 22.25 6.68799 22.069C5.31099 21.884 4.21901 21.497 3.36101 20.639C2.50301 19.781 2.11601 18.689 1.93101 17.312C1.75001 15.969 1.75 14.248 1.75 12.057V11.943C1.75 9.75199 1.75001 8.03099 1.93101 6.68799C2.11601 5.31099 2.50301 4.21901 3.36101 3.36101C4.21901 2.50301 5.31099 2.11601 6.68799 1.93101C8.03099 1.75001 9.75199 1.75 11.943 1.75H12.057ZM16.676 8.26299C17.083 8.63599 17.11 9.269 16.737 9.676L11.237 15.676C11.053 15.877 10.794 15.994 10.522 16C10.249 16.006 9.98599 15.9 9.79299 15.707L7.29299 13.207C6.90199 12.817 6.90199 12.183 7.29299 11.793C7.68299 11.402 8.31701 11.402 8.70701 11.793L10.469 13.554L15.263 8.324C15.636 7.917 16.269 7.88999 16.676 8.26299Z" fill="white"/>
@@ -401,20 +443,27 @@ const ContactPageContent = () => {
 
                     {/* Submit */}
                     <div className="flex items-center justify-end gap-4">
-                      <button
-                        type="submit"
-                        className="flex items-center gap-2 text-white text-sm font-semibold px-7 py-3 rounded-full hover:opacity-90 transition-opacity"
-                        style={{
-                          background:
-                            "linear-gradient(135deg, #00d4aa, #0088cc)",
-                        }}
-                      >
-                        Submit Inquiry
-                      </button>
-                    </div>
-                    <p className="text-gray-500 text-xs text-right">
-                      Our team will respond within one business day.
-                    </p>
+  <button
+    type="submit"
+    disabled={isSubmitting}
+    className="flex items-center gap-2 text-white text-sm font-semibold px-7 py-3 rounded-full hover:opacity-90 transition-opacity disabled:opacity-60 disabled:cursor-not-allowed"
+    style={{
+      background: "linear-gradient(135deg, #00d4aa, #0088cc)",
+    }}
+  >
+    {isSubmitting ? "Sending..." : "Submit Inquiry"}
+  </button>
+</div>
+
+{status && (
+  <p className="text-sm text-right text-gray-300">
+    {status}
+  </p>
+)}
+
+<p className="text-gray-500 text-xs text-right">
+  Our team will respond within one business day.
+</p>
                   </form>
                 </div>
               </div>
