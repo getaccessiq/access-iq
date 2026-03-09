@@ -44,7 +44,7 @@ const AuditHero = () => {
 
               {/* Main heading */}
               <h1 className="text-[34px] md:text-[42px] lg:text-[50px] font-bold leading-[1.15] text-white mb-6 tracking-tight">
-                Expert Accessibility Audit1.
+                Expert Accessibility Audit.
                 <br />
                 Verified. Defensible.
               </h1>
