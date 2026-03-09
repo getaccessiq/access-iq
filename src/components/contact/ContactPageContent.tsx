@@ -265,7 +265,7 @@ const handleSubmit = async (e: React.FormEvent) => {
                           </svg>
                         </div>
                         <span className="text-gray-300 text-sm">
-                          +1 833-362-5610
+                          +1 833-232-2730
                         </span>
                       </div>
                     </div>
@@ -296,9 +296,9 @@ const handleSubmit = async (e: React.FormEvent) => {
                           </svg>
                         </div>
                         <span className="text-gray-300 text-sm leading-relaxed">
-                          7160 Squirebeam Dr, ste 80 # 350,
+                          15257 Amberly Dr Ste 367
                           <br />
-                          Sterling, VA 20166
+                          Tampa, FL 33647
                         </span>
                       </div>
                     </div>
