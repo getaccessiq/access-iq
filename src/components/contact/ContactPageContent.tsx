@@ -265,7 +265,7 @@ const handleSubmit = async (e: React.FormEvent) => {
                           </svg>
                         </div>
                         <span className="text-gray-300 text-sm">
-                          +1 833-232-2730
+                          (833) 232-2730
                         </span>
                       </div>
                     </div>
@@ -298,7 +298,7 @@ const handleSubmit = async (e: React.FormEvent) => {
                         <span className="text-gray-300 text-sm leading-relaxed">
                           15257 Amberly Dr Ste 367
                           <br />
-                          Tampa, FL 33647
+                          Tampa, FL 33647, United States
                         </span>
                       </div>
                     </div>
@@ -315,9 +315,9 @@ const handleSubmit = async (e: React.FormEvent) => {
                         Service Hours :
                       </div>
                       <p className="text-gray-300 text-sm leading-relaxed">
-                        Monday - Friday 9AM - EST
+                        Monday - Friday 9:00 AM - 5:00 PM EST
                         <br />
-                        Saturday 9AM - 5 PM EST
+                        Saturday 9:00 AM - 2:00 PM EST
                       </p>
                     </div>
 
@@ -333,8 +333,7 @@ const handleSubmit = async (e: React.FormEvent) => {
                         Support 24/7
                       </div>
                       <p className="text-gray-400 text-sm leading-relaxed">
-                        Our experts are available around the clock by email
-                        and live chat.
+                        Our accessibility specialists are available 24/7 via email and live chat.
                       </p>
                     </div>
                   </div>
