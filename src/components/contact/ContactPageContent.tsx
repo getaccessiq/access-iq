@@ -19,8 +19,8 @@ const helpCards = [
         </defs>
       </svg>
     ),
-    title: "Visit Help Center",
-    description: "Find answers in our knowledge base and detailed guides.",
+    title: "Explore Our Help Center",
+    description: "Browse our knowledge base, accessibility guides, and compliance resources.",
     cta: "Visit Help Center",
   },
   {
@@ -42,10 +42,10 @@ const helpCards = [
         </defs>
       </svg>
     ),
-    title: "Schedule a Demo",
+    title: "Schedule a Personalized Demo",
     description:
-      "Book a personalized demo with one of our compliance experts.",
-    cta: "Book a Demo",
+      "See how AccessIQ helps organizations achieve WCAG and ADA compliance.",
+    cta: "Book Your Demo",
   },
   {
     icon: (
@@ -60,8 +60,8 @@ const helpCards = [
         </defs>
       </svg>
     ),
-    title: "Live Chat",
-    description: "Chat with our support team for immediate assistance.",
+    title: "Accessibility Support",
+    description: "Get instant answers from our compliance experts.",
     cta: "Start Live Chat",
   },
 ];
