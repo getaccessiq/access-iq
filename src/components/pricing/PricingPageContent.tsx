@@ -161,7 +161,7 @@ const PricingPageContent = () => {
                     Start Free Accessibility Audit
                   </button>
                   <a
-                    href="https://demo.getaccessiq.de"
+                    href="https://demo.getaccessiq.com"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-white text-[14px] font-medium px-7 py-3.5 rounded-full border border-white/20 hover:border-white/40 hover:bg-white/[0.03] transition-all"
