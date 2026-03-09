@@ -61,7 +61,7 @@ const helpCards = [
       </svg>
     ),
     title: "Accessibility Support",
-    description: "Get instant answers from our compliance experts.",
+    description: "Get instant answers from our compliance experts. Connect with a specialist in real time.",
     cta: "Start Live Chat",
   },
 ];
