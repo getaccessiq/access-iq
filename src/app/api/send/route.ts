@@ -6,6 +6,7 @@ export async function POST(req: Request) {
   try {
     const body = await req.json();
 
+    // prüfen ob Pflichtfelder vorhanden
     if (!body.firstName || !body.email || !body.message) {
       return Response.json(
         { error: "Missing required fields" },
@@ -19,16 +20,22 @@ export async function POST(req: Request) {
       replyTo: body.email,
       subject: "New Contact Request",
       html: `
-        <p><strong>First Name:</strong> ${body.firstName}</p>
+        <h2>New Contact Inquiry</h2>
+
+        <p><strong>Name:</strong> ${body.firstName}</p>
         <p><strong>Email:</strong> ${body.email}</p>
         <p><strong>Business Name:</strong> ${body.businessName || "-"}</p>
         <p><strong>Service:</strong> ${body.service || "-"}</p>
-        <p><strong>Message:</strong> ${body.message}</p>
+        <p><strong>Message:</strong></p>
+        <p>${body.message}</p>
       `,
     });
 
     return Response.json({ success: true, data });
+
   } catch (error) {
+    console.error("Resend error:", error);
+
     return Response.json(
       { error: "Failed to send email" },
       { status: 500 }
