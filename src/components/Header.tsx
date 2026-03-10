@@ -121,15 +121,21 @@ const Header = () => {
           </div>
 
           {/* Mobile menu button */}
-          <button className="lg:hidden text-white" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
-            <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2">
-              {mobileMenuOpen ? (
-                <path strokeLinecap="round" d="M6 6l12 12M6 18L18 6" />
-              ) : (
-                <path strokeLinecap="round" d="M4 6h16M4 12h16M4 18h16" />
-              )}
-            </svg>
-          </button>
+          <button
+  className="lg:hidden text-white"
+  onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+  aria-label={mobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
+  aria-expanded={mobileMenuOpen}
+  aria-controls="mobile-menu"
+>
+  <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2">
+    {mobileMenuOpen ? (
+      <path strokeLinecap="round" d="M6 6l12 12M6 18L18 6" />
+    ) : (
+      <path strokeLinecap="round" d="M4 6h16M4 12h16M4 18h16" />
+    )}
+  </svg>
+</button>
         </div>
       </div>
 
