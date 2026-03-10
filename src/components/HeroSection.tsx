@@ -78,7 +78,7 @@ const HeroSection = () => {
               {/* Main heading */}
               <ScrollReveal animation="fade-in-up" delay={300}>
               <h1 className="text-[34px] md:text-[42px] lg:text-[50px] font-bold leading-[1.15] text-white mb-6 tracking-tight">
-                Enterprise-Grade ADA & WCAG Accessibility Compliance.{" "}
+                Enterprise ADA & WCAG Compliance.{" "}
                 <span className="gradient-text">Beyond Automated Scans.</span>
               </h1>
               </ScrollReveal>
