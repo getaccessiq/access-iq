@@ -78,7 +78,7 @@ const HeroSection = () => {
               {/* Main heading */}
               <ScrollReveal animation="fade-in-up" delay={300}>
               <h1 className="text-[34px] md:text-[42px] lg:text-[50px] font-bold leading-[1.15] text-white mb-6 tracking-tight">
-                Enterprise-Grade Accessibility Compliance.{" "}
+                Enterprise ADA & WCAG Compliance.{" "}
                 <span className="gradient-text">Beyond Automated Scans.</span>
               </h1>
               </ScrollReveal>
@@ -86,7 +86,7 @@ const HeroSection = () => {
               {/* Description */}
               <ScrollReveal animation="fade-in-up" delay={400}>
               <p className="text-gray-300 text-[17px] leading-[1.7] mb-8 max-w-[540px]">
-                We help businesses achieve WCAG 2.2 AA &amp; ADA compliance through expert-led audits, AI-powered analysis, and verified remediation.
+                Ensure your website meets ADA and WCAG 2.2 standards with expert audits, AI-powered analysis, and continuous accessibility monitoring.
               </p>
               </ScrollReveal>
 
