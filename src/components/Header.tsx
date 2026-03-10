@@ -110,6 +110,7 @@ const Header = () => {
               href="https://accessiq.tech/"
               target="_blank"
               rel="noopener noreferrer"
+              aria-label="View the live demo of AccessIQ accessibility compliance platform"
               className="text-white text-[13px] font-semibold px-5 py-2 rounded-full transition-opacity hover:opacity-90 inline-block"
               style={{
                 background: "linear-gradient(135deg, #00d4aa 0%, #0088cc 100%)",
