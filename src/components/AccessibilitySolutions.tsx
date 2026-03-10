@@ -113,7 +113,7 @@ const AccessibilitySolutions = () => {
               </h3>
               <div className="space-y-3 mb-7">
                 {[
-                  "Verify WCAG 2.1 AA & ADA Standards",
+                  "Verify WCAG 2.2 AA & ADA Standards",
                   "Reduce Legal Exposure & Risk",
                   "Continues Accessibility Monitoring",
                 ].map((item) => (
@@ -142,7 +142,7 @@ const AccessibilitySolutions = () => {
               {/* Compliance badges image */}
               <Image
                 src="/images/logos/logo.jpg"
-                alt="WCAG 2.1, ADA, SCO Compliance Badges"
+                alt="WCAG 2.2, ADA, SCO Compliance Badges"
                 width={520}
                 height={72}
                 className="h-[60px] md:h-[68px] w-auto object-contain"
