@@ -309,29 +309,65 @@ const DigitalAccessibility = () => {
 
               {/* Navigation Arrows */}
               <div className="flex items-center gap-3">
-                <button
-                  onClick={() => setActiveTestimonial((prev) => (prev === 0 ? testimonials.length - 1 : prev - 1))}
-                  className="w-12 h-12 rounded-full flex items-center justify-center cursor-pointer transition-opacity hover:opacity-80"
-                  style={{
-                    background: "rgba(255,255,255,0.08)",
-                    border: "1px solid rgba(255,255,255,0.15)",
-                  }}
-                >
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                    <path d="M19 12H5m7-7l-7 7 7 7" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                </button>
-                <button
-                  onClick={() => setActiveTestimonial((prev) => (prev === testimonials.length - 1 ? 0 : prev + 1))}
-                  className="w-12 h-12 rounded-full flex items-center justify-center cursor-pointer transition-opacity hover:opacity-80"
-                  style={{
-                    background: "linear-gradient(135deg, #00d4aa, #0088cc)",
-                  }}
-                >
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                    <path d="M5 12h14m-7-7l7 7-7 7" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                </button>
+               <button
+  onClick={() =>
+    setActiveTestimonial((prev) =>
+      prev === 0 ? testimonials.length - 1 : prev - 1
+    )
+  }
+  className="w-12 h-12 rounded-full flex items-center justify-center cursor-pointer transition-opacity hover:opacity-80"
+  style={{
+    background: "rgba(255,255,255,0.08)",
+    border: "1px solid rgba(255,255,255,0.15)",
+  }}
+  aria-label="Show previous testimonial"
+>
+  <svg
+    width="20"
+    height="20"
+    viewBox="0 0 24 24"
+    fill="none"
+    aria-hidden="true"
+    focusable="false"
+  >
+    <path
+      d="M19 12H5m7-7l-7 7 7 7"
+      stroke="white"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+</button>
+               <button
+  onClick={() =>
+    setActiveTestimonial((prev) =>
+      prev === testimonials.length - 1 ? 0 : prev + 1
+    )
+  }
+  className="w-12 h-12 rounded-full flex items-center justify-center cursor-pointer transition-opacity hover:opacity-80"
+  style={{
+    background: "linear-gradient(135deg, #00d4aa, #0088cc)",
+  }}
+  aria-label="Show next testimonial"
+>
+  <svg
+    width="20"
+    height="20"
+    viewBox="0 0 24 24"
+    fill="none"
+    aria-hidden="true"
+    focusable="false"
+  >
+    <path
+      d="M5 12h14m-7-7l7 7-7 7"
+      stroke="white"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+</button>
               </div>
             </div>
           </div>
