@@ -112,7 +112,7 @@ const HeroSection = () => {
                 <div className="w-px h-12" style={{ background: "linear-gradient(180deg, transparent, rgba(0, 212, 170, 0.3), transparent)" }} />
                 <div>
                   <div className="text-white text-[36px] font-bold leading-none">120+</div>
-                  <div className="text-gray-400 text-[13px] mt-1.5">Companies Trust AccessIQ</div>
+                  <div className="text-gray-400 text-[13px] mt-1.5">Websites Protected</div>
                 </div>
               </div>
               </ScrollReveal>
