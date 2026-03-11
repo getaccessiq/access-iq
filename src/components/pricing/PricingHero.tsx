@@ -35,9 +35,9 @@ const PricingHero = () => {
 
             {/* Heading */}
             <h1 className="text-[34px] md:text-[42px] lg:text-[50px] font-bold leading-[1.15] text-white mb-6 tracking-tight max-w-3xl mx-auto">
-              Compliance That Costs{" "}
-              <br className="hidden md:block" />
-              Less Than One Lawsuit
+              Simple,Transparent Pricing{" "}
+              {/*<br className="hidden md:block" />
+              Less Than One Lawsuit*/}
             </h1>
 
             {/* Subtitle */}

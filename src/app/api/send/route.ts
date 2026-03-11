@@ -6,6 +6,23 @@ export async function POST(req: Request) {
   try {
     const body = await req.json();
 
+    // Popup / Waitlist / Notify request
+    if (body.notifyEmail) {
+      const data = await resend.emails.send({
+        from: "AccessIQ <support@getaccessiq.com>",
+        to: ["support@getaccessiq.com"],
+        replyTo: body.notifyEmail,
+        subject: "Quick Scan Notify Request",
+        html: `
+          <h2>New Quick Scan Notify Request</h2>
+          <p><strong>Email:</strong> ${body.notifyEmail}</p>
+        `,
+      });
+
+      return Response.json({ success: true, data });
+    }
+
+    // Bestehendes Contact-Formular
     if (!body.firstName || !body.email || !body.message) {
       return Response.json(
         { error: "Missing required fields" },
@@ -14,8 +31,8 @@ export async function POST(req: Request) {
     }
 
     const data = await resend.emails.send({
-      from: "AccessIQ <noreply@getaccessiq.com>",
-      to: ["ronny.handke@gmx.net"],
+      from: "AccessIQ <support@getaccessiq.com>",
+      to: ["support@getaccessiq.com"],
       replyTo: body.email,
       subject: "New Contact Request",
       html: `
