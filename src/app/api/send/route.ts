@@ -21,7 +21,7 @@ export async function POST(req: Request) {
       const { data, error } = await resend.emails.send({
         from: "AccessIQ <support@getaccessiq.com>",
         to: ["support@getaccessiq.com>"],
-        reply_to: body.notifyEmail,
+        replyTo: body.notifyEmail,
         subject: "Quick Scan Notify Request",
         html: `
           <h2>New Quick Scan Notify Request</h2>
@@ -54,7 +54,7 @@ export async function POST(req: Request) {
     const { data, error } = await resend.emails.send({
       from: "AccessIQ <support@getaccessiq.com>",
       to: ["support@getaccessiq.com"],
-      reply_to: body.email,
+      replyTo: body.email,
       subject: "New Contact Request",
       html: `
         <h2>New Contact Inquiry</h2>
