@@ -6,12 +6,22 @@ export async function POST(req: Request) {
   try {
     const body = await req.json();
 
+    const isValidEmail = (value: string) =>
+      /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+
     // Popup / Waitlist / Notify request
     if (body.notifyEmail) {
-      const data = await resend.emails.send({
+      if (!isValidEmail(body.notifyEmail)) {
+        return Response.json(
+          { error: "Invalid notify email" },
+          { status: 400 }
+        );
+      }
+
+      const { data, error } = await resend.emails.send({
         from: "AccessIQ <support@getaccessiq.com>",
-        to: ["support@getaccessiq.com"],
-        replyTo: body.notifyEmail,
+        to: ["support@getaccessiq.com>"],
+        reply_to: body.notifyEmail,
         subject: "Quick Scan Notify Request",
         html: `
           <h2>New Quick Scan Notify Request</h2>
@@ -19,10 +29,14 @@ export async function POST(req: Request) {
         `,
       });
 
+      if (error) {
+        return Response.json({ error }, { status: 500 });
+      }
+
       return Response.json({ success: true, data });
     }
 
-    // Bestehendes Contact-Formular
+    // Contact-Formular
     if (!body.firstName || !body.email || !body.message) {
       return Response.json(
         { error: "Missing required fields" },
@@ -30,10 +44,17 @@ export async function POST(req: Request) {
       );
     }
 
-    const data = await resend.emails.send({
+    if (!isValidEmail(body.email)) {
+      return Response.json(
+        { error: "Invalid email address" },
+        { status: 400 }
+      );
+    }
+
+    const { data, error } = await resend.emails.send({
       from: "AccessIQ <support@getaccessiq.com>",
       to: ["support@getaccessiq.com"],
-      replyTo: body.email,
+      reply_to: body.email,
       subject: "New Contact Request",
       html: `
         <h2>New Contact Inquiry</h2>
@@ -45,6 +66,10 @@ export async function POST(req: Request) {
         <p>${body.message}</p>
       `,
     });
+
+    if (error) {
+      return Response.json({ error }, { status: 500 });
+    }
 
     return Response.json({ success: true, data });
   } catch (error) {
