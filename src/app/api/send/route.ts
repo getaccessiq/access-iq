@@ -20,7 +20,7 @@ export async function POST(req: Request) {
 
       const { data, error } = await resend.emails.send({
         from: "AccessIQ <support@getaccessiq.com>",
-        to: ["support@getaccessiq.com>"],
+        to: ["support@getaccessiq.com"],
         replyTo: body.notifyEmail,
         subject: "Quick Scan Notify Request",
         html: `
