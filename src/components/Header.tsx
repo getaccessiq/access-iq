@@ -165,7 +165,7 @@ const Header = () => {
                 style={{ background: "#0b1120" }}
                 onClick={() => setSignInModalOpen(true)}
               >
-                Login
+                Sign in
               </button>
             </div>
             <a
