@@ -132,11 +132,11 @@ const AddOns = () => {
           </div>
 
           <h2 className="text-3xl md:text-4xl lg:text-[46px] font-bold text-white leading-tight mb-5">
-            Add-Ons
+            Add-On Services
           </h2>
           <p className="text-gray-400 text-base max-w-lg mx-auto leading-relaxed">
-            All add-ons are delivered by senior accessibility experts and
-            aligned with WCAG 2.1 AA &amp; ADA requirements.
+            All add-ons are delivered by senior accessibility experts and aligned with 
+            WCAG 2.1 AA &amp; ADA requirements.
           </p>
         </div>
 
