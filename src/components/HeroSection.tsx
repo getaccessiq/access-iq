@@ -93,7 +93,7 @@ const HeroSection = () => {
               {/* CTA Buttons */}
               <ScrollReveal animation="fade-in-up" delay={500}>
               <div className="flex items-center gap-4 mb-10">
-                <button className="bg-gradient-to-r from-[#00d4aa] to-[#0088cc] text-white text-[14px] font-semibold px-7 py-3.5 rounded-full hover:opacity-90 transition-opacity shadow-lg shadow-[#00d4aa]/20">
+                <button onClick={() => window.location.href = "https://access-iq.vercel.app/scan"} className="bg-gradient-to-r from-[#00d4aa] to-[#0088cc] text-white text-[14px] font-semibold px-7 py-3.5 rounded-full hover:opacity-90 transition-opacity shadow-lg shadow-[#00d4aa]/20">
                   Run Free Quick Scan
                 </button>
                 <button className="text-white text-[14px] font-medium px-7 py-3.5 rounded-full border border-white/20 hover:border-white/40 hover:bg-white/[0.03] transition-all">
