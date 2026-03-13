@@ -89,10 +89,12 @@ const addOns = [
         </defs>
       </svg>
     ),
-    title: "Express",
-    subtitle: "Fixes",
-    description: "Critical issues fixed within 48h",
-    price: "+25-40%",
+    title: "Express Fixes",
+    subtitle: "Most Requested",
+    description: "Critical accessibility issues fixed within 48 hours.",
+    price: "+25–40% project fee",
+    buttonText: "Fix Issues Fast",
+    featured: true,
   },
   {
     icon: (
@@ -122,8 +124,10 @@ const addOns = [
     ),
     title: "Legal",
     subtitle: "Support Letter",
-    description: "Compliance summary for legal teams",
-    price: "$1,5K-3K",
+    description: "Compliance summary and documentation for legal teams.",
+    price: "$1,500–$3,000",
+    buttonText: "Get Legal Letter",
+    featured: false,
   },
   {
     icon: (
@@ -153,8 +157,10 @@ const addOns = [
     ),
     title: "Design / UX",
     subtitle: "Accessibility",
-    description: "Accessible UX enhancements",
-    price: "+25-40%",
+    description: "Accessible UX improvements for better user journeys.",
+    price: "+25–40% project fee",
+    buttonText: "Improve UX",
+    featured: false,
   },
   {
     icon: (
@@ -189,10 +195,12 @@ const addOns = [
         </defs>
       </svg>
     ),
-    title: "Custom",
-    subtitle: "Requests",
-    description: "Custom requests for your business",
-    price: "",
+    title: "Custom Requests",
+    subtitle: "Tailored Support",
+    description: "Custom accessibility requests for your business needs.",
+    price: "Custom quote",
+    buttonText: "Request Quote",
+    featured: false,
   },
 ];
 
@@ -224,7 +232,7 @@ const PricingPageContent = () => {
                     />
                   </svg>
                   <span className="text-white text-[13px] font-medium">
-                    Transparent Pricing
+                    Transparent Pricing • No Contracts
                   </span>
                 </div>
               </ScrollReveal>
@@ -246,14 +254,18 @@ const PricingPageContent = () => {
 
               <ScrollReveal animation="fade-in-up" delay={400}>
                 <div className="flex items-center gap-4 mb-10">
-                  <button className="bg-gradient-to-r from-[#00d4aa] to-[#0088cc] text-white text-[14px] font-semibold px-7 py-3.5 rounded-full hover:opacity-90 transition-opacity shadow-lg shadow-[#00d4aa]/20">
-                    Start Free Accessibility Audit
+                  <button className="relative overflow-hidden rounded-full bg-gradient-to-r from-[#00d4aa] to-[#0088cc] px-8 py-4 text-[15px] font-semibold text-white shadow-[0_14px_40px_rgba(0,212,170,0.30)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_18px_50px_rgba(0,212,170,0.38)]">
+                    <span className="relative z-10">
+                      Start Free Accessibility Scan
+                    </span>
+                    <span className="pointer-events-none absolute inset-0 bg-[linear-gradient(135deg,rgba(255,255,255,0.18)_0%,transparent_35%,transparent_100%)]" />
                   </button>
+
                   <a
                     href="https://demo.getaccessiq.com"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-white text-[14px] font-medium px-7 py-3.5 rounded-full border border-white/20 hover:border-white/40 hover:bg-white/[0.03] transition-all"
+                    className="rounded-full border border-white/15 px-8 py-4 text-[15px] font-medium text-white transition-all duration-300 hover:-translate-y-0.5 hover:border-white/30 hover:bg-white/[0.03]"
                   >
                     View Live Demo
                   </a>
@@ -263,10 +275,9 @@ const PricingPageContent = () => {
               <ScrollReveal animation="fade-in-up" delay={500}>
                 <div className="flex items-center gap-4 md:gap-6 flex-wrap">
                   {[
-                    "Manual Testing",
+                    "Manual WCAG Testing",
                     "Real User Scenarios",
-                    "No Overlays",
-                    "No False Scenarios",
+                    "No Overlay Solutions",
                   ].map((label) => (
                     <div key={label} className="flex items-center gap-2">
                       <div
@@ -299,22 +310,62 @@ const PricingPageContent = () => {
                   ))}
                 </div>
               </ScrollReveal>
+
+              {/* ========================= PREMIUM RISK BLOCK START ========================= */}
+              <ScrollReveal animation="fade-in-up" delay={600}>
+                <div className="mt-6 max-w-[500px]">
+                  <div className="group relative overflow-hidden rounded-[18px] border border-white/10 bg-[#0b1630]/90 px-7 py-6 shadow-[0_20px_60px_rgba(0,0,0,0.45)] backdrop-blur-md transition-all duration-300 hover:-translate-y-[2px] hover:border-[#00d4aa]/25 hover:shadow-[0_30px_80px_rgba(0,0,0,0.6)]">
+                    <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/25 to-transparent" />
+                    <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[2px] bg-gradient-to-r from-transparent via-cyan-400 to-transparent opacity-80" />
+                    <div className="pointer-events-none absolute -left-8 top-1/2 h-28 w-28 -translate-y-1/2 rounded-full bg-[#00d4aa]/10 blur-3xl" />
+
+                    <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#00d4aa]/20 bg-[#00d4aa]/[0.06] px-3 py-1.5">
+                      <span className="h-2 w-2 rounded-full bg-[#00d4aa] shadow-[0_0_12px_rgba(0,212,170,0.9)]" />
+                      <span className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[#9fe7d6]">
+                        Risk Snapshot
+                      </span>
+                    </div>
+
+                    <h3 className="text-[19px] font-semibold leading-snug tracking-[-0.01em] text-white">
+                      $3+ Billion ADA Lawsuit Risk
+                    </h3>
+
+                    <p className="mt-3 text-[14px] leading-relaxed text-white/72">
+                      Thousands of ADA lawsuits target websites every year.
+                    </p>
+                  </div>
+
+                  <p className="mt-5 text-[13px] text-white/55">
+                    Trusted by agencies and product teams worldwide
+                  </p>
+                </div>
+              </ScrollReveal>
+              {/* ========================== PREMIUM RISK BLOCK END ========================== */}
             </div>
 
-            <ScrollReveal animation="fade-in-right" delay={400} duration={800}>
+            {/* ========================= PREMIUM DASHBOARD BLOCK START ========================= */}
+            <ScrollReveal animation="fade-in-right" delay={400} duration={900}>
               <div className="relative">
-                <div className="absolute -inset-8 bg-[#00d4aa]/[0.04] rounded-3xl blur-3xl" />
-                <div className="relative rounded-2xl overflow-hidden border border-white/[0.08] shadow-2xl shadow-black/40">
-                  <Image
-                    src="/images/dashboard.png"
-                    alt="AccessIQ Dashboard Overview"
-                    width={720}
-                    height={480}
-                    className="w-full h-auto"
-                  />
+                <div className="pointer-events-none absolute -inset-10 rounded-[40px] bg-[radial-gradient(circle_at_center,rgba(0,212,170,0.10),transparent_60%)] blur-3xl" />
+                <div className="pointer-events-none absolute -right-8 top-1/2 h-[260px] w-[260px] -translate-y-1/2 rounded-full bg-[#00d4aa]/8 blur-3xl" />
+
+                <div className="relative rounded-[26px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.05)_0%,rgba(255,255,255,0.02)_100%)] p-2 shadow-[0_60px_140px_rgba(0,0,0,0.7)]">
+                  <div className="pointer-events-none absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent" />
+
+                  <div className="relative overflow-hidden rounded-[22px] border border-white/[0.08] bg-[#0b1120]">
+                    <Image
+                      src="/images/dashboard.png"
+                      alt="AccessIQ Dashboard Overview"
+                      width={720}
+                      height={480}
+                      className="w-full h-auto scale-[1.01]"
+                    />
+                    <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(135deg,rgba(255,255,255,0.08)_0%,transparent_18%,transparent_75%,rgba(255,255,255,0.04)_100%)]" />
+                  </div>
                 </div>
               </div>
             </ScrollReveal>
+            {/* ========================== PREMIUM DASHBOARD BLOCK END ========================== */}
           </div>
         </div>
 
@@ -335,7 +386,7 @@ const PricingPageContent = () => {
               <div className="text-center mb-14">
                 <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[#00d4aa]/20 bg-[#00d4aa]/[0.06] mb-6">
                   <span className="text-[#00d4aa] text-[13px] font-medium">
-                    Pricing
+                    Transparent Pricing
                   </span>
                 </div>
 
@@ -344,6 +395,7 @@ const PricingPageContent = () => {
                   <br />
                   Plans for Every Business
                 </h2>
+
                 <p className="text-gray-400 text-base max-w-lg mx-auto leading-relaxed">
                   Expert audits, verified fixes, and continuous monitoring for
                   ADA and WCAG compliance.
@@ -495,73 +547,107 @@ const PricingPageContent = () => {
             }}
           />
 
-          <div className="container mx-auto relative">
-            <ScrollReveal animation="fade-in-up">
-              <div className="text-center mb-14">
-                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[#00d4aa]/20 bg-[#00d4aa]/[0.06] mb-6">
-                  <span className="text-[#00d4aa] text-[13px] font-medium">
-                    Enhance Your Plan
-                  </span>
-                </div>
+{/* ========================= PREMIUM ADD-ONS SECTION START ========================= */}
+<div className="container mx-auto relative">
+  <ScrollReveal animation="fade-in-up">
+    <div className="text-center mb-14">
+      <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[#00d4aa]/20 bg-[#00d4aa]/[0.06] mb-6">
+        <span className="text-[#00d4aa] text-[13px] font-medium">
+          Advanced Compliance Add-Ons
+        </span>
+      </div>
 
-                <h2 className="text-3xl md:text-4xl lg:text-[46px] font-bold text-white leading-tight mb-5">
-                  Add-On Services
-                </h2>
-                <p className="text-gray-400 text-base max-w-lg mx-auto leading-relaxed">
-                  All add-ons are delivered by senior accessibility experts and
-                  aligned with WCAG 2.1 AA &amp; ADA requirements.
-                </p>
-              </div>
-            </ScrollReveal>
+      <h2 className="text-3xl md:text-4xl lg:text-[46px] font-bold text-white leading-tight mb-5">
+        Optional Add-Ons for Advanced Compliance
+      </h2>
 
-            <ScrollReveal animation="fade-in-up" delay={200} stagger>
-              <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto">
-                {addOns.map((addon, index) => (
-                  <div
-                    key={index}
-                    className="rounded-2xl p-6 flex flex-col text-center"
-                    style={{
-                      background:
-                        "linear-gradient(180deg, #111d2e 0%, #0c1622 100%)",
-                      border: "1px solid rgba(255,255,255,0.08)",
-                    }}
-                  >
-                    <div className="flex justify-center mb-5">
-                      <div
-                        className="w-14 h-14 rounded-xl flex items-center justify-center"
-                        style={{ background: "rgba(0,212,170,0.10)" }}
-                      >
-                        {addon.icon}
-                      </div>
-                    </div>
-                    <h3 className="text-white text-lg font-bold mb-1">
-                      {addon.title}
-                    </h3>
-                    <p className="text-[#0088cc] text-sm font-medium underline underline-offset-2 mb-3">
-                      {addon.subtitle}
-                    </p>
-                    <p className="text-gray-400 text-[13px] leading-relaxed mb-4 flex-1">
-                      {addon.description}
-                    </p>
-                    {addon.price && (
-                      <div className="text-white text-2xl font-bold mb-5">
-                        {addon.price}
-                      </div>
-                    )}
-                    <button
-                      className="w-full flex items-center justify-center gap-2 text-white text-[13px] font-semibold py-2.5 rounded-full hover:opacity-90 transition-opacity"
-                      style={{
-                        background:
-                          "linear-gradient(135deg, #00d4aa, #0088cc)",
-                      }}
-                    >
-                      Request now
-                    </button>
-                  </div>
-                ))}
+      <p className="text-gray-400 text-base max-w-2xl mx-auto leading-relaxed">
+        Extend your accessibility program with expert-led remediation, legal
+        documentation, UX improvements, and custom support aligned with WCAG
+        2.1 AA and ADA requirements.
+      </p>
+    </div>
+  </ScrollReveal>
+
+  <ScrollReveal animation="fade-in-up" delay={200} stagger>
+    <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
+      {addOns.map((addon, index) => (
+        <div
+          key={index}
+          className="group relative rounded-2xl p-6 flex flex-col text-center transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_24px_60px_rgba(0,0,0,0.35)]"
+          style={{
+            background: "linear-gradient(180deg, #111d2e 0%, #0c1622 100%)",
+            border: addon.featured
+              ? "1px solid rgba(0,212,170,0.22)"
+              : "1px solid rgba(255,255,255,0.08)",
+            boxShadow: addon.featured
+              ? "0 0 24px rgba(0,212,170,0.08), 0 20px 60px rgba(0,0,0,0.22)"
+              : "none",
+          }}
+        >
+          {addon.featured && (
+            <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10">
+              <div
+                className="flex items-center gap-2 px-3.5 py-1.5 rounded-full text-white text-[11px] font-semibold"
+                style={{
+                  background: "linear-gradient(135deg, #00d4aa, #0088cc)",
+                  boxShadow: "0 8px 24px rgba(0,212,170,0.16)",
+                }}
+              >
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none">
+                  <path
+                    d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+                    fill="#FFD700"
+                  />
+                </svg>
+                Most Requested
               </div>
-            </ScrollReveal>
+            </div>
+          )}
+
+          <div className="flex justify-center mb-5 mt-2">
+            <div
+              className="w-14 h-14 rounded-xl flex items-center justify-center"
+              style={{
+                background: "rgba(0,212,170,0.10)",
+                boxShadow: "inset 0 1px 0 rgba(255,255,255,0.04)",
+              }}
+            >
+              {addon.icon}
+            </div>
           </div>
+
+          <h3 className="text-white text-[18px] font-bold mb-2">
+            {addon.title}
+          </h3>
+
+          <p className="text-[#22b8ff] text-sm font-medium mb-4">
+            {addon.subtitle}
+          </p>
+
+          <div className="text-white text-[18px] md:text-[20px] font-bold mb-4">
+            {addon.price}
+          </div>
+
+          <p className="text-gray-400 text-[14px] leading-relaxed mb-6 flex-1">
+            {addon.description}
+          </p>
+
+          <button
+            className="w-full flex items-center justify-center gap-2 text-white text-[14px] font-semibold py-3 rounded-full transition-all duration-300 hover:opacity-95 hover:scale-[1.01]"
+            style={{
+              background: "linear-gradient(135deg, #00d4aa, #0088cc)",
+              boxShadow: "0 12px 30px rgba(0,212,170,0.18)",
+            }}
+          >
+            {addon.buttonText}
+          </button>
+        </div>
+      ))}
+    </div>
+  </ScrollReveal>
+</div>
+{/* ========================== PREMIUM ADD-ONS SECTION END ========================== */}
         </div>
 
         {/* CTA SECTION */}
