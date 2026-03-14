@@ -19,7 +19,7 @@ const plans = [
       "Basic accessibility report",
     ],
     buttonText: "Run Free Scan",
-    buttonLink: "#",
+    buttonLink: "https://access-iq.vercel.app/scan",
     featured: false,
   },
   {

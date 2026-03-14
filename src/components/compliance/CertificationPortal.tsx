@@ -30,7 +30,7 @@ const CertificationPortal = () => {
           <div className="flex items-center justify-center gap-6 md:gap-10 flex-wrap mb-14">
             {[
               "Reduce Legal Risk",
-              "Meet WCAG 2.1 AA",
+              "Meet WCAG 2.2 AA",
               "Stay Compliant Automatically",
             ].map((badge) => (
               <div key={badge} className="flex items-center gap-2">
