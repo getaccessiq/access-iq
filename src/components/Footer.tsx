@@ -6,14 +6,31 @@ import Image from "next/image";
 import ScrollReveal from "./ScrollReveal";
 
 const footerLinks = {
-  pages: ["Audit Services", "Compliance Standards", "Pricing", "View Demo"],
-  company: ["About us", "Contact us", "Support 24/5", "Careers"],
-  resources: [
-    "WCAG checklist",
-    "Privacy policy",
-    "Terms of use",
-    "Accessibility Statement",
+  pages: [
+    { label: "Audit Services", href: "/audit" },
+    { label: "Compliance Standards", href: "/compliance-standards" },
+    { label: "Pricing", href: "/prices" },
+    { label: "View Demo", href: "https://demo.getaccessiq.com", external: true },
   ],
+  company: [
+    { label: "About us", href: "/about" },
+    { label: "Contact us", href: "/contact" },
+    { label: "Support 24/5", href: "/support" },
+    { label: "Careers", href: "/careers" },
+  ],
+  resources: [
+    { label: "WCAG checklist", href: "/wcag-checklist" },
+    { label: "Privacy policy", href: "/privacy-policy" },
+    { label: "Terms of use", href: "/terms-of-use" },
+    { label: "Accessibility Statement", href: "/accessibility-statement" },
+  ],
+};
+
+const socialLinks = {
+  youtube: "https://www.youtube.com/",
+  facebook: "https://www.facebook.com/",
+  instagram: "https://www.instagram.com/",
+  linkedin: "https://www.linkedin.com/",
 };
 
 const Footer = () => {
@@ -77,7 +94,6 @@ const Footer = () => {
                 />
               </Link>
 
-              {/* ========================= REAL BADGE IMAGE START ========================= */}
               <div className="mb-2">
                 <div className="relative inline-block rounded-[24px] border border-white/8 bg-white/[0.02] p-2 shadow-[0_18px_50px_rgba(0,0,0,0.28)]">
                   <Image
@@ -90,7 +106,6 @@ const Footer = () => {
                   />
                 </div>
               </div>
-              {/* ========================== REAL BADGE IMAGE END ========================== */}
             </div>
 
             {/* PAGES */}
@@ -100,13 +115,24 @@ const Footer = () => {
               </h4>
               <ul className="space-y-5">
                 {footerLinks.pages.map((item) => (
-                  <li key={item}>
-                    <Link
-                      href="#"
-                      className="text-gray-300 text-[15px] hover:text-white transition-colors"
-                    >
-                      {item}
-                    </Link>
+                  <li key={item.label}>
+                    {item.external ? (
+                      <a
+                        href={item.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-gray-300 text-[15px] hover:text-white transition-colors"
+                      >
+                        {item.label}
+                      </a>
+                    ) : (
+                      <Link
+                        href={item.href}
+                        className="text-gray-300 text-[15px] hover:text-white transition-colors"
+                      >
+                        {item.label}
+                      </Link>
+                    )}
                   </li>
                 ))}
               </ul>
@@ -119,12 +145,12 @@ const Footer = () => {
               </h4>
               <ul className="space-y-5">
                 {footerLinks.company.map((item) => (
-                  <li key={item}>
+                  <li key={item.label}>
                     <Link
-                      href="#"
+                      href={item.href}
                       className="text-gray-300 text-[15px] hover:text-white transition-colors"
                     >
-                      {item}
+                      {item.label}
                     </Link>
                   </li>
                 ))}
@@ -138,16 +164,16 @@ const Footer = () => {
               </h4>
               <ul className="space-y-5">
                 {footerLinks.resources.map((item) => (
-                  <li key={item}>
+                  <li key={item.label}>
                     <Link
-                      href="#"
+                      href={item.href}
                       className={`text-[15px] transition-colors ${
-                        item === "Accessibility Statement"
+                        item.label === "Accessibility Statement"
                           ? "text-[#36bfff] hover:text-white"
                           : "text-gray-300 hover:text-white"
                       }`}
                     >
-                      {item}
+                      {item.label}
                     </Link>
                   </li>
                 ))}
@@ -163,12 +189,7 @@ const Footer = () => {
               <ul className="space-y-5">
                 <li className="flex items-center gap-4">
                   <div className="flex items-center justify-center flex-shrink-0">
-                    <svg
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                    >
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
                       <path
                         d="M3 7.75C3 6.23122 4.23122 5 5.75 5H18.25C19.7688 5 21 6.23122 21 7.75V16.25C21 17.7688 19.7688 19 18.25 19H5.75C4.23122 19 3 17.7688 3 16.25V7.75Z"
                         stroke="#FDFDFD"
@@ -183,53 +204,54 @@ const Footer = () => {
                       />
                     </svg>
                   </div>
-                  <span className="text-gray-300 text-[15px]">
+                  <a
+                    href="mailto:support@getaccessiq.com"
+                    className="text-gray-300 text-[15px] hover:text-white transition-colors"
+                  >
                     support@getaccessiq.com
-                  </span>
+                  </a>
                 </li>
 
                 <li className="flex items-center gap-4">
                   <div className="flex items-center justify-center flex-shrink-0">
-                    <svg
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                    >
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
                       <path
                         d="M17.6252 14.174L20.2682 15.75C20.8142 16.076 21.0961 16.71 20.9711 17.334C20.4601 19.893 17.8902 21.533 15.3732 20.842C9.4342 19.212 4.79509 14.587 3.15909 8.635C2.46709 6.117 4.10519 3.54498 6.66519 3.03298L6.68204 3.02999C7.30704 2.90499 7.94419 3.18799 8.26919 3.73699L9.83218 6.376C10.3882 7.315 10.112 8.52398 9.20303 9.12798L7.54214 10.233C8.71414 13.04 10.9541 15.289 13.7531 16.459L14.8681 14.794C15.4771 13.887 16.6872 13.615 17.6252 14.174Z"
                         fill="#FDFDFD"
                       />
                     </svg>
                   </div>
-                  <span className="text-gray-300 text-[15px]">
+                  <a
+                    href="tel:+18332322730"
+                    className="text-gray-300 text-[15px] hover:text-white transition-colors"
+                  >
                     (833) 232-2730
-                  </span>
+                  </a>
                 </li>
 
-             <li className="flex items-start gap-4">
-  <div className="flex items-center justify-center flex-shrink-0 mt-1">
-    <svg
-      width="21"
-      height="24"
-      viewBox="0 0 19 22"
-      fill="none"
-    >
-      <path
-        d="M9.50112 0C4.26209 0 0 4.26209 0 9.50112C0 15.071 5.1742 18.4891 8.59795 20.7504L9.19038 21.1439C9.28427 21.2065 9.39269 21.2378 9.49999 21.2378C9.6073 21.2378 9.71573 21.2065 9.80963 21.1439L10.402 20.7504C13.8258 18.4891 19 15.071 19 9.50112C19.0022 4.26209 14.7401 0 9.50112 0ZM9.50112 12.2956C7.95747 12.2956 6.70667 11.0448 6.70667 9.50112C6.70667 7.95746 7.95747 6.70667 9.50112 6.70667C11.0448 6.70667 12.2956 7.95746 12.2956 9.50112C12.2956 11.0448 11.0448 12.2956 9.50112 12.2956Z"
-        fill="#FDFDFD"
-      />
-    </svg>
-  </div>
+                <li className="flex items-start gap-4">
+                  <div className="flex items-center justify-center flex-shrink-0 mt-1">
+                    <svg width="21" height="24" viewBox="0 0 19 22" fill="none">
+                      <path
+                        d="M9.50112 0C4.26209 0 0 4.26209 0 9.50112C0 15.071 5.1742 18.4891 8.59795 20.7504L9.19038 21.1439C9.28427 21.2065 9.39269 21.2378 9.49999 21.2378C9.6073 21.2378 9.71573 21.2065 9.80963 21.1439L10.402 20.7504C13.8258 18.4891 19 15.071 19 9.50112C19.0022 4.26209 14.7401 0 9.50112 0ZM9.50112 12.2956C7.95747 12.2956 6.70667 11.0448 6.70667 9.50112C6.70667 7.95746 7.95747 6.70667 9.50112 6.70667C11.0448 6.70667 12.2956 7.95746 12.2956 9.50112C12.2956 11.0448 11.0448 12.2956 9.50112 12.2956Z"
+                        fill="#FDFDFD"
+                      />
+                    </svg>
+                  </div>
 
-  <span className="max-w-[260px] text-gray-300 text-[15px] leading-[1.55]">
-    Assure Digital Group LLC,
-    <br />
-    15257 Amberly Dr Ste 367
-    <br />
-    Tampa, FL 33647, USA
-  </span>
-</li>
+                  <a
+                    href="https://maps.google.com/?q=15257+Amberly+Dr+Ste+367+Tampa+FL+33647+USA"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="max-w-[260px] text-gray-300 text-[15px] leading-[1.55] hover:text-white transition-colors"
+                  >
+                    Assure Digital Group LLC,
+                    <br />
+                    15257 Amberly Dr Ste 367
+                    <br />
+                    Tampa, FL 33647, USA
+                  </a>
+                </li>
               </ul>
             </div>
           </div>
@@ -251,8 +273,10 @@ const Footer = () => {
             {/* Social icons */}
             <div className="flex items-center gap-4">
               {/* YouTube */}
-              <Link
-                href="#"
+              <a
+                href={socialLinks.youtube}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.03] hover:bg-white/[0.06] hover:border-white/20 transition-all shadow-[0_10px_25px_rgba(0,0,0,0.18)]"
               >
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
@@ -261,11 +285,13 @@ const Footer = () => {
                     fill="#FDFDFD"
                   />
                 </svg>
-              </Link>
+              </a>
 
               {/* Facebook */}
-              <Link
-                href="#"
+              <a
+                href={socialLinks.facebook}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.03] hover:bg-white/[0.06] hover:border-white/20 transition-all shadow-[0_10px_25px_rgba(0,0,0,0.18)]"
               >
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
@@ -274,11 +300,13 @@ const Footer = () => {
                     fill="#FDFDFD"
                   />
                 </svg>
-              </Link>
+              </a>
 
               {/* Instagram */}
-              <Link
-                href="#"
+              <a
+                href={socialLinks.instagram}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.03] hover:bg-white/[0.06] hover:border-white/20 transition-all shadow-[0_10px_25px_rgba(0,0,0,0.18)]"
               >
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
@@ -294,11 +322,13 @@ const Footer = () => {
                   <circle cx="12" cy="12" r="4.2" stroke="#FDFDFD" strokeWidth="1.8" />
                   <circle cx="17.2" cy="6.8" r="1.2" fill="#FDFDFD" />
                 </svg>
-              </Link>
+              </a>
 
               {/* LinkedIn */}
-              <Link
-                href="#"
+              <a
+                href={socialLinks.linkedin}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.03] hover:bg-white/[0.06] hover:border-white/20 transition-all shadow-[0_10px_25px_rgba(0,0,0,0.18)]"
               >
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
@@ -307,41 +337,35 @@ const Footer = () => {
                     fill="#FDFDFD"
                   />
                 </svg>
-              </Link>
+              </a>
             </div>
 
             {/* Copyright / trademark / accessibility */}
-<div className="flex flex-col lg:flex-row items-center gap-2 lg:gap-4 text-center text-[13px] text-gray-400">
+            <div className="flex flex-col lg:flex-row items-center gap-2 lg:gap-4 text-center text-[13px] text-gray-400">
+              <span>© 2026 AccessIQ. All rights reserved.</span>
 
-  <span>
-    © 2026 AccessIQ. All rights reserved.
-  </span>
+              <span className="hidden lg:inline text-white/20">·</span>
 
-  <span className="hidden lg:inline text-white/20">·</span>
+              <span>A product of Assure Digital Group LLC</span>
 
-  <span>
-    A product of Assure Digital Group LLC
-  </span>
+              <span className="hidden lg:inline text-white/20">·</span>
 
-  <span className="hidden lg:inline text-white/20">·</span>
-
-  <Link
-    href="#"
-    className="inline-flex items-center gap-1.5 text-[#36bfff] hover:text-white transition-colors"
-  >
-    Accessibility Statement
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-      <path
-        d="M7 17L17 7M17 7H8M17 7V16"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  </Link>
-
-</div>
+              <Link
+                href="/accessibility-statement"
+                className="inline-flex items-center gap-1.5 text-[#36bfff] hover:text-white transition-colors"
+              >
+                Accessibility Statement
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                  <path
+                    d="M7 17L17 7M17 7H8M17 7V16"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </Link>
+            </div>
           </div>
         </ScrollReveal>
       </div>
