@@ -52,10 +52,11 @@ const Header = () => {
     };
   }, [signInModalOpen]);
 
-  const isActive = (href) => {
-    if (href === "/") return pathname === "/";
-    return pathname === href || pathname.startsWith(`${href}/`);
-  };
+  const isActive = (href: string) => {
+  if (href === "/") return pathname === "/";
+  return pathname === href || pathname.startsWith(`${href}/`);
+};
+
 
   const handleNotify = async () => {
     setNotifyError("");
@@ -104,12 +105,12 @@ const Header = () => {
     }
   };
 
-  const navLinkClass = (active) =>
+  const navLinkClass = (active: boolean) =>
     `relative inline-flex items-center text-[13px] font-medium transition-colors duration-200 ${
       active ? "text-white" : "text-gray-300 hover:text-[#00d4aa]"
     }`;
 
-  const mobileNavLinkClass = (active) =>
+  const mobileNavLinkClass = (active: boolean) =>
     `relative inline-flex w-fit items-center text-sm font-medium transition-colors duration-200 ${
       active ? "text-white" : "text-gray-300 hover:text-[#00d4aa]"
     }`;
