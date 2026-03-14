@@ -39,6 +39,24 @@ const serviceOptions = [
   { value: "not-sure", label: "Not sure – need guidance" },
 ];
 
+const helpCards = [
+  {
+    title: "Explore Our Help Center",
+    description: "Browse our knowledge base, accessibility guides, and compliance resources.",
+    cta: "Visit Help Center",
+  },
+  {
+    title: "Schedule a Personalized Demo",
+    description: "See how AccessIQ helps organizations achieve WCAG and ADA compliance.",
+    cta: "Book Your Demo",
+  },
+  {
+    title: "Accessibility Support",
+    description: "Get answers from our compliance experts and connect with a specialist.",
+    cta: "Start Live Chat",
+  },
+];
+
 function isValidEmail(email: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
@@ -187,7 +205,7 @@ function ChatIcon() {
 
 function CardIconShell({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white/[0.04] ring-1 ring-white/8">
+    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-[#1f6fff]/40 bg-white/[0.03]">
       {children}
     </div>
   );
@@ -195,21 +213,35 @@ function CardIconShell({ children }: { children: React.ReactNode }) {
 
 function InfoCard({
   label,
-  value,
-  icon,
+  children,
 }: {
   label: string;
-  value: string;
-  icon: React.ReactNode;
+  children: React.ReactNode;
 }) {
   return (
-    <div className="rounded-[22px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.035),rgba(255,255,255,0.02))] p-5 backdrop-blur-xl shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
+    <div className="rounded-[24px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.035),rgba(255,255,255,0.02))] px-5 py-5 backdrop-blur-xl shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
       <div className="text-[11px] font-semibold uppercase tracking-[0.24em] text-slate-400">
         {label}
       </div>
-      <div className="mt-3 flex items-start gap-3">
-        <CardIconShell>{icon}</CardIconShell>
-        <div className="whitespace-pre-line text-[15px] leading-7 text-slate-200">{value}</div>
+      <div className="mt-4">{children}</div>
+    </div>
+  );
+}
+
+function InfoRow({
+  icon,
+  children,
+  alignStart = false,
+}: {
+  icon: React.ReactNode;
+  children: React.ReactNode;
+  alignStart?: boolean;
+}) {
+  return (
+    <div className={`flex gap-4 ${alignStart ? "items-start" : "items-center"}`}>
+      <CardIconShell>{icon}</CardIconShell>
+      <div className={`${alignStart ? "pt-1" : ""} text-[15px] leading-8 text-slate-200`}>
+        {children}
       </div>
     </div>
   );
@@ -245,67 +277,6 @@ function HelpCard({
     </div>
   );
 }
-
-function TrustMiniCard({
-  title,
-  text,
-}: {
-  title: string;
-  text: string;
-}) {
-  return (
-    <div className="rounded-[18px] border border-white/8 bg-white/[0.03] p-4 backdrop-blur-xl">
-      <p className="text-sm font-semibold text-white">{title}</p>
-      <p className="mt-2 text-[13px] leading-6 text-slate-400">{text}</p>
-    </div>
-  );
-}
-
-const contactCards = [
-  {
-    label: "Email",
-    value: "support@getaccessiq.com",
-    icon: <EmailIcon />,
-  },
-  {
-    label: "Phone Number",
-    value: "(833) 232-2730",
-    icon: <PhoneIcon />,
-  },
-  {
-    label: "Address",
-    value: "15257 Amberly Dr Ste 367\nTampa, FL 33647, United States",
-    icon: <LocationIcon />,
-  },
-  {
-    label: "Service Hours",
-    value: "Monday - Friday 9:00 AM - 5:00 PM EST\nSaturday 9:00 AM - 2:00 PM EST",
-    icon: <ClockIcon />,
-  },
-  {
-    label: "Support Availability",
-    value: "Our accessibility specialists are available 24/7 via email and live chat.",
-    icon: <ChatIcon />,
-  },
-];
-
-const helpCards = [
-  {
-    title: "Explore Our Help Center",
-    description: "Browse our knowledge base, accessibility guides, and compliance resources.",
-    cta: "Visit Help Center",
-  },
-  {
-    title: "Schedule a Personalized Demo",
-    description: "See how AccessIQ helps organizations achieve WCAG and ADA compliance.",
-    cta: "Book Your Demo",
-  },
-  {
-    title: "Accessibility Support",
-    description: "Get answers from our compliance experts and connect with a specialist.",
-    cta: "Start Live Chat",
-  },
-];
 
 const ContactPageContent = () => {
   const [formData, setFormData] = useState<FormDataType>(initialFormData);
@@ -364,10 +335,10 @@ const ContactPageContent = () => {
     e.preventDefault();
 
     if (!validateForm()) {
-      setStatus("Some required fields are missing. Please review the highlighted fields below.");
-      setStatusType("error");
-      return;
-    }
+  setStatus("");
+  setStatusType("");
+  return;
+}
 
     setIsSubmitting(true);
     setStatus("");
@@ -481,7 +452,7 @@ const ContactPageContent = () => {
               }}
             >
               <div className="overflow-hidden rounded-[27px] bg-[linear-gradient(180deg,#111d2e_0%,#0c1622_100%)]">
-                <div className="grid lg:grid-cols-[40%_60%]">
+                <div className="grid lg:grid-cols-[38%_62%]">
                   <div className="border-b border-white/8 p-7 md:p-9 lg:border-b-0 lg:border-r lg:border-white/8 xl:p-10">
                     <div className="max-w-md">
                       <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-cyan-300/75">
@@ -497,14 +468,46 @@ const ContactPageContent = () => {
                     </div>
 
                     <div className="mt-8 space-y-4">
-                      {contactCards.map((item) => (
-                        <InfoCard
-                          key={item.label}
-                          label={item.label}
-                          value={item.value}
-                          icon={item.icon}
-                        />
-                      ))}
+                      <InfoCard label="Email">
+                        <InfoRow icon={<EmailIcon />}>
+                          <p className="break-all text-[15px] leading-7 text-slate-200">
+                            support@getaccessiq.com
+                          </p>
+                        </InfoRow>
+                      </InfoCard>
+
+                      <InfoCard label="Phone Number">
+                        <InfoRow icon={<PhoneIcon />}>
+                          <p className="text-[15px] leading-7 text-slate-200">(833) 232-2730</p>
+                        </InfoRow>
+                      </InfoCard>
+
+                      <InfoCard label="Address">
+                        <InfoRow icon={<LocationIcon />} alignStart>
+                          <div className="space-y-0.5 text-[15px] leading-7 text-slate-200">
+                            <div>Assure Digital Group LLC</div>
+                            <div>15257 Amberly Dr Ste 367</div>
+                            <div>Tampa, FL 33647, United States</div>
+                          </div>
+                        </InfoRow>
+                      </InfoCard>
+
+                      <InfoCard label="Service Hours">
+                        <InfoRow icon={<ClockIcon />} alignStart>
+                          <div className="space-y-0.5 text-[15px] leading-7 text-slate-200">
+                            <div className="whitespace-nowrap">Monday - Friday 9:00 AM - 5:00 PM EST</div>
+                            <div className="whitespace-nowrap">Saturday 9:00 AM - 2:00 PM EST</div>
+                          </div>
+                        </InfoRow>
+                      </InfoCard>
+
+                      <InfoCard label="Support Availability">
+                        <InfoRow icon={<ChatIcon />} alignStart>
+                          <p className="max-w-[280px] text-[15px] leading-7 text-slate-200">
+                            Our accessibility specialists are available 24/7 via email and live chat.
+                          </p>
+                        </InfoRow>
+                      </InfoCard>
                     </div>
                   </div>
 
@@ -664,57 +667,44 @@ const ContactPageContent = () => {
                         </div>
                       )}
 
-                      <div className="mt-2 border-t border-white/8 pt-5">
-                        <div className="flex flex-col gap-5 xl:flex-row xl:items-start xl:justify-between">
-                          <div className="max-w-[720px]">
-                            <p className="text-xs leading-6 text-slate-500">
+                      <div className="mt-2 border-t border-white/8 pt-6">
+                        <div className="flex flex-col gap-6 xl:flex-row xl:items-start xl:justify-between xl:gap-8">
+                          <div className="max-w-[760px]">
+                            <p className="text-[15px] leading-8 text-slate-500">
                               Fields marked with <span className="text-red-300">*</span> are required.
                               Our team will respond within one business day with the most relevant next steps.
                             </p>
 
-                            <div className="mt-4 flex flex-col gap-2 text-[12px] text-slate-400 sm:flex-row sm:flex-wrap sm:gap-4">
-                              <span className="inline-flex items-center gap-2">
+                            <div className="mt-5 space-y-3">
+                              <div className="inline-flex items-center gap-3 text-[15px] text-slate-300">
                                 <GradientCheckIcon />
-                                No-obligation consultation
-                              </span>
-                              <span className="inline-flex items-center gap-2">
+                                <span>No-obligation consultation</span>
+                              </div>
+                              <div className="inline-flex items-center gap-3 text-[15px] text-slate-300">
                                 <GradientCheckIcon />
-                                Reviewed by accessibility specialists
-                              </span>
-                              <span className="inline-flex items-center gap-2">
+                                <span>Reviewed by accessibility specialists</span>
+                              </div>
+                              <div className="inline-flex items-center gap-3 text-[15px] text-slate-300">
                                 <GradientCheckIcon />
-                                Response within one business day
-                              </span>
-                            </div>
-
-                            <div className="mt-6 grid gap-3 md:grid-cols-3">
-                              <TrustMiniCard
-                                title="Confidential Review"
-                                text="Your inquiry is reviewed privately by our accessibility team."
-                              />
-                              <TrustMiniCard
-                                title="Expert Guidance"
-                                text="We provide practical next steps based on your goals, risk, and compliance needs."
-                              />
-                              <TrustMiniCard
-                                title="Fast Response"
-                                text="Our team typically replies within one business day with the most relevant next step."
-                              />
+                                <span>Response within one business day</span>
+                              </div>
                             </div>
                           </div>
 
-                          <button
-                            type="submit"
-                            disabled={isSubmitting}
-                            className="inline-flex min-h-[54px] min-w-[220px] items-center justify-center gap-2 rounded-full px-7 py-3.5 text-sm font-semibold text-white transition-all duration-200 hover:scale-[1.01] hover:opacity-95 disabled:cursor-not-allowed disabled:opacity-60"
-                            style={{
-                              background: "linear-gradient(135deg, #00d4aa, #0088cc)",
-                              boxShadow: "0 10px 30px rgba(0, 136, 204, 0.22)",
-                            }}
-                          >
-                            {isSubmitting ? "Sending..." : "Submit Inquiry"}
-                            {!isSubmitting && <ArrowRightIcon />}
-                          </button>
+                          <div className="shrink-0 xl:pt-1">
+                            <button
+                              type="submit"
+                              disabled={isSubmitting}
+                              className="inline-flex min-h-[56px] min-w-[220px] items-center justify-center gap-2 rounded-full px-7 py-3.5 text-[15px] font-semibold text-white transition-all duration-200 hover:scale-[1.01] hover:opacity-95 disabled:cursor-not-allowed disabled:opacity-60"
+                              style={{
+                                background: "linear-gradient(135deg, #00d4aa, #0088cc)",
+                                boxShadow: "0 12px 30px rgba(0, 136, 204, 0.22)",
+                              }}
+                            >
+                              {isSubmitting ? "Sending..." : "Submit Inquiry"}
+                              {!isSubmitting && <ArrowRightIcon />}
+                            </button>
+                          </div>
                         </div>
                       </div>
                     </form>
