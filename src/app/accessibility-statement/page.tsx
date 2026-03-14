@@ -231,15 +231,21 @@ export default function AccessibilityStatementPage() {
                     issue, please contact us at:
                   </p>
 
-                  <div className="mt-6 space-y-1 text-gray-300">
-                    <p className="font-medium text-white">AccessIQ</p>
-                    <p>a product of Assure Digital Group LLC</p>
-                    <p>15257 Amberly Dr Ste 367</p>
-                    <p>Tampa, FL 33647</p>
-                    <p>United States</p>
-                    <p className="mt-2">Email: support@getaccessiq.com</p>
-                    <p>Phone: (833) 232-2730</p>
-                  </div>
+                 <div className="mt-6 text-gray-300">
+  <p className="font-medium text-white">AccessIQ</p>
+  <p>a product of Assure Digital Group LLC</p>
+
+  <div className="mt-2">
+    <p>15257 Amberly Dr Ste 367</p>
+    <p>Tampa, FL 33647</p>
+    <p>United States</p>
+  </div>
+
+  <div className="mt-3">
+    <p>Email: support@getaccessiq.com</p>
+    <p>Phone: (833) 232-2730</p>
+  </div>
+</div>
                 </section>
               </div>
             </div>
@@ -314,8 +320,7 @@ export default function AccessibilityStatementPage() {
                   <div className="mt-5 text-sm leading-relaxed text-gray-300">
                     <p className="font-medium text-white">Assure Digital Group LLC</p>
                     <p>15257 Amberly Dr Ste 367</p>
-                    <p>Tampa, FL 33647</p>
-                    <p>United States</p>
+                    <p>Tampa, FL 33647, United States</p>
                   </div>
                 </div>
 
