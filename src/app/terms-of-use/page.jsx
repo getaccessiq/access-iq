@@ -1,32 +1,12 @@
 import Link from "next/link";
 
-const standards = [
-  "WCAG 2.2 Level AA",
-  "ADA accessibility considerations",
-  "Section 508 guidance",
-  "EN 301 549 accessibility principles",
-];
-
-const measures = [
-  "Regular accessibility reviews of design, structure, and core user journeys",
-  "Automated accessibility testing tools",
-  "Manual accessibility checks and remediation reviews",
-  "Continuous monitoring and ongoing improvements",
-];
-
-const assessmentMethods = [
-  "Automated accessibility testing",
-  "Manual accessibility evaluation",
-  "Ongoing monitoring and periodic review",
-];
-
 const summaryItems = [
-  "We work toward WCAG 2.2 AA conformance.",
-  "Accessibility is reviewed on an ongoing basis.",
-  "Accessibility feedback can be sent directly to our support team.",
+  "Use of the website must comply with applicable laws and these terms.",
+  "Website content is provided for general informational purposes only.",
+  "Unauthorized access, copying, interference, or misuse is prohibited.",
 ];
 
-function CheckCard({ text }) {
+function InfoCard({ text }) {
   return (
     <div className="flex items-start gap-3 rounded-2xl border border-white/10 bg-[#0b1424] px-4 py-4">
       <div className="mt-0.5 shrink-0">
@@ -45,7 +25,7 @@ function CheckCard({ text }) {
   );
 }
 
-export default function AccessibilityStatementPage() {
+export default function TermsOfUsePage() {
   return (
     <main className="relative min-h-screen overflow-hidden bg-[#050b1a] text-white">
       <div
@@ -76,30 +56,32 @@ export default function AccessibilityStatementPage() {
         <div className="max-w-3xl">
           <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-[#00d4aa]/20 bg-[#00d4aa]/[0.06] px-4 py-2">
             <span className="text-[13px] font-medium text-[#00d4aa]">
-              Accessibility & Compliance
+              Legal & Compliance
             </span>
           </div>
 
           <h1 className="text-4xl font-bold tracking-tight leading-[1.05] md:text-5xl lg:text-6xl">
-            Accessibility Statement
+            Terms of Use
           </h1>
 
           <p className="mt-6 max-w-2xl text-lg leading-relaxed text-gray-300">
-            AccessIQ, a product of Assure Digital Group LLC, is committed to
-            improving digital accessibility for people with disabilities. We
-            continue to review and improve the usability of our website to
-            support broader and more inclusive access for all users.
+            These Terms of Use govern your access to and use of the AccessIQ
+            website, a product of Assure Digital Group LLC. By accessing or
+            using this website, you agree to these Terms of Use and to comply
+            with all applicable laws and regulations.
           </p>
 
           <div className="mt-6 flex flex-wrap gap-3">
-            {["WCAG 2.2 AA", "ADA", "Section 508", "EN 301 549"].map((item) => (
-              <div
-                key={item}
-                className="rounded-full border border-white/10 bg-white/[0.03] px-4 py-2 text-sm text-gray-200"
-              >
-                {item}
-              </div>
-            ))}
+            {["Website Use", "User Responsibilities", "Legal Terms", "AccessIQ"].map(
+              (item) => (
+                <div
+                  key={item}
+                  className="rounded-full border border-white/10 bg-white/[0.03] px-4 py-2 text-sm text-gray-200"
+                >
+                  {item}
+                </div>
+              )
+            )}
           </div>
         </div>
 
@@ -117,107 +99,159 @@ export default function AccessibilityStatementPage() {
               <div className="space-y-12">
                 <section>
                   <h2 className="text-2xl font-semibold tracking-tight">
-                    Our Commitment
+                    Acceptance of Terms
                   </h2>
                   <p className="mt-4 leading-relaxed text-gray-300">
-                    We strive to make our website accessible to the widest
-                    possible audience, regardless of technology or ability. Our
-                    goal is to reduce barriers for visitors who rely on
-                    assistive technologies such as screen readers, keyboard
-                    navigation, magnification software, captions, or voice input
-                    tools.
+                    By accessing or using this website, you agree to be bound by
+                    these Terms of Use and any related policies referenced on
+                    this website, including our Privacy Policy and Accessibility
+                    Statement. If you do not agree to these terms, you should
+                    not use the website.
                   </p>
                 </section>
 
                 <section>
                   <h2 className="text-2xl font-semibold tracking-tight">
-                    Accessibility Standards
+                    Permitted Use
                   </h2>
                   <p className="mt-4 leading-relaxed text-gray-300">
-                    Our website is designed with reference to the Web Content
-                    Accessibility Guidelines (WCAG) 2.2 Level AA and broader
-                    accessibility expectations associated with the Americans
-                    with Disabilities Act (ADA), Section 508, and EN 301 549.
+                    You may use this website solely for lawful business,
+                    informational, and evaluation purposes. You agree not to
+                    misuse the website, interfere with its operation, attempt
+                    unauthorized access, or use website content in violation of
+                    applicable law or these Terms of Use.
                   </p>
 
                   <div className="mt-6 grid gap-3 sm:grid-cols-2">
-                    {standards.map((item) => (
-                      <CheckCard key={item} text={item} />
+                    {[
+                      "Use the website only for lawful purposes",
+                      "Do not interfere with website functionality or security",
+                      "Do not attempt unauthorized access to systems or data",
+                      "Do not misuse forms, demo requests, scans, or contact features",
+                    ].map((item) => (
+                      <InfoCard key={item} text={item} />
                     ))}
                   </div>
                 </section>
 
                 <section>
                   <h2 className="text-2xl font-semibold tracking-tight">
-                    Conformance Status
+                    Intellectual Property
                   </h2>
                   <p className="mt-4 leading-relaxed text-gray-300">
-                    The Web Content Accessibility Guidelines (WCAG) define
-                    requirements for designers and developers to improve
-                    accessibility for people with disabilities. AccessIQ aims to
-                    conform to WCAG 2.2 Level AA for its public-facing website,
-                    while recognizing that accessibility is an ongoing process
-                    of evaluation and improvement.
+                    All website content, including text, graphics, branding,
+                    logos, designs, layouts, visual elements, and other
+                    materials, is owned by or licensed to AccessIQ, Assure
+                    Digital Group LLC, or their licensors unless otherwise
+                    stated. You may not reproduce, distribute, republish,
+                    modify, transmit, display, or create derivative works from
+                    website content without prior written permission.
                   </p>
                 </section>
 
                 <section>
                   <h2 className="text-2xl font-semibold tracking-tight">
-                    Accessibility Measures
+                    Informational Content Only
                   </h2>
                   <p className="mt-4 leading-relaxed text-gray-300">
-                    To support accessibility, we take the following measures:
-                  </p>
-
-                  <div className="mt-6 grid gap-3 sm:grid-cols-2">
-                    {measures.map((item) => (
-                      <CheckCard key={item} text={item} />
-                    ))}
-                  </div>
-                </section>
-
-                <section>
-                  <h2 className="text-2xl font-semibold tracking-tight">
-                    Assessment Approach
-                  </h2>
-                  <p className="mt-4 leading-relaxed text-gray-300">
-                    We evaluate accessibility using a combination of technical
-                    review, manual checks, and ongoing monitoring methods.
-                  </p>
-
-                  <div className="mt-6 grid gap-3 sm:grid-cols-2">
-                    {assessmentMethods.map((item) => (
-                      <CheckCard key={item} text={item} />
-                    ))}
-                  </div>
-                </section>
-
-                <section>
-                  <h2 className="text-2xl font-semibold tracking-tight">
-                    Limitations & Alternatives
-                  </h2>
-                  <p className="mt-4 leading-relaxed text-gray-300">
-                    Despite our efforts to improve accessibility, some content
-                    or areas of the website may not yet fully conform to all
-                    accessibility expectations in every scenario. Accessibility
-                    improvements are ongoing.
-                  </p>
-                  <p className="mt-4 leading-relaxed text-gray-300">
-                    If you encounter an accessibility barrier, please contact us
-                    and we will make reasonable efforts to provide the
-                    information, service, or support you need in an accessible
-                    format.
+                    The information provided on this website is for general
+                    informational purposes only. Nothing on this website
+                    constitutes legal advice, regulatory advice, compliance
+                    advice, or any other professional advice. Any reliance on
+                    website content is at your own risk.
                   </p>
                 </section>
 
                 <section>
                   <h2 className="text-2xl font-semibold tracking-tight">
-                    Ongoing Improvements
+                    Third-Party Links
                   </h2>
                   <p className="mt-4 leading-relaxed text-gray-300">
-                    Accessibility is an ongoing effort. We continue to review,
-                    test, and improve our website to support a more inclusive
-                    digital experience over time.
+                    This website may contain links to third-party websites,
+                    platforms, or services for convenience or reference.
+                    AccessIQ and Assure Digital Group LLC do not control and are
+                    not responsible for the content, availability, privacy
+                    practices, or policies of any third-party website or
+                    service.
+                  </p>
+                </section>
+
+                <section>
+                  <h2 className="text-2xl font-semibold tracking-tight">
+                    Disclaimer of Warranties
+                  </h2>
+                  <p className="mt-4 leading-relaxed text-gray-300">
+                    This website and all content made available through it are
+                    provided on an “as is” and “as available” basis, without
+                    warranties of any kind, whether express, implied, or
+                    statutory. To the fullest extent permitted by law, we
+                    disclaim all warranties, including warranties of accuracy,
+                    completeness, availability, merchantability, fitness for a
+                    particular purpose, and non-infringement.
+                  </p>
+                </section>
+
+                <section>
+                  <h2 className="text-2xl font-semibold tracking-tight">
+                    Limitation of Liability
+                  </h2>
+                  <p className="mt-4 leading-relaxed text-gray-300">
+                    To the fullest extent permitted by law, AccessIQ and Assure
+                    Digital Group LLC shall not be liable for any indirect,
+                    incidental, special, consequential, exemplary, or punitive
+                    damages, or for any loss of profits, data, goodwill, or
+                    business opportunity, arising out of or relating to your use
+                    of, or inability to use, this website.
+                  </p>
+                </section>
+
+                <section>
+                  <h2 className="text-2xl font-semibold tracking-tight">
+                    Suspension or Termination
+                  </h2>
+                  <p className="mt-4 leading-relaxed text-gray-300">
+                    We reserve the right to suspend, restrict, or terminate
+                    access to the website at any time, without notice, if we
+                    believe a user has violated these Terms of Use, applicable
+                    law, or the security or integrity of the website.
+                  </p>
+                </section>
+
+                <section>
+                  <h2 className="text-2xl font-semibold tracking-tight">
+                    Changes to These Terms
+                  </h2>
+                  <p className="mt-4 leading-relaxed text-gray-300">
+                    We may update these Terms of Use from time to time to
+                    reflect changes to the website, our services, our business
+                    operations, or legal requirements. Updated versions will be
+                    posted on this page with a revised effective date. Continued
+                    use of the website after any update constitutes acceptance
+                    of the revised Terms of Use.
+                  </p>
+                </section>
+
+                <section>
+                  <h2 className="text-2xl font-semibold tracking-tight">
+                    Governing Law
+                  </h2>
+                  <p className="mt-4 leading-relaxed text-gray-300">
+                    These Terms of Use shall be governed by and construed in
+                    accordance with the laws of the State of Florida, without
+                    regard to its conflict of law principles.
+                  </p>
+                </section>
+
+                <section>
+                  <h2 className="text-2xl font-semibold tracking-tight">
+                    Venue & Jurisdiction
+                  </h2>
+                  <p className="mt-4 leading-relaxed text-gray-300">
+                    To the extent permitted by law, any dispute arising out of
+                    or relating to these Terms of Use or your use of the website
+                    shall be brought exclusively in the state or federal courts
+                    located in Florida, and you consent to the jurisdiction of
+                    those courts.
                   </p>
                 </section>
 
@@ -226,9 +260,8 @@ export default function AccessibilityStatementPage() {
                     Contact Information
                   </h2>
                   <p className="mt-4 leading-relaxed text-gray-300">
-                    If you experience difficulty accessing content on this
-                    website, or if you would like to report an accessibility
-                    issue, please contact us at:
+                    If you have questions about these Terms of Use, you may
+                    contact us at:
                   </p>
 
                   <div className="mt-6 space-y-1 text-gray-300">
@@ -260,19 +293,27 @@ export default function AccessibilityStatementPage() {
                     Scope
                   </p>
                   <p className="text-sm leading-relaxed text-gray-300">
-                    This accessibility statement applies to the public-facing
-                    AccessIQ website operated by Assure Digital Group LLC.
+                    These Terms of Use apply to the AccessIQ website and related
+                    website content operated by Assure Digital Group LLC.
                   </p>
                 </div>
 
                 <div className="rounded-2xl border border-white/10 bg-[#0b1424] p-5">
-                  <h3 className="mb-3 text-lg font-semibold">
-                    Feedback & Support
-                  </h3>
+                  <h3 className="mb-3 text-lg font-semibold">Quick Summary</h3>
+                  <ul className="space-y-3 text-sm text-gray-300">
+                    {summaryItems.map((item) => (
+                      <li key={item} className="flex items-start gap-3">
+                        <span className="mt-1.5 h-2 w-2 rounded-full bg-[#00d4aa]" />
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div className="rounded-2xl border border-white/10 bg-[#0b1424] p-5">
+                  <h3 className="mb-3 text-lg font-semibold">Contact</h3>
                   <p className="text-sm leading-relaxed text-gray-300">
-                    If you encounter accessibility barriers or need assistance,
-                    please contact us and we will make reasonable efforts to
-                    support you.
+                    Questions about these terms can be directed to our team.
                   </p>
 
                   <div className="mt-5 space-y-4">
@@ -317,18 +358,6 @@ export default function AccessibilityStatementPage() {
                     <p>Tampa, FL 33647</p>
                     <p>United States</p>
                   </div>
-                </div>
-
-                <div className="rounded-2xl border border-white/10 bg-[#0b1424] p-5">
-                  <h3 className="mb-3 text-lg font-semibold">Quick Summary</h3>
-                  <ul className="space-y-3 text-sm text-gray-300">
-                    {summaryItems.map((item) => (
-                      <li key={item} className="flex items-start gap-3">
-                        <span className="mt-1.5 h-2 w-2 rounded-full bg-[#00d4aa]" />
-                        <span>{item}</span>
-                      </li>
-                    ))}
-                  </ul>
                 </div>
               </div>
             </aside>

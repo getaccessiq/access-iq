@@ -10,7 +10,7 @@ const footerLinks = {
     { label: "Audit Services", href: "/audit" },
     { label: "Compliance Standards", href: "/compliance-standards" },
     { label: "Pricing", href: "/prices" },
-    { label: "View Demo", href: "https://demo.getaccessiq.com", external: true },
+    { label: "View Demo", href: "https://accessiq.tech/", external: true },
   ],
   company: [
     { label: "About us", href: "/about" },
