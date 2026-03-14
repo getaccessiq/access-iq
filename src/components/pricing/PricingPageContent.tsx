@@ -34,8 +34,8 @@ const plans = [
       "Legal risk assessment (ADA)",
       "Accessibility verification",
     ],
-    buttonText: "Request Audit",
-    buttonLink: "#",
+    buttonText: "Expert Audit",
+    buttonLink: "https://accessiq.tech/monitoring-plans.html",
     featured: true,
   },
   {
@@ -51,7 +51,7 @@ const plans = [
       "Accessibility history tracking",
     ],
     buttonText: "Start Monitoring",
-    buttonLink: "#",
+    buttonLink: "https://accessiq.tech/monitoring-plans.html",
     featured: false,
   },
 ];
@@ -94,6 +94,7 @@ const addOns = [
     description: "Critical accessibility issues fixed within 48 hours.",
     price: "+25–40% project fee",
     buttonText: "Fix Issues Fast",
+    buttonLink: "/contact",
     featured: true,
   },
   {
@@ -127,6 +128,7 @@ const addOns = [
     description: "Compliance summary and documentation for legal teams.",
     price: "$1,500–$3,000",
     buttonText: "Get Legal Letter",
+    buttonLink: "/contact",
     featured: false,
   },
   {
@@ -160,6 +162,7 @@ const addOns = [
     description: "Accessible UX improvements for better user journeys.",
     price: "+25–40% project fee",
     buttonText: "Improve UX",
+    buttonLink: "/contact",
     featured: false,
   },
   {
@@ -200,9 +203,17 @@ const addOns = [
     description: "Custom accessibility requests for your business needs.",
     price: "Custom quote",
     buttonText: "Request Quote",
+    buttonLink: "/contact",
     featured: false,
   },
 ];
+
+const isExternalLink = (url = "") => /^https?:\/\//i.test(url);
+
+const getLinkProps = (url = "") =>
+  isExternalLink(url)
+    ? { target: "_blank", rel: "noopener noreferrer" }
+    : {};
 
 const PricingPageContent = () => {
   return (
@@ -239,8 +250,7 @@ const PricingPageContent = () => {
 
               <ScrollReveal animation="fade-in-up" delay={200}>
                 <h1 className="text-[34px] md:text-[42px] lg:text-[50px] font-bold leading-[1.15] text-white mb-6 tracking-tight">
-                  Compliance That Costs{" "}
-                  <br className="hidden md:block" />
+                  Compliance That Costs <br className="hidden md:block" />
                   Less Than One Lawsuit
                 </h1>
               </ScrollReveal>
@@ -254,17 +264,20 @@ const PricingPageContent = () => {
 
               <ScrollReveal animation="fade-in-up" delay={400}>
                 <div className="flex items-center gap-4 mb-10">
-                  <button className="relative overflow-hidden rounded-full bg-gradient-to-r from-[#00d4aa] to-[#0088cc] px-8 py-4 text-[15px] font-semibold text-white shadow-[0_14px_40px_rgba(0,212,170,0.30)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_18px_50px_rgba(0,212,170,0.38)]">
+                  <a
+                    href="https://access-iq.vercel.app/scan"
+                    {...getLinkProps("https://access-iq.vercel.app/scan")}
+                    className="relative overflow-hidden rounded-full bg-gradient-to-r from-[#00d4aa] to-[#0088cc] px-8 py-4 text-[15px] font-semibold text-white shadow-[0_14px_40px_rgba(0,212,170,0.30)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_18px_50px_rgba(0,212,170,0.38)]"
+                  >
                     <span className="relative z-10">
                       Start Free Accessibility Scan
                     </span>
                     <span className="pointer-events-none absolute inset-0 bg-[linear-gradient(135deg,rgba(255,255,255,0.18)_0%,transparent_35%,transparent_100%)]" />
-                  </button>
+                  </a>
 
                   <a
                     href="https://demo.getaccessiq.com"
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    {...getLinkProps("https://demo.getaccessiq.com")}
                     className="rounded-full border border-white/15 px-8 py-4 text-[15px] font-medium text-white transition-all duration-300 hover:-translate-y-0.5 hover:border-white/30 hover:bg-white/[0.03]"
                   >
                     View Live Demo
@@ -311,7 +324,6 @@ const PricingPageContent = () => {
                 </div>
               </ScrollReveal>
 
-              {/* ========================= PREMIUM RISK BLOCK START ========================= */}
               <ScrollReveal animation="fade-in-up" delay={600}>
                 <div className="mt-6 max-w-[500px]">
                   <div className="group relative overflow-hidden rounded-[18px] border border-white/10 bg-[#0b1630]/90 px-7 py-6 shadow-[0_20px_60px_rgba(0,0,0,0.45)] backdrop-blur-md transition-all duration-300 hover:-translate-y-[2px] hover:border-[#00d4aa]/25 hover:shadow-[0_30px_80px_rgba(0,0,0,0.6)]">
@@ -340,10 +352,8 @@ const PricingPageContent = () => {
                   </p>
                 </div>
               </ScrollReveal>
-              {/* ========================== PREMIUM RISK BLOCK END ========================== */}
             </div>
 
-            {/* ========================= PREMIUM DASHBOARD BLOCK START ========================= */}
             <ScrollReveal animation="fade-in-right" delay={400} duration={900}>
               <div className="relative">
                 <div className="pointer-events-none absolute -inset-10 rounded-[40px] bg-[radial-gradient(circle_at_center,rgba(0,212,170,0.10),transparent_60%)] blur-3xl" />
@@ -365,7 +375,6 @@ const PricingPageContent = () => {
                 </div>
               </div>
             </ScrollReveal>
-            {/* ========================== PREMIUM DASHBOARD BLOCK END ========================== */}
           </div>
         </div>
 
@@ -505,6 +514,7 @@ const PricingPageContent = () => {
 
                       <a
                         href={plan.buttonLink}
+                        {...getLinkProps(plan.buttonLink)}
                         className="w-full flex items-center justify-center gap-2 text-sm font-semibold py-3 rounded-full transition-opacity hover:opacity-90"
                         style={
                           plan.featured
@@ -547,107 +557,109 @@ const PricingPageContent = () => {
             }}
           />
 
-{/* ========================= PREMIUM ADD-ONS SECTION START ========================= */}
-<div className="container mx-auto relative">
-  <ScrollReveal animation="fade-in-up">
-    <div className="text-center mb-14">
-      <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[#00d4aa]/20 bg-[#00d4aa]/[0.06] mb-6">
-        <span className="text-[#00d4aa] text-[13px] font-medium">
-          Advanced Compliance Add-Ons
-        </span>
-      </div>
+          <div className="container mx-auto relative">
+            <ScrollReveal animation="fade-in-up">
+              <div className="text-center mb-14">
+                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[#00d4aa]/20 bg-[#00d4aa]/[0.06] mb-6">
+                  <span className="text-[#00d4aa] text-[13px] font-medium">
+                    Advanced Compliance Add-Ons
+                  </span>
+                </div>
 
-      <h2 className="text-3xl md:text-4xl lg:text-[46px] font-bold text-white leading-tight mb-5">
-        Optional Add-Ons for Advanced Compliance
-      </h2>
+                <h2 className="text-3xl md:text-4xl lg:text-[46px] font-bold text-white leading-tight mb-5">
+                  Optional Add-Ons for Advanced Compliance
+                </h2>
 
-      <p className="text-gray-400 text-base max-w-2xl mx-auto leading-relaxed">
-        Extend your accessibility program with expert-led remediation, legal
-        documentation, UX improvements, and custom support aligned with WCAG
-        2.1 AA and ADA requirements.
-      </p>
-    </div>
-  </ScrollReveal>
-
-  <ScrollReveal animation="fade-in-up" delay={200} stagger>
-    <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
-      {addOns.map((addon, index) => (
-        <div
-          key={index}
-          className="group relative rounded-2xl p-6 flex flex-col text-center transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_24px_60px_rgba(0,0,0,0.35)]"
-          style={{
-            background: "linear-gradient(180deg, #111d2e 0%, #0c1622 100%)",
-            border: addon.featured
-              ? "1px solid rgba(0,212,170,0.22)"
-              : "1px solid rgba(255,255,255,0.08)",
-            boxShadow: addon.featured
-              ? "0 0 24px rgba(0,212,170,0.08), 0 20px 60px rgba(0,0,0,0.22)"
-              : "none",
-          }}
-        >
-          {addon.featured && (
-            <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10">
-              <div
-                className="flex items-center gap-2 px-3.5 py-1.5 rounded-full text-white text-[11px] font-semibold"
-                style={{
-                  background: "linear-gradient(135deg, #00d4aa, #0088cc)",
-                  boxShadow: "0 8px 24px rgba(0,212,170,0.16)",
-                }}
-              >
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="none">
-                  <path
-                    d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
-                    fill="#FFD700"
-                  />
-                </svg>
-                Most Requested
+                <p className="text-gray-400 text-base max-w-2xl mx-auto leading-relaxed">
+                  Extend your accessibility program with expert-led remediation,
+                  legal documentation, UX improvements, and custom support
+                  aligned with WCAG 2.1 AA and ADA requirements.
+                </p>
               </div>
-            </div>
-          )}
+            </ScrollReveal>
 
-          <div className="flex justify-center mb-5 mt-2">
-            <div
-              className="w-14 h-14 rounded-xl flex items-center justify-center"
-              style={{
-                background: "rgba(0,212,170,0.10)",
-                boxShadow: "inset 0 1px 0 rgba(255,255,255,0.04)",
-              }}
-            >
-              {addon.icon}
-            </div>
+            <ScrollReveal animation="fade-in-up" delay={200} stagger>
+              <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
+                {addOns.map((addon, index) => (
+                  <div
+                    key={index}
+                    className="group relative rounded-2xl p-6 flex flex-col text-center transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_24px_60px_rgba(0,0,0,0.35)]"
+                    style={{
+                      background:
+                        "linear-gradient(180deg, #111d2e 0%, #0c1622 100%)",
+                      border: addon.featured
+                        ? "1px solid rgba(0,212,170,0.22)"
+                        : "1px solid rgba(255,255,255,0.08)",
+                      boxShadow: addon.featured
+                        ? "0 0 24px rgba(0,212,170,0.08), 0 20px 60px rgba(0,0,0,0.22)"
+                        : "none",
+                    }}
+                  >
+                    {addon.featured && (
+                      <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10">
+                        <div
+                          className="flex items-center gap-2 px-3.5 py-1.5 rounded-full text-white text-[11px] font-semibold"
+                          style={{
+                            background:
+                              "linear-gradient(135deg, #00d4aa, #0088cc)",
+                            boxShadow: "0 8px 24px rgba(0,212,170,0.16)",
+                          }}
+                        >
+                          <svg width="11" height="11" viewBox="0 0 24 24" fill="none">
+                            <path
+                              d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+                              fill="#FFD700"
+                            />
+                          </svg>
+                          Most Requested
+                        </div>
+                      </div>
+                    )}
+
+                    <div className="flex justify-center mb-5 mt-2">
+                      <div
+                        className="w-14 h-14 rounded-xl flex items-center justify-center"
+                        style={{
+                          background: "rgba(0,212,170,0.10)",
+                          boxShadow: "inset 0 1px 0 rgba(255,255,255,0.04)",
+                        }}
+                      >
+                        {addon.icon}
+                      </div>
+                    </div>
+
+                    <h3 className="text-white text-[18px] font-bold mb-2">
+                      {addon.title}
+                    </h3>
+
+                    <p className="text-[#22b8ff] text-sm font-medium mb-4">
+                      {addon.subtitle}
+                    </p>
+
+                    <div className="text-white text-[18px] md:text-[20px] font-bold mb-4">
+                      {addon.price}
+                    </div>
+
+                    <p className="text-gray-400 text-[14px] leading-relaxed mb-6 flex-1">
+                      {addon.description}
+                    </p>
+
+                    <a
+                      href={addon.buttonLink}
+                      {...getLinkProps(addon.buttonLink)}
+                      className="w-full flex items-center justify-center gap-2 text-white text-[14px] font-semibold py-3 rounded-full transition-all duration-300 hover:opacity-95 hover:scale-[1.01]"
+                      style={{
+                        background: "linear-gradient(135deg, #00d4aa, #0088cc)",
+                        boxShadow: "0 12px 30px rgba(0,212,170,0.18)",
+                      }}
+                    >
+                      {addon.buttonText}
+                    </a>
+                  </div>
+                ))}
+              </div>
+            </ScrollReveal>
           </div>
-
-          <h3 className="text-white text-[18px] font-bold mb-2">
-            {addon.title}
-          </h3>
-
-          <p className="text-[#22b8ff] text-sm font-medium mb-4">
-            {addon.subtitle}
-          </p>
-
-          <div className="text-white text-[18px] md:text-[20px] font-bold mb-4">
-            {addon.price}
-          </div>
-
-          <p className="text-gray-400 text-[14px] leading-relaxed mb-6 flex-1">
-            {addon.description}
-          </p>
-
-          <button
-            className="w-full flex items-center justify-center gap-2 text-white text-[14px] font-semibold py-3 rounded-full transition-all duration-300 hover:opacity-95 hover:scale-[1.01]"
-            style={{
-              background: "linear-gradient(135deg, #00d4aa, #0088cc)",
-              boxShadow: "0 12px 30px rgba(0,212,170,0.18)",
-            }}
-          >
-            {addon.buttonText}
-          </button>
-        </div>
-      ))}
-    </div>
-  </ScrollReveal>
-</div>
-{/* ========================== PREMIUM ADD-ONS SECTION END ========================== */}
         </div>
 
         {/* CTA SECTION */}
@@ -725,7 +737,12 @@ const PricingPageContent = () => {
                       Ensure your site is WCAG ADA compliant and minimizes legal
                       risk.
                     </p>
-                    <button className="inline-flex items-center gap-2 bg-white text-[#0b1a2a] font-semibold px-8 py-3.5 rounded-full hover:bg-gray-100 transition-colors text-sm cursor-pointer">
+
+                    <a
+                      href="https://accessiq.tech/monitoring-plans.html"
+                      {...getLinkProps("https://accessiq.tech/monitoring-plans.html")}
+                      className="inline-flex items-center gap-2 bg-white text-[#0b1a2a] font-semibold px-8 py-3.5 rounded-full hover:bg-gray-100 transition-colors text-sm cursor-pointer"
+                    >
                       Start Your Audit
                       <svg
                         width="18"
@@ -741,7 +758,7 @@ const PricingPageContent = () => {
                           strokeLinejoin="round"
                         />
                       </svg>
-                    </button>
+                    </a>
                   </div>
                 </div>
 

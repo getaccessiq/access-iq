@@ -4,66 +4,6 @@ import React, { useState } from "react";
 import AnimatedGradient from "../AnimatedGradient";
 import ScrollReveal from "../ScrollReveal";
 
-const helpCards = [
-  {
-    icon: (
-      <svg width="40" height="40" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M32.0006 4.66663C35.9718 4.66663 39.802 4.74961 43.4017 4.90361L43.5788 4.91143C46.6913 5.04447 49.259 5.15401 51.3574 5.57809C53.5993 6.03119 55.4462 6.86567 57.0734 8.50516C60.3118 11.7683 60.3468 15.8678 60.5606 21.9296C60.6297 23.8908 60.6673 25.9214 60.6673 28C60.6673 30.0786 60.6297 32.109 60.5606 34.0704C60.3468 40.132 60.3118 44.2317 57.0734 47.4946C55.4462 49.1344 53.5993 49.9688 51.3574 50.4218C49.2588 50.8458 46.6916 50.9554 43.5788 51.0885L43.4017 51.0962C41.4286 51.1808 39.3862 51.244 37.2897 51.2837C35.1641 51.3242 34.5961 51.3618 34.1308 51.5389C33.6644 51.7168 33.2313 52.0528 31.662 53.3984L25.8496 58.3829C25.1343 58.9962 24.2216 59.3333 23.2793 59.3333C21.1006 59.3328 19.3346 57.5666 19.334 55.388V51.0389C16.7052 50.9224 14.4928 50.7954 12.6439 50.4218C10.402 49.9688 8.555 49.1344 6.92774 47.4946C3.68948 44.2317 3.6546 40.132 3.44076 34.0704C3.37156 32.109 3.33398 30.0786 3.33398 28C3.33398 25.9214 3.37156 23.8908 3.44076 21.9296C3.6546 15.8679 3.68948 11.7683 6.92774 8.50516C8.555 6.86567 10.402 6.03119 12.6439 5.57809C14.7424 5.15401 17.3099 5.04447 20.4225 4.91143L20.5996 4.90361C24.1993 4.74961 28.0294 4.66663 32.0006 4.66663ZM21.3574 25.3333C19.885 25.3336 18.6908 26.5274 18.6908 28C18.6908 29.4725 19.885 30.6664 21.3574 30.6666H21.3809L21.6543 30.6536C22.9988 30.517 24.0475 29.3805 24.0475 28C24.0475 26.6193 22.9988 25.483 21.6543 25.3463L21.3809 25.3333H21.3574ZM32.011 25.3333C30.539 25.3341 29.3444 26.5277 29.3444 28C29.3444 29.4722 30.539 30.6658 32.011 30.6666H32.0372C33.5094 30.6661 34.7038 29.4722 34.7038 28C34.7038 26.5276 33.5094 25.3339 32.0372 25.3333H32.011ZM42.6673 25.3333C41.1948 25.3336 40.0006 26.5274 40.0006 28C40.0006 29.4725 41.1948 30.6664 42.6673 30.6666H42.6908C44.1636 30.6666 45.3574 29.4728 45.3574 28C45.3574 26.5272 44.1636 25.3333 42.6908 25.3333H42.6673Z" fill="url(#ctHelpGrad)" fillOpacity="0.8" />
-        <defs>
-          <linearGradient id="ctHelpGrad" x1="64.4576" y1="32" x2="3.33393" y2="32.0219" gradientUnits="userSpaceOnUse">
-            <stop stopColor="#3770FD" />
-            <stop offset="0.5" stopColor="#2FB8DC" />
-            <stop offset="1" stopColor="#00E19A" />
-          </linearGradient>
-        </defs>
-      </svg>
-    ),
-    title: "Explore Our Help Center",
-    description: "Browse our knowledge base, accessibility guides, and compliance resources.",
-    cta: "Visit Help Center",
-  },
-  {
-    icon: (
-      <svg width="40" height="40" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path fillRule="evenodd" clipRule="evenodd" d="M21.6 3.33337C23.0359 3.33337 24.2 4.50015 24.2 5.93943V8.56761C25.7411 8.54545 27.4091 8.54545 29.2099 8.54548H34.7901C36.5909 8.54545 38.2589 8.54545 39.8 8.56761V5.93943C39.8 4.50015 40.964 3.33337 42.4 3.33337C43.836 3.33337 45 4.50015 45 5.93943V8.79863C45.4701 8.84153 45.9227 8.89169 46.3581 8.95039C49.4784 9.37089 52.1059 10.2705 54.1923 12.362C56.2789 14.4535 57.1765 17.0869 57.596 20.2146C58 23.2271 58 27.0574 58 31.8094V37.4027C58 42.1547 58 45.9851 57.596 48.9976C57.1765 52.1254 56.2789 54.7587 54.1923 56.8502C52.1059 58.9416 49.4784 59.8414 46.3581 60.2619C43.3525 60.6667 39.5312 60.6667 34.7901 60.6667H29.2099C24.4688 60.6667 20.6474 60.6667 17.6419 60.2619C14.5215 59.8414 11.8943 58.9416 9.80763 56.8502C7.72099 54.7587 6.82347 52.1254 6.40395 48.9976C5.99987 45.9851 5.99995 42.155 6 37.403V31.8094C5.99995 27.0574 5.99987 23.227 6.40395 20.2146C6.82347 17.0869 7.72099 14.4535 9.80763 12.362C11.8943 10.2705 14.5215 9.37089 17.6419 8.95039C18.0774 8.89169 18.53 8.84153 19 8.79863V5.93943C19 4.50015 20.1641 3.33337 21.6 3.33337ZM11.237 26C11.2012 27.7222 11.2 29.7008 11.2 32V37.212C11.2 42.1998 11.2055 45.6784 11.5576 48.3032C11.8996 50.8528 12.5251 52.203 13.4846 53.1646C14.4441 54.1264 15.7911 54.7534 18.3349 55.0963C20.9534 55.4491 24.4239 55.4547 29.4 55.4547H34.6C39.5763 55.4547 43.0467 55.4491 45.6653 55.0963C48.2091 54.7534 49.556 54.1264 50.5155 53.1646C51.4749 52.203 52.1005 50.8528 52.4424 48.3032C52.7944 45.6784 52.8 42.1998 52.8 37.212V32C52.8 29.7008 52.7989 27.7222 52.7632 26H11.237Z" fill="url(#ctDemoGrad1)" fillOpacity="0.8" />
-        <path fillRule="evenodd" clipRule="evenodd" d="M18.666 35.3958C18.666 33.9233 19.8599 32.7291 21.3327 32.7291H21.3566C22.8294 32.7291 24.0233 33.9233 24.0233 35.3958C24.0233 36.8686 22.8294 38.0625 21.3566 38.0625H21.3327C19.8599 38.0625 18.666 36.8686 18.666 35.3958ZM29.3207 35.3958C29.3207 33.9233 30.5145 32.7291 31.9873 32.7291H32.0114C33.4842 32.7291 34.678 33.9233 34.678 35.3958C34.678 36.8686 33.4842 38.0625 32.0114 38.0625H31.9873C30.5145 38.0625 29.3207 36.8686 29.3207 35.3958ZM39.9754 35.3958C39.9754 33.9233 41.1692 32.7291 42.642 32.7291H42.666C44.1388 32.7291 45.3327 33.9233 45.3327 35.3958C45.3327 36.8686 44.1388 38.0625 42.666 38.0625H42.642C41.1692 38.0625 39.9754 36.8686 39.9754 35.3958ZM18.666 46.0625C18.666 44.5899 19.8599 43.3958 21.3327 43.3958H21.3566C22.8294 43.3958 24.0233 44.5899 24.0233 46.0625C24.0233 47.5353 22.8294 48.7291 21.3566 48.7291H21.3327C19.8599 48.7291 18.666 47.5353 18.666 46.0625ZM29.3207 46.0625C29.3207 44.5899 30.5145 43.3958 31.9873 43.3958H32.0114C33.4842 43.3958 34.678 44.5899 34.678 46.0625C34.678 47.5353 33.4842 48.7291 32.0114 48.7291H31.9873C30.5145 48.7291 29.3207 47.5353 29.3207 46.0625Z" fill="url(#ctDemoGrad2)" fillOpacity="0.8" />
-        <defs>
-          <linearGradient id="ctDemoGrad1" x1="61.4377" y1="32" x2="5.99995" y2="32.0173" gradientUnits="userSpaceOnUse">
-            <stop stopColor="#3770FD" />
-            <stop offset="0.5" stopColor="#2FB8DC" />
-            <stop offset="1" stopColor="#00E19A" />
-          </linearGradient>
-          <linearGradient id="ctDemoGrad2" x1="47.0956" y1="40.7291" x2="18.666" y2="40.7453" gradientUnits="userSpaceOnUse">
-            <stop stopColor="#3770FD" />
-            <stop offset="0.5" stopColor="#2FB8DC" />
-            <stop offset="1" stopColor="#00E19A" />
-          </linearGradient>
-        </defs>
-      </svg>
-    ),
-    title: "Schedule a Personalized Demo",
-    description: "See how AccessIQ helps organizations achieve WCAG and ADA compliance.",
-    cta: "Book Your Demo",
-  },
-  {
-    icon: (
-      <svg width="40" height="40" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M32.0006 4.66663C35.9718 4.66663 39.802 4.74961 43.4017 4.90361L43.5788 4.91143C46.6913 5.04447 49.259 5.15401 51.3574 5.57809C53.5993 6.03119 55.4462 6.86567 57.0734 8.50516C60.3118 11.7683 60.3468 15.8678 60.5606 21.9296C60.6297 23.8908 60.6673 25.9214 60.6673 28C60.6673 30.0786 60.6297 32.109 60.5606 34.0704C60.3468 40.132 60.3118 44.2317 57.0734 47.4946C55.4462 49.1344 53.5993 49.9688 51.3574 50.4218C49.2588 50.8458 46.6916 50.9554 43.5788 51.0885L43.4017 51.0962C41.4286 51.1808 39.3862 51.244 37.2897 51.2837C35.1641 51.3242 34.5961 51.3618 34.1308 51.5389C33.6644 51.7168 33.2313 52.0528 31.662 53.3984L25.8496 58.3829C25.1343 58.9962 24.2216 59.3333 23.2793 59.3333C21.1006 59.3328 19.3346 57.5666 19.334 55.388V51.0389C16.7052 50.9224 14.4928 50.7954 12.6439 50.4218C10.402 49.9688 8.555 49.1344 6.92774 47.4946C3.68948 44.2317 3.6546 40.132 3.44076 34.0704C3.37156 32.109 3.33398 30.0786 3.33398 28C3.33398 25.9214 3.37156 23.8908 3.44076 21.9296C3.6546 15.8679 3.68948 11.7683 6.92774 8.50516C8.555 6.86567 10.402 6.03119 12.6439 5.57809C14.7424 5.15401 17.3099 5.04447 20.4225 4.91143L20.5996 4.90361C24.1993 4.74961 28.0294 4.66663 32.0006 4.66663ZM21.3574 25.3333C19.885 25.3336 18.6908 26.5274 18.6908 28C18.6908 29.4725 19.885 30.6664 21.3574 30.6666H21.3809L21.6543 30.6536C22.9988 30.517 24.0475 29.3805 24.0475 28C24.0475 26.6193 22.9988 25.483 21.6543 25.3463L21.3809 25.3333H21.3574ZM32.011 25.3333C30.539 25.3341 29.3444 26.5277 29.3444 28C29.3444 29.4722 30.539 30.6658 32.011 30.6666H32.0372C33.5094 30.6661 34.7038 29.4722 34.7038 28C34.7038 26.5276 33.5094 25.3339 32.0372 25.3333H32.011ZM42.6673 25.3333C41.1948 25.3336 40.0006 26.5274 40.0006 28C40.0006 29.4725 41.1948 30.6664 42.6673 30.6666H42.6908C44.1636 30.6666 45.3574 29.4728 45.3574 28C45.3574 26.5272 44.1636 25.3333 42.6908 25.3333H42.6673Z" fill="url(#ctLiveChatGrad)" fillOpacity="0.8" />
-        <defs>
-          <linearGradient id="ctLiveChatGrad" x1="64.4576" y1="32" x2="3.33393" y2="32.0219" gradientUnits="userSpaceOnUse">
-            <stop stopColor="#3770FD" />
-            <stop offset="0.5" stopColor="#2FB8DC" />
-            <stop offset="1" stopColor="#00E19A" />
-          </linearGradient>
-        </defs>
-      </svg>
-    ),
-    title: "Accessibility Support",
-    description: "Get instant answers from our compliance experts. Connect with a specialist in real time.",
-    cta: "Start Live Chat",
-  },
-];
-
 type FormDataType = {
   firstName: string;
   email: string;
@@ -89,15 +29,283 @@ const initialFormData: FormDataType = {
 
 const serviceOptions = [
   { value: "", label: "Select a service" },
-  { value: "audit", label: "Accessibility Audit" },
-  { value: "remediation", label: "Remediation" },
-  { value: "monitoring", label: "Continuous Monitoring" },
-  { value: "consultation", label: "Compliance Consultation" },
+  { value: "audit", label: "Accessibility Audit (ADA / WCAG)" },
+  { value: "scan", label: "Quick Accessibility Scan" },
+  { value: "remediation", label: "Accessibility Remediation" },
+  { value: "compliance", label: "ADA / WCAG Compliance Consultation" },
+  { value: "monitoring", label: "Continuous Accessibility Monitoring" },
+  { value: "training", label: "Accessibility Training" },
+  { value: "enterprise", label: "Enterprise Accessibility Program" },
+  { value: "not-sure", label: "Not sure – need guidance" },
 ];
 
 function isValidEmail(email: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
+
+function GradientCheckIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+      <defs>
+        <linearGradient id="gCheck" x1="18" y1="10" x2="2" y2="10" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#3770FD" />
+          <stop offset="0.5" stopColor="#2FB8DC" />
+          <stop offset="1" stopColor="#00E19A" />
+        </linearGradient>
+      </defs>
+      <circle cx="10" cy="10" r="8.5" fill="url(#gCheck)" fillOpacity="0.14" />
+      <path
+        d="M6 10.3L8.6 12.9L14 7.5"
+        stroke="url(#gCheck)"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+function ArrowRightIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M5 12H19" stroke="white" strokeWidth="1.8" strokeLinecap="round" />
+      <path
+        d="M13 6L19 12L13 18"
+        stroke="white"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+function EmailIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <defs>
+        <linearGradient id="mailGrad" x1="20" y1="12" x2="4" y2="12" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#3770FD" />
+          <stop offset="0.5" stopColor="#2FB8DC" />
+          <stop offset="1" stopColor="#00E19A" />
+        </linearGradient>
+      </defs>
+      <path
+        d="M4 7.5C4 6.67 4.67 6 5.5 6H18.5C19.33 6 20 6.67 20 7.5V16.5C20 17.33 19.33 18 18.5 18H5.5C4.67 18 4 17.33 4 16.5V7.5Z"
+        stroke="url(#mailGrad)"
+        strokeWidth="1.8"
+      />
+      <path
+        d="M5 7L10.94 11.46C11.57 11.93 12.43 11.93 13.06 11.46L19 7"
+        stroke="url(#mailGrad)"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+function PhoneIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <defs>
+        <linearGradient id="phoneGrad" x1="20" y1="12" x2="4" y2="12" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#3770FD" />
+          <stop offset="0.5" stopColor="#2FB8DC" />
+          <stop offset="1" stopColor="#00E19A" />
+        </linearGradient>
+      </defs>
+      <path
+        d="M15.95 14.55L13.9 16.6C10.95 15.1 8.9 13.05 7.4 10.1L9.45 8.05C9.75 7.75 9.85 7.31 9.72 6.91L8.82 4.2C8.65 3.69 8.17 3.34 7.63 3.34H4.5C3.84 3.34 3.3 3.88 3.34 4.54C3.64 9.37 5.7 13.99 9.17 17.46C12.64 20.93 17.26 22.99 22.09 23.29C22.75 23.33 23.29 22.79 23.29 22.13V19C23.29 18.46 22.94 17.98 22.43 17.81L19.72 16.91C19.32 16.78 18.88 16.88 18.58 17.18L16.53 19.23"
+        transform="scale(.78) translate(1.6 1)"
+        stroke="url(#phoneGrad)"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+function LocationIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <defs>
+        <linearGradient id="locGrad" x1="18" y1="12.75" x2="6" y2="12.75" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#3770FD" />
+          <stop offset="0.5" stopColor="#2FB8DC" />
+          <stop offset="1" stopColor="#00E19A" />
+        </linearGradient>
+      </defs>
+      <path
+        d="M12 21C12 21 18 15.6 18 10.5C18 7.19 15.31 4.5 12 4.5C8.69 4.5 6 7.19 6 10.5C6 15.6 12 21 12 21Z"
+        stroke="url(#locGrad)"
+        strokeWidth="1.8"
+      />
+      <circle cx="12" cy="10.5" r="2.2" stroke="url(#locGrad)" strokeWidth="1.8" />
+    </svg>
+  );
+}
+
+function ClockIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <defs>
+        <linearGradient id="clockGrad" x1="20.25" y1="12" x2="3.75" y2="12" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#3770FD" />
+          <stop offset="0.5" stopColor="#2FB8DC" />
+          <stop offset="1" stopColor="#00E19A" />
+        </linearGradient>
+      </defs>
+      <circle cx="12" cy="12" r="8.25" stroke="url(#clockGrad)" strokeWidth="1.8" />
+      <path d="M12 7.8V12L15.2 13.9" stroke="url(#clockGrad)" strokeWidth="1.8" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function ChatIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <defs>
+        <linearGradient id="chatGrad" x1="19.25" y1="12.5" x2="4.75" y2="12.5" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#3770FD" />
+          <stop offset="0.5" stopColor="#2FB8DC" />
+          <stop offset="1" stopColor="#00E19A" />
+        </linearGradient>
+      </defs>
+      <path
+        d="M7 17.25L4.75 19V7.75C4.75 6.78 5.53 6 6.5 6H17.5C18.47 6 19.25 6.78 19.25 7.75V15.25C19.25 16.22 18.47 17 17.5 17H7Z"
+        stroke="url(#chatGrad)"
+        strokeWidth="1.8"
+        strokeLinejoin="round"
+      />
+      <path d="M8.5 11.5H15.5" stroke="url(#chatGrad)" strokeWidth="1.8" strokeLinecap="round" />
+      <path d="M8.5 8.8H13.7" stroke="url(#chatGrad)" strokeWidth="1.8" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function CardIconShell({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white/[0.04] ring-1 ring-white/8">
+      {children}
+    </div>
+  );
+}
+
+function InfoCard({
+  label,
+  value,
+  icon,
+}: {
+  label: string;
+  value: string;
+  icon: React.ReactNode;
+}) {
+  return (
+    <div className="rounded-[22px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.035),rgba(255,255,255,0.02))] p-5 backdrop-blur-xl shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
+      <div className="text-[11px] font-semibold uppercase tracking-[0.24em] text-slate-400">
+        {label}
+      </div>
+      <div className="mt-3 flex items-start gap-3">
+        <CardIconShell>{icon}</CardIconShell>
+        <div className="whitespace-pre-line text-[15px] leading-7 text-slate-200">{value}</div>
+      </div>
+    </div>
+  );
+}
+
+function HelpCard({
+  title,
+  description,
+  cta,
+}: {
+  title: string;
+  description: string;
+  cta: string;
+}) {
+  return (
+    <div className="flex flex-col rounded-[26px] border border-[#d9f5ef] bg-white p-6 shadow-[0_16px_40px_rgba(0,0,0,0.06)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_24px_55px_rgba(0,0,0,0.10)]">
+      <div
+        className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl"
+        style={{ background: "rgba(0,212,170,0.10)" }}
+      >
+        <GradientCheckIcon />
+      </div>
+
+      <h3 className="text-[20px] font-semibold tracking-[-0.02em] text-[#0b0f1a]">{title}</h3>
+      <p className="mt-2 flex-1 text-[15px] leading-7 text-slate-500">{description}</p>
+
+      <button
+        className="mt-6 inline-flex w-fit items-center gap-2 rounded-full px-5 py-2.5 text-[13px] font-semibold text-white transition-opacity hover:opacity-90"
+        style={{ background: "linear-gradient(135deg, #00d4aa, #0088cc)" }}
+      >
+        {cta}
+      </button>
+    </div>
+  );
+}
+
+function TrustMiniCard({
+  title,
+  text,
+}: {
+  title: string;
+  text: string;
+}) {
+  return (
+    <div className="rounded-[18px] border border-white/8 bg-white/[0.03] p-4 backdrop-blur-xl">
+      <p className="text-sm font-semibold text-white">{title}</p>
+      <p className="mt-2 text-[13px] leading-6 text-slate-400">{text}</p>
+    </div>
+  );
+}
+
+const contactCards = [
+  {
+    label: "Email",
+    value: "support@getaccessiq.com",
+    icon: <EmailIcon />,
+  },
+  {
+    label: "Phone Number",
+    value: "(833) 232-2730",
+    icon: <PhoneIcon />,
+  },
+  {
+    label: "Address",
+    value: "15257 Amberly Dr Ste 367\nTampa, FL 33647, United States",
+    icon: <LocationIcon />,
+  },
+  {
+    label: "Service Hours",
+    value: "Monday - Friday 9:00 AM - 5:00 PM EST\nSaturday 9:00 AM - 2:00 PM EST",
+    icon: <ClockIcon />,
+  },
+  {
+    label: "Support Availability",
+    value: "Our accessibility specialists are available 24/7 via email and live chat.",
+    icon: <ChatIcon />,
+  },
+];
+
+const helpCards = [
+  {
+    title: "Explore Our Help Center",
+    description: "Browse our knowledge base, accessibility guides, and compliance resources.",
+    cta: "Visit Help Center",
+  },
+  {
+    title: "Schedule a Personalized Demo",
+    description: "See how AccessIQ helps organizations achieve WCAG and ADA compliance.",
+    cta: "Book Your Demo",
+  },
+  {
+    title: "Accessibility Support",
+    description: "Get answers from our compliance experts and connect with a specialist.",
+    cta: "Start Live Chat",
+  },
+];
 
 const ContactPageContent = () => {
   const [formData, setFormData] = useState<FormDataType>(initialFormData);
@@ -156,7 +364,7 @@ const ContactPageContent = () => {
     e.preventDefault();
 
     if (!validateForm()) {
-      setStatus("Please complete all required fields and correct any highlighted errors.");
+      setStatus("Some required fields are missing. Please review the highlighted fields below.");
       setStatusType("error");
       return;
     }
@@ -190,19 +398,17 @@ const ContactPageContent = () => {
       } else {
         setStatus(result?.error || "Something went wrong. Please try again.");
         setStatusType("error");
-        console.error(result);
       }
-    } catch (error) {
+    } catch {
       setStatus("Failed to send message. Please try again.");
       setStatusType("error");
-      console.error(error);
     } finally {
       setIsSubmitting(false);
     }
   };
 
   const inputBaseClass =
-    "w-full rounded-2xl border bg-[#08111f]/90 px-4 py-3.5 text-sm text-white placeholder:text-slate-500 outline-none transition-all duration-200 focus:border-cyan-300/50 focus:ring-4 focus:ring-cyan-400/10";
+    "w-full rounded-2xl border bg-[#08111f]/95 px-4 py-3.5 text-sm text-white placeholder:text-slate-500 outline-none transition-all duration-200 focus:border-cyan-300/50 focus:ring-4 focus:ring-cyan-400/10";
   const inputNormalClass = "border-white/10";
   const inputErrorClass = "border-red-400/60 ring-4 ring-red-400/10";
 
@@ -238,8 +444,8 @@ const ContactPageContent = () => {
 
             <ScrollReveal animation="fade-in-up" delay={240}>
               <p className="mx-auto mt-6 max-w-3xl text-base leading-8 text-slate-300 sm:text-lg lg:text-[20px]">
-                Get expert guidance on accessibility compliance, ADA risk, and practical
-                next steps to improve your website and reduce legal exposure.
+                Get expert guidance on accessibility compliance, ADA risk, and practical next
+                steps to improve your website and reduce legal exposure.
               </p>
             </ScrollReveal>
 
@@ -256,21 +462,7 @@ const ContactPageContent = () => {
                     key={badge}
                     className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-sm font-medium text-slate-200 backdrop-blur-xl transition duration-300 hover:border-cyan-300/25 hover:bg-white/[0.06] hover:text-white"
                   >
-                    <svg
-                      width="16"
-                      height="16"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      className="text-cyan-300"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        clipRule="evenodd"
-                        d="M12.057 1.75C14.248 1.75 15.969 1.75001 17.312 1.93101C18.689 2.11601 19.781 2.50301 20.639 3.36101C21.497 4.21901 21.884 5.31099 22.069 6.68799C22.25 8.03099 22.25 9.75199 22.25 11.943V12.057C22.25 14.248 22.25 15.969 22.069 17.312C21.884 18.689 21.497 19.781 20.639 20.639C19.781 21.497 18.689 21.884 17.312 22.069C15.969 22.25 14.248 22.25 12.057 22.25H11.943C9.75199 22.25 8.03099 22.25 6.68799 22.069C5.31099 21.884 4.21901 21.497 3.36101 20.639C2.50301 19.781 2.11601 18.689 1.93101 17.312C1.75001 15.969 1.75 14.248 1.75 12.057V11.943C1.75 9.75199 1.75001 8.03099 1.93101 6.68799C2.11601 5.31099 2.50301 4.21901 3.36101 3.36101C4.21901 2.50301 5.31099 2.11601 6.68799 1.93101C8.03099 1.75001 9.75199 1.75 11.943 1.75H12.057ZM16.676 8.26299C17.083 8.63599 17.11 9.269 16.737 9.676L11.237 15.676C11.053 15.877 10.794 15.994 10.522 16C10.249 16.006 9.98599 15.9 9.79299 15.707L7.29299 13.207C6.90199 12.817 6.90199 12.183 7.29299 11.793C7.68299 11.402 8.31701 11.402 8.70701 11.793L10.469 13.554L15.263 8.324C15.636 7.917 16.269 7.88999 16.676 8.26299Z"
-                        fill="currentColor"
-                      />
-                    </svg>
+                    <GradientCheckIcon />
                     <span>{badge}</span>
                   </div>
                 ))}
@@ -305,94 +497,14 @@ const ContactPageContent = () => {
                     </div>
 
                     <div className="mt-8 space-y-4">
-                      {[
-                        {
-                          label: "Email",
-                          value: "support@getaccessiq.com",
-                          icon: (
-                            <svg width="36" height="36" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                              <circle cx="24" cy="24" r="24" fill="#FAE9E9" fillOpacity="0.08" />
-                              <path fillRule="evenodd" clipRule="evenodd" d="M26.92 14.7868C24.967 14.7377 23.033 14.7377 21.08 14.7868L21.0218 14.7883C19.497 14.8265 18.27 14.8574 17.2867 15.0286C16.2572 15.2079 15.4205 15.5518 14.7136 16.2613C14.0097 16.9679 13.6676 17.7926 13.4918 18.8054C13.3243 19.7698 13.2988 20.9668 13.2672 22.4496L13.2659 22.5084C13.2447 23.5047 13.2447 24.4952 13.2659 25.4916L13.2672 25.5503C13.2988 27.0332 13.3243 28.2302 13.4918 29.1946C13.6676 30.2074 14.0097 31.0321 14.7136 31.7386C15.4205 32.4482 16.2572 32.7921 17.2867 32.9714C18.27 33.1426 19.497 33.1734 21.0218 33.2117L21.08 33.2132C23.033 33.2622 24.967 33.2622 26.92 33.2132L26.9782 33.2117C28.503 33.1734 29.73 33.1426 30.7133 32.9714C31.7428 32.7921 32.5795 32.4482 33.2864 31.7386C33.9903 31.0321 34.3324 30.2074 34.5082 29.1946C34.6757 28.2302 34.7012 27.0332 34.7328 25.5503L34.7341 25.4916C34.7553 24.4952 34.7553 23.5047 34.7341 22.5084L34.7328 22.4496C34.7012 20.9668 34.6757 19.7698 34.5082 18.8054C34.3324 17.7926 33.9903 16.9679 33.2864 16.2613C32.5795 15.5518 31.7428 15.2079 30.7133 15.0286C29.73 14.8574 28.503 14.8266 26.9782 14.7883L26.92 14.7868ZM19.3818 19.8545C19.0253 19.6437 18.5653 19.7619 18.3545 20.1184C18.1437 20.475 18.2619 20.9349 18.6184 21.1457L21.5604 22.8851C22.4313 23.4 23.1827 23.7501 24.0001 23.7501C24.8175 23.7501 25.569 23.4 26.4398 22.8851L29.3818 21.1457C29.7384 20.9349 29.8565 20.475 29.6457 20.1184C29.4349 19.7619 28.975 19.6437 28.6184 19.8545L25.6764 21.594C24.832 22.0931 24.3831 22.2501 24.0001 22.2501C23.6171 22.2501 23.1682 22.0931 22.3238 21.594L19.3818 19.8545Z" fill="url(#ctEmailGrad)" fillOpacity="0.8" />
-                              <defs>
-                                <linearGradient id="ctEmailGrad" x1="36.1714" y1="24" x2="13.25" y2="24.0091" gradientUnits="userSpaceOnUse">
-                                  <stop stopColor="#3770FD" />
-                                  <stop offset="0.5" stopColor="#2FB8DC" />
-                                  <stop offset="1" stopColor="#00E19A" />
-                                </linearGradient>
-                              </defs>
-                            </svg>
-                          ),
-                        },
-                        {
-                          label: "Phone Number",
-                          value: "(833) 232-2730",
-                          icon: (
-                            <svg width="36" height="36" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                              <circle cx="24" cy="24" r="24" fill="#FAE9E9" fillOpacity="0.08" />
-                              <path d="M29.6252 25.674L32.2682 27.25C32.8142 27.576 33.0961 28.21 32.9711 28.834C32.4601 31.393 29.8902 33.033 27.3732 32.342C21.4342 30.712 16.7951 26.087 15.1591 20.135C14.4671 17.617 16.1052 15.045 18.6652 14.533L18.682 14.53C19.307 14.405 19.9442 14.688 20.2692 15.237L21.8322 17.876C22.3882 18.815 22.112 20.024 21.203 20.628L19.5421 21.733C20.7141 24.54 22.9541 26.789 25.7531 27.959L26.8681 26.294C27.4771 25.387 28.6872 25.115 29.6252 25.674Z" fill="url(#ctPhoneGrad)" fillOpacity="0.8" />
-                              <defs>
-                                <linearGradient id="ctPhoneGrad" x1="34.1904" y1="23.5006" x2="15" y2="23.5072" gradientUnits="userSpaceOnUse">
-                                  <stop stopColor="#3770FD" />
-                                  <stop offset="0.5" stopColor="#2FB8DC" />
-                                  <stop offset="1" stopColor="#00E19A" />
-                                </linearGradient>
-                              </defs>
-                            </svg>
-                          ),
-                        },
-                        {
-                          label: "Address",
-                          value: "15257 Amberly Dr Ste 367\nTampa, FL 33647, United States",
-                          icon: (
-                            <svg width="36" height="36" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                              <circle cx="24" cy="24" r="24" fill="#FAE9E9" fillOpacity="0.08" />
-                              <path d="M25.1691 13.3828C19.9301 13.3828 15.668 17.6449 15.668 22.8839C15.668 28.4538 20.8422 31.8719 24.2659 34.1332L24.8583 34.5267C24.9522 34.5893 25.0607 34.6206 25.168 34.6206C25.2753 34.6206 25.3837 34.5893 25.4776 34.5267L26.07 34.1332C29.4938 31.8719 34.668 28.4538 34.668 22.8839C34.6702 17.6449 30.4081 13.3828 25.1691 13.3828ZM25.1691 25.6784C23.6254 25.6784 22.3746 24.4276 22.3746 22.8839C22.3746 21.3403 23.6254 20.0895 25.1691 20.0895C26.7127 20.0895 27.9635 21.3403 27.9635 22.8839C27.9635 24.4276 26.7127 25.6784 25.1691 25.6784Z" fill="url(#ctLocationGrad)" fillOpacity="0.8" />
-                              <defs>
-                                <linearGradient id="ctLocationGrad" x1="35.924" y1="24.0017" x2="15.668" y2="24.0079" gradientUnits="userSpaceOnUse">
-                                  <stop stopColor="#3770FD" />
-                                  <stop offset="0.5" stopColor="#2FB8DC" />
-                                  <stop offset="1" stopColor="#00E19A" />
-                                </linearGradient>
-                              </defs>
-                            </svg>
-                          ),
-                        },
-                      ].map((item) => (
-                        <div
+                      {contactCards.map((item) => (
+                        <InfoCard
                           key={item.label}
-                          className="rounded-2xl border border-white/8 bg-white/[0.04] p-5 backdrop-blur-xl"
-                        >
-                          <div className="text-[11px] font-semibold uppercase tracking-[0.24em] text-slate-400">
-                            {item.label}
-                          </div>
-                          <div className="mt-3 flex items-start gap-3">
-                            <div className="shrink-0">{item.icon}</div>
-                            <div className="whitespace-pre-line text-[15px] leading-7 text-slate-200">
-                              {item.value}
-                            </div>
-                          </div>
-                        </div>
+                          label={item.label}
+                          value={item.value}
+                          icon={item.icon}
+                        />
                       ))}
-
-                      <div className="rounded-2xl border border-white/8 bg-white/[0.04] p-5 backdrop-blur-xl">
-                        <div className="text-[11px] font-semibold uppercase tracking-[0.24em] text-slate-400">
-                          Service Hours
-                        </div>
-                        <p className="mt-3 text-[15px] leading-7 text-slate-200">
-                          Monday - Friday 9:00 AM - 5:00 PM EST
-                          <br />
-                          Saturday 9:00 AM - 2:00 PM EST
-                        </p>
-                      </div>
-
-                      <div className="rounded-2xl border border-white/8 bg-white/[0.04] p-5 backdrop-blur-xl">
-                        <div className="text-[11px] font-semibold uppercase tracking-[0.24em] text-slate-400">
-                          Support Availability
-                        </div>
-                        <p className="mt-3 text-[15px] leading-7 text-slate-200">
-                          Our accessibility specialists are available 24/7 via email and live chat.
-                        </p>
-                      </div>
                     </div>
                   </div>
 
@@ -405,14 +517,14 @@ const ContactPageContent = () => {
                         Request Your Consultation
                       </h2>
                       <p className="mt-3 text-[15px] leading-7 text-slate-400">
-                        Tell us about your accessibility needs and our team will get back to you
-                        with the right next steps.
+                        Tell us about your accessibility needs and our team will review your
+                        request and get back to you with the most relevant next steps.
                       </p>
                     </div>
 
                     <form onSubmit={handleSubmit} className="mt-8 space-y-5" noValidate>
                       <div className="grid gap-5 md:grid-cols-2">
-                        <div className="md:col-span-1">
+                        <div>
                           <label
                             htmlFor="firstName"
                             className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.24em] text-slate-400"
@@ -437,7 +549,7 @@ const ContactPageContent = () => {
                           )}
                         </div>
 
-                        <div className="md:col-span-1">
+                        <div>
                           <label
                             htmlFor="email"
                             className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.24em] text-slate-400"
@@ -553,11 +665,43 @@ const ContactPageContent = () => {
                       )}
 
                       <div className="mt-2 border-t border-white/8 pt-5">
-                        <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-                          <p className="max-w-[540px] text-xs leading-6 text-slate-500">
-                            Fields marked with <span className="text-red-300">*</span> are required.
-                            Our team will respond within one business day with the most relevant next steps.
-                          </p>
+                        <div className="flex flex-col gap-5 xl:flex-row xl:items-start xl:justify-between">
+                          <div className="max-w-[720px]">
+                            <p className="text-xs leading-6 text-slate-500">
+                              Fields marked with <span className="text-red-300">*</span> are required.
+                              Our team will respond within one business day with the most relevant next steps.
+                            </p>
+
+                            <div className="mt-4 flex flex-col gap-2 text-[12px] text-slate-400 sm:flex-row sm:flex-wrap sm:gap-4">
+                              <span className="inline-flex items-center gap-2">
+                                <GradientCheckIcon />
+                                No-obligation consultation
+                              </span>
+                              <span className="inline-flex items-center gap-2">
+                                <GradientCheckIcon />
+                                Reviewed by accessibility specialists
+                              </span>
+                              <span className="inline-flex items-center gap-2">
+                                <GradientCheckIcon />
+                                Response within one business day
+                              </span>
+                            </div>
+
+                            <div className="mt-6 grid gap-3 md:grid-cols-3">
+                              <TrustMiniCard
+                                title="Confidential Review"
+                                text="Your inquiry is reviewed privately by our accessibility team."
+                              />
+                              <TrustMiniCard
+                                title="Expert Guidance"
+                                text="We provide practical next steps based on your goals, risk, and compliance needs."
+                              />
+                              <TrustMiniCard
+                                title="Fast Response"
+                                text="Our team typically replies within one business day with the most relevant next step."
+                              />
+                            </div>
+                          </div>
 
                           <button
                             type="submit"
@@ -569,13 +713,8 @@ const ContactPageContent = () => {
                             }}
                           >
                             {isSubmitting ? "Sending..." : "Submit Inquiry"}
+                            {!isSubmitting && <ArrowRightIcon />}
                           </button>
-                        </div>
-
-                        <div className="mt-4 flex flex-col gap-2 text-[12px] text-slate-500 sm:flex-row sm:flex-wrap sm:gap-4">
-                          <span>✓ No-obligation consultation</span>
-                          <span>✓ Reviewed by accessibility specialists</span>
-                          <span>✓ Response within one business day</span>
                         </div>
                       </div>
                     </form>
@@ -604,33 +743,12 @@ const ContactPageContent = () => {
           <ScrollReveal animation="fade-in-up" delay={200} stagger>
             <div className="mt-10 grid gap-6 md:grid-cols-3">
               {helpCards.map((card) => (
-                <div
+                <HelpCard
                   key={card.title}
-                  className="flex flex-col rounded-[26px] border border-[#d9f5ef] bg-white p-6 shadow-[0_16px_40px_rgba(0,0,0,0.06)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_24px_55px_rgba(0,0,0,0.10)]"
-                >
-                  <div
-                    className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl"
-                    style={{ background: "rgba(0,212,170,0.10)" }}
-                  >
-                    {card.icon}
-                  </div>
-
-                  <h3 className="text-[20px] font-semibold tracking-[-0.02em] text-[#0b0f1a]">
-                    {card.title}
-                  </h3>
-                  <p className="mt-2 flex-1 text-[15px] leading-7 text-slate-500">
-                    {card.description}
-                  </p>
-
-                  <button
-                    className="mt-6 inline-flex w-fit items-center gap-2 rounded-full px-5 py-2.5 text-[13px] font-semibold text-white transition-opacity hover:opacity-90"
-                    style={{
-                      background: "linear-gradient(135deg, #00d4aa, #0088cc)",
-                    }}
-                  >
-                    {card.cta}
-                  </button>
-                </div>
+                  title={card.title}
+                  description={card.description}
+                  cta={card.cta}
+                />
               ))}
             </div>
           </ScrollReveal>
