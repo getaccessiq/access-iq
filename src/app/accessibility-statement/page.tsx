@@ -26,7 +26,7 @@ const summaryItems = [
   "Accessibility feedback can be sent directly to our support team.",
 ];
 
-function CheckCard({ text }) {
+function CheckCard({ text }: { text: string }) {
   return (
     <div className="flex items-start gap-3 rounded-2xl border border-white/10 bg-[#0b1424] px-4 py-4">
       <div className="mt-0.5 shrink-0">
