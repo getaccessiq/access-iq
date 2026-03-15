@@ -150,11 +150,11 @@ const HeroSection = () => {
 
               <div className="flex flex-wrap items-center justify-center gap-3 text-[12px] font-medium text-white/45 md:text-[13px]">
                 <span>ADA</span>
-                <span>|</span>
+                <span>•</span>
                 <span>WCAG</span>
-                <span>|</span>
+                <span>•</span>
                 <span>Section 508</span>
-                <span>|</span>
+                <span>•</span>
                 <span>EN 301 549</span>
               </div>
             </div>

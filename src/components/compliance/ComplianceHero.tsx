@@ -40,7 +40,7 @@ const ComplianceHero = () => {
                     </svg>
                   </div>
                   <span className="text-white text-[14px] md:text-[15px] font-medium tracking-[-0.01em]">
-                    ADA &amp; WCAG Compliance Without Legal Risk
+                    Prevent ADA Lawsuits Before They Happen
                   </span>
                 </div>
 
@@ -87,7 +87,7 @@ const ComplianceHero = () => {
                     </svg>
                   </div>
                   <span className="text-[16px] md:text-[17px] leading-relaxed">
-                    Thousands of ADA lawsuits are filed against websites every year.
+                    Over 4,000 ADA website lawsuits are filed every year in the U.S.
                   </span>
                 </div>
 
