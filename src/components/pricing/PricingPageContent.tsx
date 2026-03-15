@@ -34,26 +34,26 @@ const plans = [
       "Legal risk assessment (ADA)",
       "Accessibility verification",
     ],
-    buttonText: "Expert Audit",
-    buttonLink: "https://accessiq.tech/monitoring-plans.html",
+    buttonText: "View Audit Plans",
+    buttonLink: "/audit-pricing",
     featured: true,
   },
-  {
-    label: "Professional",
-    title: "Accessibility Monitoring",
-    price: "from $49",
-    period: "/month",
-    description: "Automated scans with manual spot checks and trend reports.",
-    features: [
-      "Automated accessibility scans",
-      "Weekly / daily monitoring",
-      "Alerts for new violations",
-      "Accessibility history tracking",
-    ],
-    buttonText: "Start Monitoring",
-    buttonLink: "https://accessiq.tech/monitoring-plans.html",
-    featured: false,
-  },
+ {
+  label: "Professional",
+  title: "Accessibility Monitoring",
+  price: "from $49",
+  period: "/month",
+  description: "Automated scans with manual spot checks",
+  features: [
+    "Automated accessibility scans",
+    "Weekly / daily monitoring",
+    "Alerts for new violations",
+    "Accessibility history tracking",
+  ],
+  buttonText: "View Monitoring Plans",
+  buttonLink: "/monitoring-pricing",
+  featured: false,
+}
 ];
 
 const addOns = [
