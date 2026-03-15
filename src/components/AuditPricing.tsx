@@ -129,14 +129,7 @@ export default function AccessIQAuditPricingSection() {
       </div>
 
       <div className="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
-        <div className="mb-8 flex justify-start">
-          <Link
-            href="/prices"
-            className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-4 py-2 text-sm text-cyan-300 transition hover:border-cyan-300/40 hover:bg-cyan-400/10 hover:text-white"
-          >
-            ← Back to Pricing
-          </Link>
-        </div>
+        
 
         {/* Header */}
         <div className="mx-auto max-w-3xl text-center">
@@ -155,6 +148,7 @@ export default function AccessIQAuditPricingSection() {
             Compare our three manual audit packages at a glance, then review the
             full deliverables below in a detailed comparison table.
           </p>
+          <div className="mx-auto mt-12 h-px max-w-4xl bg-gradient-to-r from-transparent via-cyan-400/20 to-transparent" />
         </div>
 
         {/* Compact pricing cards */}
