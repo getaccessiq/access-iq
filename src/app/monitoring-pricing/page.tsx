@@ -1,5 +1,5 @@
 import Header from "@/components/Header";
-import AuditPricing from "@/components/AuditPricing";
+import MonitorPricing from "@/components/MonitorPricing";
 import Footer from "@/components/Footer";
 
 export default function Page() {
@@ -8,7 +8,7 @@ export default function Page() {
       <Header />
 
       <main className="pt-24">
-        <AuditPricing />
+        <MonitorPricing />
       </main>
 
       <Footer />
