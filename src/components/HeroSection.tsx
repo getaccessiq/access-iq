@@ -83,7 +83,7 @@ const HeroSection = () => {
               <ScrollReveal animation="fade-in-up" delay={360}>
                 <div className="mb-7 flex flex-col items-start gap-3 sm:flex-row sm:items-center">
                   <Link
-                    href="/scan"
+                    href="https://access-iq.vercel.app/scan"
                     className="inline-flex min-w-[250px] items-center justify-center rounded-full bg-gradient-to-r from-[#22d9c9] to-[#25beff] px-8 py-4 text-[15px] font-semibold text-white shadow-[0_16px_40px_rgba(36,191,255,0.22)] transition-all duration-300 hover:scale-[1.015] hover:shadow-[0_22px_48px_rgba(36,191,255,0.30)]"
                   >
                     Run Free Accessibility Scan
