@@ -33,7 +33,7 @@ const monitoringPlans: MonitoringPlan[] = [
     idealFor:
       "Best for brochure sites, small business websites, and single-site monitoring.",
     highlights: [
-      "Up to 500 pages monitored",
+      "Monitor up to 500 pages monthly",
       "Weekly automated scans",
       "Email alerts for new issues",
       "Basic reporting dashboard",
@@ -52,7 +52,7 @@ const monitoringPlans: MonitoringPlan[] = [
     idealFor:
       "Best for SaaS products, marketing teams, and growing multi-page websites.",
     highlights: [
-      "Up to 6000 pages monitored",
+      "Monitor up to 6,000 pages monthly",
       "Daily automated scans",
       "Email + Slack alerts",
       "Advanced reporting dashboard",

@@ -2,6 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
+import Link from "next/link";
 import AnimatedGradient from "./AnimatedGradient";
 import ScrollReveal from "./ScrollReveal";
 
@@ -10,149 +11,124 @@ const HeroSection = () => {
     <section className="relative overflow-hidden bg-[#06101a]">
       <AnimatedGradient />
 
+      {/* soft ambient glows */}
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute left-[-8%] top-[8%] h-[420px] w-[420px] rounded-full bg-[#18d4c0]/10 blur-[120px]" />
+        <div className="absolute right-[-6%] top-[14%] h-[440px] w-[440px] rounded-full bg-[#229dff]/10 blur-[140px]" />
+      </div>
+
       <div className="relative z-10">
-        <div className="mx-auto max-w-[1400px] px-4 md:px-6 lg:px-8 pt-[145px] md:pt-[160px] lg:pt-[175px] pb-10">
-          <div className="grid lg:grid-cols-2 gap-10 lg:gap-8 items-center min-h-[520px]">
+        <div className="mx-auto max-w-[1400px] px-4 md:px-6 lg:px-8 pt-[124px] md:pt-[136px] lg:pt-[146px] pb-12 md:pb-14 lg:pb-16">
+          <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-10 min-h-[500px]">
             {/* Left side */}
-            <div className="max-w-[560px]">
-              <ScrollReveal animation="fade-in-up" delay={180}>
-                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[#1c93b3]/40 bg-[#0e2234]/70 mb-6">
+            <div className="max-w-[590px]">
+              <ScrollReveal animation="fade-in-up" delay={120}>
+                <div className="mb-6 inline-flex items-center gap-2.5 rounded-full border border-[#1d8fb4]/35 bg-[#0d2235]/65 px-4 py-2.5 shadow-[0_0_0_1px_rgba(255,255,255,0.02)] backdrop-blur-md">
                   <svg
-                    width="16"
-                    height="16"
+                    width="15"
+                    height="15"
                     viewBox="0 0 16 16"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
                     aria-hidden="true"
+                    className="shrink-0"
                   >
                     <defs>
                       <linearGradient
-                        id="trustGrad0"
-                        x1="14.6654"
-                        y1="8.00065"
-                        x2="1.33203"
-                        y2="8.00065"
+                        id="heroTrustGradA"
+                        x1="0.8"
+                        y1="8"
+                        x2="15.2"
+                        y2="8"
                         gradientUnits="userSpaceOnUse"
                       >
-                        <stop stopColor="#2865C7" />
-                        <stop offset="1" stopColor="#24A9AC" />
-                      </linearGradient>
-                      <linearGradient
-                        id="trustGrad1"
-                        x1="10.6654"
-                        y1="8.00065"
-                        x2="5.33203"
-                        y2="8.00065"
-                        gradientUnits="userSpaceOnUse"
-                      >
-                        <stop stopColor="#2865C7" />
-                        <stop offset="1" stopColor="#24A9AC" />
-                      </linearGradient>
-                      <linearGradient
-                        id="trustGrad2"
-                        x1="14.6654"
-                        y1="8.5"
-                        x2="1.33203"
-                        y2="8.5"
-                        gradientUnits="userSpaceOnUse"
-                      >
-                        <stop stopColor="#2865C7" />
-                        <stop offset="1" stopColor="#24A9AC" />
+                        <stop stopColor="#19d7c3" />
+                        <stop offset="1" stopColor="#28a9ff" />
                       </linearGradient>
                     </defs>
                     <path
-                      d="M7.9987 14.6673C11.6806 14.6673 14.6654 11.6825 14.6654 8.00065C14.6654 4.31875 11.6806 1.33398 7.9987 1.33398C4.3168 1.33398 1.33203 4.31875 1.33203 8.00065C1.33203 11.6825 4.3168 14.6673 7.9987 14.6673Z"
-                      stroke="url(#trustGrad0)"
-                      strokeWidth="1.33333"
+                      d="M8 1.5V14.5M1.5 8H14.5M3 3L13 13M13 3L3 13"
+                      stroke="url(#heroTrustGradA)"
+                      strokeWidth="1.4"
                       strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <path
-                      d="M7.9987 1.33398C6.28685 3.13142 5.33203 5.51848 5.33203 8.00065C5.33203 10.4828 6.28685 12.8699 7.9987 14.6673C9.71054 12.8699 10.6654 10.4828 10.6654 8.00065C10.6654 5.51848 9.71054 3.13142 7.9987 1.33398Z"
-                      stroke="url(#trustGrad1)"
-                      strokeWidth="1.33333"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <path
-                      d="M1.33203 8H14.6654"
-                      stroke="url(#trustGrad2)"
-                      strokeWidth="1.33333"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
                     />
                   </svg>
-                  <span className="text-white text-[13px] font-semibold">
+
+                  <span className="text-[13px] font-semibold tracking-[-0.01em] text-white">
                     Trusted Accessibility Experts
                   </span>
                 </div>
               </ScrollReveal>
 
-              <ScrollReveal animation="fade-in-up" delay={260}>
-                <h1 className="text-white font-semibold tracking-[-0.04em] leading-[0.96] text-[40px] md:text-[52px] xl:text-[64px] mb-5">
+              <ScrollReveal animation="fade-in-up" delay={200}>
+                <h1 className="mb-6 text-[42px] font-semibold leading-[0.94] tracking-[-0.05em] text-white md:text-[56px] xl:text-[68px]">
                   Enterprise WCAG
                   <br />
-                  & ADA Compliance{" "}
-                  <span className="bg-gradient-to-r from-[#1fd8c4] via-[#20c7ff] to-[#2b9dff] bg-clip-text text-transparent">
+                  & ADA Compliance
+                  <br />
+                  <span className="bg-gradient-to-r from-[#1fd8c4] via-[#22cfff] to-[#2f98ff] bg-clip-text text-transparent">
                     Platform.
                   </span>
                 </h1>
               </ScrollReveal>
 
-              <ScrollReveal animation="fade-in-up" delay={340}>
-                <p className="text-white/78 text-[16px] md:text-[18px] leading-[1.6] mb-8 max-w-[540px]">
+              <ScrollReveal animation="fade-in-up" delay={280}>
+                <p className="mb-8 max-w-[560px] text-[16px] leading-[1.65] text-white/80 md:text-[18px]">
                   Automated monitoring, expert audits, and AI-powered tools for
                   continuous accessibility compliance. Ensure your website meets
                   the latest ADA & WCAG standards.
                 </p>
               </ScrollReveal>
 
-              <ScrollReveal animation="fade-in-up" delay={420}>
-                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 mb-8">
-                  <button
-                    onClick={() => (window.location.href = "https://access-iq.vercel.app/scan")}
-                    className="bg-gradient-to-r from-[#22d9c9] to-[#25beff] text-white text-[15px] font-semibold px-7 py-3.5 rounded-full shadow-[0_12px_35px_rgba(36,191,255,0.25)] hover:opacity-95 transition-opacity"
+              <ScrollReveal animation="fade-in-up" delay={360}>
+                <div className="mb-7 flex flex-col items-start gap-3 sm:flex-row sm:items-center">
+                  <Link
+                    href="/scan"
+                    className="inline-flex min-w-[250px] items-center justify-center rounded-full bg-gradient-to-r from-[#22d9c9] to-[#25beff] px-8 py-4 text-[15px] font-semibold text-white shadow-[0_16px_40px_rgba(36,191,255,0.22)] transition-all duration-300 hover:scale-[1.015] hover:shadow-[0_22px_48px_rgba(36,191,255,0.30)]"
                   >
-                    Run Free Quick Scan
-                  </button>
+                    Run Free Accessibility Scan
+                  </Link>
 
-                  <button className="text-white text-[15px] font-semibold px-7 py-3.5 rounded-full border border-white/15 hover:border-white/30 hover:bg-white/[0.03] transition-all">
+                  <Link
+                    href="/contact"
+                    className="inline-flex min-w-[230px] items-center justify-center rounded-full border border-white/15 bg-white/[0.02] px-8 py-4 text-[15px] font-semibold text-white transition-all duration-300 hover:border-white/30 hover:bg-white/[0.05] hover:scale-[1.015]"
+                  >
                     Book Expert Audit
-                  </button>
+                  </Link>
                 </div>
               </ScrollReveal>
 
-              <ScrollReveal animation="fade-in-up" delay={500}>
-                <div>
-                  <p className="text-white/72 text-[14px] font-medium mb-4">
-                    Trusted by 1,000+ organizations
-                  </p>
-
-                  <div className="flex flex-wrap items-center gap-x-8 gap-y-3">
-                    <span className="text-white/90 text-[17px] font-semibold">Shopify</span>
-                    <span className="text-white/90 text-[17px] font-semibold italic">KPMG</span>
-                    <span className="text-white/90 text-[17px] font-semibold">
-                      Deloitte <span className="font-normal text-[15px]">Digital</span>
-                    </span>
+              <ScrollReveal animation="fade-in-up" delay={440}>
+                <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-1 text-[20px] leading-none text-[#ffbf1f] drop-shadow-[0_0_12px_rgba(255,191,31,0.18)]">
+                    <span>★</span>
+                    <span>★</span>
+                    <span>★</span>
+                    <span>★</span>
+                    <span>★</span>
                   </div>
+
+                  <p className="text-[15px] font-medium text-white/90 md:text-[16px]">
+                    Rated <span className="font-semibold text-white">4.9 / 5</span> by accessibility teams
+                  </p>
                 </div>
               </ScrollReveal>
             </div>
 
             {/* Right side */}
-            <ScrollReveal animation="fade-in-right" delay={300} duration={800}>
-              <div className="relative mx-auto w-full max-w-[640px]">
-                <div className="absolute inset-0 bg-[#20c7ff]/10 blur-[100px] rounded-full scale-90" />
-                <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 w-[85%] h-[70px] bg-[#1fc5ff]/10 blur-[60px]" />
+            <ScrollReveal animation="fade-in-right" delay={240} duration={800}>
+              <div className="relative mx-auto w-full max-w-[690px]">
+                <div className="absolute inset-0 scale-[0.96] rounded-[34px] bg-[#24c7ff]/8 blur-[90px]" />
+                <div className="absolute -bottom-8 left-1/2 h-[70px] w-[70%] -translate-x-1/2 bg-[#1fc5ff]/20 blur-[55px]" />
 
-                <div className="relative rounded-[24px] border border-white/10 bg-[#0c1627]/70 p-[8px] shadow-[0_30px_80px_rgba(0,0,0,0.45)]">
-                  <div className="overflow-hidden rounded-[18px] border border-white/10 bg-white">
+                <div className="relative rounded-[30px] border border-[#2aaeff]/30 bg-[linear-gradient(180deg,rgba(11,20,35,0.96),rgba(10,18,32,0.86))] p-[10px] shadow-[0_28px_80px_rgba(0,0,0,0.45),0_0_0_1px_rgba(34,207,255,0.06)]">
+                  <div className="overflow-hidden rounded-[22px] border border-white/10 bg-white shadow-[inset_0_1px_0_rgba(255,255,255,0.45)]">
                     <Image
                       src="/images/premium-hero-dashboard.png"
                       alt="AccessIQ Dashboard Overview"
-                      width={1400}
-                      height={980}
-                      className="w-full h-auto object-cover"
+                      width={1600}
+                      height={1100}
+                      className="h-auto w-full object-cover"
                       priority
                     />
                   </div>
@@ -164,15 +140,15 @@ const HeroSection = () => {
 
         {/* Bottom info strip */}
         <div className="border-t border-white/[0.06]">
-          <div className="mx-auto max-w-[1400px] px-4 md:px-6 lg:px-8 py-5">
-            <div className="flex flex-col md:flex-row items-center justify-center gap-3 md:gap-4 text-center">
-              <span className="text-white/78 text-[16px] font-medium">
-                Over <span className="text-[#25c8ff] font-semibold">20 million</span> pages scanned
+          <div className="mx-auto max-w-[1400px] px-4 md:px-6 lg:px-8 py-4 md:py-5">
+            <div className="flex flex-col items-center justify-center gap-3 text-center md:flex-row md:gap-4">
+              <span className="text-[15px] font-medium text-white/80 md:text-[16px]">
+                Over <span className="font-semibold text-[#25c8ff]">20 million</span> pages scanned
               </span>
 
-              <div className="hidden md:block w-px h-4 bg-white/10" />
+              <div className="hidden h-4 w-px bg-white/10 md:block" />
 
-              <div className="flex flex-wrap items-center justify-center gap-3 text-[12px] font-medium text-white/45">
+              <div className="flex flex-wrap items-center justify-center gap-3 text-[12px] font-medium text-white/45 md:text-[13px]">
                 <span>ADA</span>
                 <span>|</span>
                 <span>WCAG</span>
@@ -185,7 +161,8 @@ const HeroSection = () => {
           </div>
         </div>
 
-        <div className="h-6 md:h-8" />
+        {/* extra dark spacer before next white section */}
+        <div className="h-12 md:h-16 lg:h-20 bg-[#06101a]" />
       </div>
     </section>
   );
