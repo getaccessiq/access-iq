@@ -192,7 +192,7 @@ const Header = () => {
             <div className="relative flex h-full items-center justify-between px-5 sm:px-6 lg:px-7">
               <Link href="/" className="flex shrink-0 items-center">
                 <Image
-                  src="/images/logos/public/images/logos/accessiq-logo.png"
+                  src="/images/logos/accessiq-logo.png"
                   alt="AccessIQ"
                   width={158}
                   height={40}
