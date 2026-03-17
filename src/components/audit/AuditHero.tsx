@@ -81,9 +81,7 @@ const AuditHero = () => {
 
               <ScrollReveal animation="fade-in-up" delay={280}>
                 <p className="mb-8 max-w-[560px] text-[16px] leading-[1.65] text-white/80 md:text-[18px]">
-                  Human-led accessibility audits with verified findings,
-                  compliance documentation, issue evidence, and a remediation
-                  roadmap your legal and engineering teams can act on.
+                  Human-verified compliance reviews with clear documentation, standards mapping, issue evidence, and actionable remediation guidance for your legal and engineering teams.
                 </p>
               </ScrollReveal>
 
