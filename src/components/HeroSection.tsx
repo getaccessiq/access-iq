@@ -6,24 +6,38 @@ import Link from "next/link";
 import AnimatedGradient from "./AnimatedGradient";
 import ScrollReveal from "./ScrollReveal";
 
+const primaryButtonClass =
+  "inline-flex min-w-[250px] items-center justify-center rounded-full bg-gradient-to-r from-[#22d9c9] to-[#25beff] px-8 py-4 text-[15px] font-semibold text-white shadow-[0_16px_40px_rgba(36,191,255,0.22)] transition-all duration-300 hover:scale-[1.015] hover:shadow-[0_22px_48px_rgba(36,191,255,0.30)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#25c8ff] focus-visible:ring-offset-2 focus-visible:ring-offset-[#06101a]";
+
+const secondaryButtonClass =
+  "inline-flex min-w-[230px] items-center justify-center rounded-full border border-white/15 bg-white/[0.02] px-8 py-4 text-[15px] font-semibold text-white transition-all duration-300 hover:scale-[1.015] hover:border-white/30 hover:bg-white/[0.05] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#25c8ff] focus-visible:ring-offset-2 focus-visible:ring-offset-[#06101a]";
+
 const HeroSection = () => {
   return (
-    <section className="relative overflow-hidden bg-[#06101a]">
-      <AnimatedGradient />
+    <section
+      className="relative overflow-hidden bg-[#06101a]"
+      aria-labelledby="hero-heading"
+    >
+      <div aria-hidden="true">
+        <AnimatedGradient />
+      </div>
 
       {/* soft ambient glows */}
-      <div className="pointer-events-none absolute inset-0">
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0">
         <div className="absolute left-[-8%] top-[8%] h-[420px] w-[420px] rounded-full bg-[#18d4c0]/10 blur-[120px]" />
         <div className="absolute right-[-6%] top-[14%] h-[440px] w-[440px] rounded-full bg-[#229dff]/10 blur-[140px]" />
       </div>
 
       <div className="relative z-10">
-        <div className="mx-auto max-w-[1400px] px-4 md:px-6 lg:px-8 pt-[124px] md:pt-[136px] lg:pt-[146px] pb-12 md:pb-14 lg:pb-16">
-          <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-10 min-h-[500px]">
+        <div className="mx-auto max-w-[1400px] px-4 pb-12 pt-[124px] md:px-6 md:pb-14 md:pt-[136px] lg:px-8 lg:pb-16 lg:pt-[146px]">
+          <div className="grid min-h-[500px] items-center gap-10 lg:grid-cols-2 lg:gap-10">
             {/* Left side */}
             <div className="max-w-[590px]">
               <ScrollReveal animation="fade-in-up" delay={120}>
-                <div className="mb-6 inline-flex items-center gap-2.5 rounded-full border border-[#1d8fb4]/35 bg-[#0d2235]/65 px-4 py-2.5 shadow-[0_0_0_1px_rgba(255,255,255,0.02)] backdrop-blur-md">
+                <div
+                  className="mb-6 inline-flex items-center gap-2.5 rounded-full border border-[#1d8fb4]/35 bg-[#0d2235]/65 px-4 py-2.5 shadow-[0_0_0_1px_rgba(255,255,255,0.02)] backdrop-blur-md"
+                  aria-label="Trusted accessibility experts"
+                >
                   <svg
                     width="15"
                     height="15"
@@ -31,6 +45,7 @@ const HeroSection = () => {
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
                     aria-hidden="true"
+                    focusable="false"
                     className="shrink-0"
                   >
                     <defs>
@@ -61,10 +76,13 @@ const HeroSection = () => {
               </ScrollReveal>
 
               <ScrollReveal animation="fade-in-up" delay={200}>
-                <h1 className="mb-6 text-[42px] font-semibold leading-[0.94] tracking-[-0.05em] text-white md:text-[56px] xl:text-[68px]">
+                <h1
+                  id="hero-heading"
+                  className="mb-6 text-[42px] font-semibold leading-[0.94] tracking-[-0.05em] text-white md:text-[56px] xl:text-[68px]"
+                >
                   Enterprise WCAG
                   <br />
-                  & ADA Compliance
+                  &amp; ADA Compliance
                   <br />
                   <span className="bg-gradient-to-r from-[#1fd8c4] via-[#22cfff] to-[#2f98ff] bg-clip-text text-transparent">
                     Platform.
@@ -76,22 +94,24 @@ const HeroSection = () => {
                 <p className="mb-8 max-w-[560px] text-[16px] leading-[1.65] text-white/80 md:text-[18px]">
                   Automated monitoring, expert audits, and AI-powered tools for
                   continuous accessibility compliance. Ensure your website meets
-                  the latest ADA & WCAG standards.
+                  the latest ADA and WCAG standards.
                 </p>
               </ScrollReveal>
 
               <ScrollReveal animation="fade-in-up" delay={360}>
                 <div className="mb-7 flex flex-col items-start gap-3 sm:flex-row sm:items-center">
-                  <Link
+                  <a
                     href="https://access-iq.vercel.app/scan"
-                    className="inline-flex min-w-[250px] items-center justify-center rounded-full bg-gradient-to-r from-[#22d9c9] to-[#25beff] px-8 py-4 text-[15px] font-semibold text-white shadow-[0_16px_40px_rgba(36,191,255,0.22)] transition-all duration-300 hover:scale-[1.015] hover:shadow-[0_22px_48px_rgba(36,191,255,0.30)]"
+                    className={primaryButtonClass}
+                    aria-label="Run free accessibility scan"
                   >
                     Run Free Accessibility Scan
-                  </Link>
+                  </a>
 
                   <Link
                     href="/contact"
-                    className="inline-flex min-w-[230px] items-center justify-center rounded-full border border-white/15 bg-white/[0.02] px-8 py-4 text-[15px] font-semibold text-white transition-all duration-300 hover:border-white/30 hover:bg-white/[0.05] hover:scale-[1.015]"
+                    className={secondaryButtonClass}
+                    aria-label="Book expert audit"
                   >
                     Book Expert Audit
                   </Link>
@@ -99,8 +119,14 @@ const HeroSection = () => {
               </ScrollReveal>
 
               <ScrollReveal animation="fade-in-up" delay={440}>
-                <div className="flex items-center gap-3">
-                  <div className="flex items-center gap-1 text-[20px] leading-none text-[#ffbf1f] drop-shadow-[0_0_12px_rgba(255,191,31,0.18)]">
+                <div
+                  className="flex items-center gap-3"
+                  aria-label="Rated 4.9 out of 5 by accessibility teams"
+                >
+                  <div
+                    className="flex items-center gap-1 text-[20px] leading-none text-[#ffbf1f] drop-shadow-[0_0_12px_rgba(255,191,31,0.18)]"
+                    aria-hidden="true"
+                  >
                     <span>★</span>
                     <span>★</span>
                     <span>★</span>
@@ -109,7 +135,8 @@ const HeroSection = () => {
                   </div>
 
                   <p className="text-[15px] font-medium text-white/90 md:text-[16px]">
-                    Rated <span className="font-semibold text-white">4.9 / 5</span> by accessibility teams
+                    Rated <span className="font-semibold text-white">4.9 / 5</span> by
+                    accessibility teams
                   </p>
                 </div>
               </ScrollReveal>
@@ -118,14 +145,20 @@ const HeroSection = () => {
             {/* Right side */}
             <ScrollReveal animation="fade-in-right" delay={240} duration={800}>
               <div className="relative mx-auto w-full max-w-[690px]">
-                <div className="absolute inset-0 scale-[0.96] rounded-[34px] bg-[#24c7ff]/8 blur-[90px]" />
-                <div className="absolute -bottom-8 left-1/2 h-[70px] w-[70%] -translate-x-1/2 bg-[#1fc5ff]/20 blur-[55px]" />
+                <div
+                  aria-hidden="true"
+                  className="absolute inset-0 scale-[0.96] rounded-[34px] bg-[#24c7ff]/8 blur-[90px]"
+                />
+                <div
+                  aria-hidden="true"
+                  className="absolute -bottom-8 left-1/2 h-[70px] w-[70%] -translate-x-1/2 bg-[#1fc5ff]/20 blur-[55px]"
+                />
 
                 <div className="relative rounded-[30px] border border-[#2aaeff]/30 bg-[linear-gradient(180deg,rgba(11,20,35,0.96),rgba(10,18,32,0.86))] p-[10px] shadow-[0_28px_80px_rgba(0,0,0,0.45),0_0_0_1px_rgba(34,207,255,0.06)]">
                   <div className="overflow-hidden rounded-[22px] border border-white/10 bg-white shadow-[inset_0_1px_0_rgba(255,255,255,0.45)]">
                     <Image
                       src="/images/premium-hero-dashboard1.png"
-                      alt="AccessIQ Dashboard Overview"
+                      alt="AccessIQ dashboard showing accessibility monitoring and compliance insights"
                       width={1600}
                       height={1100}
                       className="h-auto w-full object-cover"
@@ -140,29 +173,30 @@ const HeroSection = () => {
 
         {/* Bottom info strip */}
         <div className="border-t border-white/[0.06]">
-          <div className="mx-auto max-w-[1400px] px-4 md:px-6 lg:px-8 py-4 md:py-5">
+          <div className="mx-auto max-w-[1400px] px-4 py-4 md:px-6 md:py-5 lg:px-8">
             <div className="flex flex-col items-center justify-center gap-3 text-center md:flex-row md:gap-4">
-              <span className="text-[15px] font-medium text-white/80 md:text-[16px]">
-                Over <span className="font-semibold text-[#25c8ff]">20 million</span> pages scanned
-              </span>
+              <p className="text-[15px] font-medium text-white/80 md:text-[16px]">
+                Over <span className="font-semibold text-[#25c8ff]">20 million</span>{" "}
+                pages scanned
+              </p>
 
-              <div className="hidden h-4 w-px bg-white/10 md:block" />
+              <div aria-hidden="true" className="hidden h-4 w-px bg-white/10 md:block" />
 
-              <div className="flex flex-wrap items-center justify-center gap-3 text-[12px] font-medium text-white/45 md:text-[13px]">
+              <p className="flex flex-wrap items-center justify-center gap-3 text-[12px] font-medium text-white/45 md:text-[13px]">
                 <span>ADA</span>
-                <span>•</span>
+                <span aria-hidden="true">•</span>
                 <span>WCAG</span>
-                <span>•</span>
+                <span aria-hidden="true">•</span>
                 <span>Section 508</span>
-                <span>•</span>
+                <span aria-hidden="true">•</span>
                 <span>EN 301 549</span>
-              </div>
+              </p>
             </div>
           </div>
         </div>
 
         {/* extra dark spacer before next white section */}
-        <div className="h-12 md:h-16 lg:h-20 bg-[#06101a]" />
+        <div aria-hidden="true" className="h-12 bg-[#06101a] md:h-16 lg:h-20" />
       </div>
     </section>
   );
