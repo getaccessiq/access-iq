@@ -69,12 +69,12 @@ const AuditHero = () => {
 
               <ScrollReveal animation="fade-in-up" delay={200}>
                 <h1 className="mb-6 text-[42px] font-semibold leading-[0.94] tracking-[-0.05em] text-white md:text-[56px] xl:text-[68px]">
-                  Expert WCAG
+                  Accessibility Audits
                   <br />
-                  & ADA Audit
+                  Reduce Legal Risk
                   <br />
                   <span className="bg-gradient-to-r from-[#1fd8c4] via-[#22cfff] to-[#2f98ff] bg-clip-text text-transparent">
-                    Reports You Can Defend.
+                    Prove Compliance.
                   </span>
                 </h1>
               </ScrollReveal>
@@ -105,15 +105,7 @@ const AuditHero = () => {
                 </div>
               </ScrollReveal>
 
-              <ScrollReveal animation="fade-in-up" delay={440}>
-                <div className="flex items-center gap-3">
-             
-
-                  <p className="text-[15px] font-medium text-white/90 md:text-[16px]">
-                    Human-verified <span className="font-semibold text-white">WCAG</span> accessibility audits
-                  </p>
-                </div>
-              </ScrollReveal>
+            
             </div>
 
             {/* Right side */}
@@ -125,7 +117,7 @@ const AuditHero = () => {
                 <div className="relative rounded-[30px] border border-[#2aaeff]/30 bg-[linear-gradient(180deg,rgba(11,20,35,0.96),rgba(10,18,32,0.86))] p-[10px] shadow-[0_28px_80px_rgba(0,0,0,0.45),0_0_0_1px_rgba(34,207,255,0.06)]">
                   <div className="overflow-hidden rounded-[22px] border border-white/10 bg-white shadow-[inset_0_1px_0_rgba(255,255,255,0.45)]">
                     <Image
-                      src="/images/premium-hero-dashboard.png"
+                      src="/images/Dashboard_i3484.png"
                       alt="AccessIQ Audit Report Overview"
                       width={1600}
                       height={1100}
@@ -136,31 +128,57 @@ const AuditHero = () => {
                 </div>
               </div>
             </ScrollReveal>
+
+            
           </div>
+
+          <ScrollReveal animation="fade-in-up" delay={440}>
+                            <div
+                              className="flex items-center gap-3"
+                              aria-label="Rated 4.9 out of 5 by accessibility teams"
+                            >
+                              <div
+                                className="flex items-center gap-1 text-[20px] leading-none text-[#ffbf1f] drop-shadow-[0_0_12px_rgba(255,191,31,0.18)]"
+                                aria-hidden="true"
+                              >
+                                <span>★</span>
+                                <span>★</span>
+                                <span>★</span>
+                                <span>★</span>
+                                <span>★</span>
+                              </div>
+            
+                              <p className="text-[15px] font-medium text-white/90 md:text-[16px]">
+                                Trusted by <span className="font-semibold text-white">compliance</span> teams worldwide
+
+                              </p>
+                            </div>
+                          </ScrollReveal>
         </div>
 
         {/* Bottom info strip */}
-<div className="border-t border-white/[0.06]">
-  <div className="mx-auto max-w-[1400px] px-4 md:px-6 lg:px-8 py-3 md:py-4">
-    <div className="flex flex-col items-center justify-center gap-3 text-center md:flex-row md:gap-4">
+        <div className="mt-12 md:mt-16 lg:mt-8 border-t border-white/[0.06]">
+          <div className="mx-auto max-w-[1400px] px-4 py-4 md:px-6 md:py-5 lg:px-8">
+            <div className="flex flex-col items-center justify-center gap-3 text-center md:flex-row md:gap-4">
+              <p className="text-[15px] font-medium text-white/80 md:text-[16px]">
+                Human-verified <span className="font-semibold text-[#25c8ff]">WCAG</span>{" "}
+                accessibility audits
+              </p>
 
-      
+              <div aria-hidden="true" className="hidden h-4 w-px bg-white/10 md:block" />
 
-      <div className="hidden h-4 w-px bg-white/10 md:block" />
-
-      <div className="flex flex-wrap items-center justify-center gap-3 text-[12px] font-medium text-white/45 leading-none md:text-[13px]">
-        <span>ADA</span>
-        <span>•</span>
-        <span>WCAG</span>
-        <span>•</span>
-        <span>Section 508</span>
-        <span>•</span>
-        <span>EN 301 549</span>
-      </div>
-
-    </div>
-  </div>
-</div>
+              <p className="flex flex-wrap items-center justify-center gap-3 text-[12px] font-medium text-white/45 md:text-[13px]">
+                <span>ADA</span>
+                <span aria-hidden="true">•</span>
+                <span>WCAG</span>
+                <span aria-hidden="true">•</span>
+                <span>Section 508</span>
+                <span aria-hidden="true">•</span>
+                <span>EN 301 549</span>
+              </p>
+            </div>
+          </div>
+        </div>
 
         {/* extra dark spacer before next white section */}
         <div className="h-12 md:h-16 lg:h-20 bg-[#06101a]" />
