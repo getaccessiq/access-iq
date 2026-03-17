@@ -337,8 +337,7 @@ const DigitalAccessibility = () => {
                 id={testimonialHeadingId}
                 className="text-3xl md:text-4xl lg:text-[46px] font-bold text-white leading-tight"
               >
-                Trusted by{" "}
-                <span className="gradient-text">industry Leaders</span>
+                Trusted by <span className="gradient-text">industry Leaders</span>
               </h2>
             </div>
           </ScrollReveal>
@@ -348,9 +347,9 @@ const DigitalAccessibility = () => {
               aria-labelledby={testimonialHeadingId}
               className="relative z-10"
             >
-              <div className="flex items-stretch gap-8 lg:gap-10">
+              <div className="flex flex-col gap-8 lg:flex-row lg:gap-12 lg:items-stretch">
                 <div
-                  className="relative w-[280px] flex-shrink-0 overflow-hidden"
+                  className="relative w-full max-w-[280px] flex-shrink-0 overflow-hidden"
                   style={{ borderRadius: "12px" }}
                 >
                   <Image
@@ -364,7 +363,7 @@ const DigitalAccessibility = () => {
                 </div>
 
                 <article
-                  className="flex flex-1 flex-col justify-between"
+                  className="flex min-h-[350px] flex-1 flex-col"
                   aria-roledescription="carousel"
                   aria-label="Client testimonial"
                 >
@@ -372,22 +371,22 @@ const DigitalAccessibility = () => {
                     id={testimonialRegionId}
                     aria-live="polite"
                     aria-atomic="true"
+                    className="flex h-full flex-col"
                   >
                     <p className="text-xl font-light leading-relaxed text-gray-200 md:text-2xl lg:text-[26px]">
                       &ldquo;{activeItem.quote}&rdquo;
                     </p>
 
                     <div className="sr-only">
-                      Testimonial {activeTestimonial + 1} of{" "}
-                      {testimonials.length}
+                      Testimonial {activeTestimonial + 1} of {testimonials.length}
                     </div>
 
-                    <div className="mt-10 flex items-end justify-between">
+                    <div className="mt-auto flex items-end justify-between gap-6 pt-10">
                       <div>
-                        <div className="text-xl font-bold text-white md:text-2xl">
+                        <div className="text-xl font-bold text-white md:text-2xl lg:text-[24px]">
                           {activeItem.name}
                         </div>
-                        <div className="mt-1 text-sm text-gray-400">
+                        <div className="mt-1 text-sm text-gray-400 md:text-base">
                           {activeItem.title}, {activeItem.company}
                         </div>
                       </div>
@@ -399,7 +398,7 @@ const DigitalAccessibility = () => {
                         <button
                           type="button"
                           onClick={showPreviousTestimonial}
-                          className="flex h-12 w-12 items-center justify-center rounded-full cursor-pointer transition-opacity hover:opacity-80"
+                          className="flex h-12 w-12 items-center justify-center rounded-full transition-opacity hover:opacity-80"
                           style={{
                             background: "rgba(255,255,255,0.08)",
                             border: "1px solid rgba(255,255,255,0.15)",
@@ -428,7 +427,7 @@ const DigitalAccessibility = () => {
                         <button
                           type="button"
                           onClick={showNextTestimonial}
-                          className="flex h-12 w-12 items-center justify-center rounded-full cursor-pointer transition-opacity hover:opacity-80"
+                          className="flex h-12 w-12 items-center justify-center rounded-full transition-opacity hover:opacity-80"
                           style={{
                             background:
                               "linear-gradient(135deg, #00d4aa, #0088cc)",
