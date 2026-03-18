@@ -1,5 +1,8 @@
 import Header from "@/components/Header";
-import PricingPageContent from "@/components/pricing/PricingPageContent";
+import PricingHero from "@/components/pricing/PricingHero";
+import PricingCards from "@/components/pricing/PricingCards";
+import AddOns from "@/components/pricing/AddOns";
+import CTASection from "@/components/CTASection";
 import Footer from "@/components/Footer";
 
 export const metadata = {
@@ -12,7 +15,10 @@ export default function PricesPage() {
   return (
     <div className="min-h-screen">
       <Header />
-      <PricingPageContent />
+      <PricingHero />
+      <PricingCards />
+      <AddOns />
+      <CTASection />
       <Footer />
     </div>
   );

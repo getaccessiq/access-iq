@@ -25,7 +25,7 @@ const plans = [
   {
     label: "Most Popular",
     title: "Expert Accessibility Audit",
-    price: "$1,500+",
+    price: "from $750",
     period: "one-time",
     description: "Comprehensive WCAG audit with prioritized remediation.",
     features: [
@@ -221,164 +221,134 @@ const PricingPageContent = () => {
       <AnimatedGradient />
 
       <div className="relative z-10">
-        {/* HERO SECTION */}
-        <div className="container mx-auto pt-[120px] pb-20">
-          <div className="grid lg:grid-cols-2 gap-12 items-center min-h-[540px]">
-            <div>
-              <ScrollReveal animation="fade-in-up" delay={100}>
-                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[#00d4aa]/20 bg-[#00d4aa]/[0.06] mb-7">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-                    <path
-                      d="M12 2L3 7v5c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-9-5z"
-                      fill="none"
-                      stroke="#00d4aa"
-                      strokeWidth="1.5"
-                    />
-                    <path
-                      d="M9 12l2 2 4-4"
-                      stroke="#00d4aa"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                  <span className="text-white text-[13px] font-medium">
-                    Transparent Pricing • No Contracts
-                  </span>
-                </div>
-              </ScrollReveal>
+{/* HERO SECTION */}
+<div className="mx-auto w-full max-w-[1500px] px-4 md:px-6 lg:px-8 pt-[120px] pb-20">
+  <div className="grid lg:grid-cols-[1.08fr_0.92fr] gap-10 lg:gap-12 items-center min-h-[540px]">
+    <div>
+      <ScrollReveal animation="fade-in-up" delay={100}>
+        <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-[#00d4aa]/20 bg-[#00d4aa]/[0.06] mb-7">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+            <path
+              d="M12 2L3 7v5c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-9-5z"
+              fill="none"
+              stroke="#00d4aa"
+              strokeWidth="1.5"
+            />
+            <path
+              d="M9 12l2 2 4-4"
+              stroke="#00d4aa"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+          <span className="text-white text-[13px] md:text-[14px] font-medium">
+            Transparent Pricing • No Contracts
+          </span>
+        </div>
+      </ScrollReveal>
 
-              <ScrollReveal animation="fade-in-up" delay={200}>
-                <h1 className="text-[34px] md:text-[42px] lg:text-[50px] font-bold leading-[1.15] text-white mb-6 tracking-tight">
-                  Compliance That Costs <br className="hidden md:block" />
-                  Less Than One Lawsuit
-                </h1>
-              </ScrollReveal>
+      <ScrollReveal animation="fade-in-up" delay={200}>
+        <h1 className="text-[44px] sm:text-[56px] md:text-[68px] lg:text-[76px] font-semibold leading-[0.98] tracking-[-0.04em] text-white mb-7 max-w-[860px]">
+          Clear Pricing for
+          <br />
+          WCAG & ADA
+          <br />
+          Compliance
+        </h1>
+      </ScrollReveal>
 
-              <ScrollReveal animation="fade-in-up" delay={300}>
-                <p className="text-gray-300 text-[17px] leading-[1.7] mb-8 max-w-[540px]">
-                  Manual accessibility testing and legal-grade compliance for
-                  WCAG, ADA, Section 508 and EN 301 549.
-                </p>
-              </ScrollReveal>
+      <ScrollReveal animation="fade-in-up" delay={300}>
+        <p className="text-white/72 text-[18px] md:text-[19px] leading-[1.65] mb-9 max-w-[700px]">
+          Choose the right plan for automated scans, expert audits, and
+          ongoing accessibility compliance without hidden fees or long-term
+          commitments.
+        </p>
+      </ScrollReveal>
 
-              <ScrollReveal animation="fade-in-up" delay={400}>
-                <div className="flex items-center gap-4 mb-10">
-                  <a
-                    href="https://access-iq.vercel.app/scan"
-                    {...getLinkProps("https://access-iq.vercel.app/scan")}
-                    className="relative overflow-hidden rounded-full bg-gradient-to-r from-[#00d4aa] to-[#0088cc] px-8 py-4 text-[15px] font-semibold text-white shadow-[0_14px_40px_rgba(0,212,170,0.30)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_18px_50px_rgba(0,212,170,0.38)]"
-                  >
-                    <span className="relative z-10">
-                      Start Free Accessibility Scan
-                    </span>
-                    <span className="pointer-events-none absolute inset-0 bg-[linear-gradient(135deg,rgba(255,255,255,0.18)_0%,transparent_35%,transparent_100%)]" />
-                  </a>
+      <ScrollReveal animation="fade-in-up" delay={400}>
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-8">
+          <a
+            href="#pricing"
+            className="relative overflow-hidden rounded-full bg-gradient-to-r from-[#22d3ee] to-[#1d9bf0] px-8 md:px-10 py-4 md:py-[18px] text-[15px] md:text-[16px] font-semibold text-white shadow-[0_16px_40px_rgba(34,211,238,0.24)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_20px_50px_rgba(34,211,238,0.34)]"
+          >
+            <span className="relative z-10">View Plans</span>
+            <span className="pointer-events-none absolute inset-0 bg-[linear-gradient(135deg,rgba(255,255,255,0.16)_0%,transparent_35%,transparent_100%)]" />
+          </a>
 
-                  <a
-                    href="https://demo.getaccessiq.com"
-                    {...getLinkProps("https://demo.getaccessiq.com")}
-                    className="rounded-full border border-white/15 px-8 py-4 text-[15px] font-medium text-white transition-all duration-300 hover:-translate-y-0.5 hover:border-white/30 hover:bg-white/[0.03]"
-                  >
-                    View Live Demo
-                  </a>
-                </div>
-              </ScrollReveal>
+          <a
+            href="/contact"
+            className="rounded-full border border-white/12 px-8 md:px-10 py-4 md:py-[18px] text-[15px] md:text-[16px] font-medium text-white transition-all duration-300 hover:-translate-y-0.5 hover:border-white/25 hover:bg-white/[0.03]"
+          >
+            Book Expert Audit
+          </a>
+        </div>
+      </ScrollReveal>
 
-              <ScrollReveal animation="fade-in-up" delay={500}>
-                <div className="flex items-center gap-4 md:gap-6 flex-wrap">
-                  {[
-                    "Manual WCAG Testing",
-                    "Real User Scenarios",
-                    "No Overlay Solutions",
-                  ].map((label) => (
-                    <div key={label} className="flex items-center gap-2">
-                      <div
-                        className="w-7 h-7 rounded-full flex items-center justify-center"
-                        style={{
-                          background:
-                            "linear-gradient(135deg, rgba(0,212,170,0.15), rgba(0,136,204,0.15))",
-                          border: "1px solid rgba(0,212,170,0.2)",
-                        }}
-                      >
-                        <svg
-                          width="12"
-                          height="12"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                        >
-                          <path
-                            d="M5 13l4 4L19 7"
-                            stroke="#00d4aa"
-                            strokeWidth="2.5"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
-                        </svg>
-                      </div>
-                      <span className="text-gray-300 text-sm font-medium">
-                        {label}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </ScrollReveal>
+      <ScrollReveal animation="fade-in-up" delay={500}>
+        <div className="flex items-center gap-3 flex-wrap">
+          <div className="flex items-center gap-1 text-[#fbbf24] text-[20px] leading-none">
+            <span>★</span>
+            <span>★</span>
+            <span>★</span>
+            <span>★</span>
+            <span>★</span>
+          </div>
+          <span className="text-white/80 text-[16px] font-medium">
+            Trusted by accessibility teams and growing businesses
+          </span>
+        </div>
+      </ScrollReveal>
+    </div>
 
-              <ScrollReveal animation="fade-in-up" delay={600}>
-                <div className="mt-6 max-w-[500px]">
-                  <div className="group relative overflow-hidden rounded-[18px] border border-white/10 bg-[#0b1630]/90 px-7 py-6 shadow-[0_20px_60px_rgba(0,0,0,0.45)] backdrop-blur-md transition-all duration-300 hover:-translate-y-[2px] hover:border-[#00d4aa]/25 hover:shadow-[0_30px_80px_rgba(0,0,0,0.6)]">
-                    <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/25 to-transparent" />
-                    <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[2px] bg-gradient-to-r from-transparent via-cyan-400 to-transparent opacity-80" />
-                    <div className="pointer-events-none absolute -left-8 top-1/2 h-28 w-28 -translate-y-1/2 rounded-full bg-[#00d4aa]/10 blur-3xl" />
+    <ScrollReveal animation="fade-in-right" delay={400} duration={900}>
+      <div className="relative">
+        <div className="pointer-events-none absolute -inset-10 rounded-[40px] bg-[radial-gradient(circle_at_center,rgba(34,211,238,0.12),transparent_60%)] blur-3xl" />
+        <div className="pointer-events-none absolute -right-10 top-1/2 h-[280px] w-[280px] -translate-y-1/2 rounded-full bg-[#22d3ee]/10 blur-3xl" />
 
-                    <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#00d4aa]/20 bg-[#00d4aa]/[0.06] px-3 py-1.5">
-                      <span className="h-2 w-2 rounded-full bg-[#00d4aa] shadow-[0_0_12px_rgba(0,212,170,0.9)]" />
-                      <span className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[#9fe7d6]">
-                        Risk Snapshot
-                      </span>
-                    </div>
+        <div className="relative rounded-[30px] border border-[#3cc7ff]/35 bg-[linear-gradient(180deg,rgba(255,255,255,0.04)_0%,rgba(255,255,255,0.02)_100%)] p-[10px] shadow-[0_55px_130px_rgba(0,0,0,0.72)]">
+          <div className="pointer-events-none absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent" />
 
-                    <h3 className="text-[19px] font-semibold leading-snug tracking-[-0.01em] text-white">
-                      $3+ Billion ADA Lawsuit Risk
-                    </h3>
-
-                    <p className="mt-3 text-[14px] leading-relaxed text-white/72">
-                      Thousands of ADA lawsuits target websites every year.
-                    </p>
-                  </div>
-
-                  <p className="mt-5 text-[13px] text-white/55">
-                    Trusted by agencies and product teams worldwide
-                  </p>
-                </div>
-              </ScrollReveal>
-            </div>
-
-            <ScrollReveal animation="fade-in-right" delay={400} duration={900}>
-              <div className="relative">
-                <div className="pointer-events-none absolute -inset-10 rounded-[40px] bg-[radial-gradient(circle_at_center,rgba(0,212,170,0.10),transparent_60%)] blur-3xl" />
-                <div className="pointer-events-none absolute -right-8 top-1/2 h-[260px] w-[260px] -translate-y-1/2 rounded-full bg-[#00d4aa]/8 blur-3xl" />
-
-                <div className="relative rounded-[26px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.05)_0%,rgba(255,255,255,0.02)_100%)] p-2 shadow-[0_60px_140px_rgba(0,0,0,0.7)]">
-                  <div className="pointer-events-none absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent" />
-
-                  <div className="relative overflow-hidden rounded-[22px] border border-white/[0.08] bg-[#0b1120]">
-                    <Image
-                      src="/images/dashboard.png"
-                      alt="AccessIQ Dashboard Overview"
-                      width={720}
-                      height={480}
-                      className="w-full h-auto scale-[1.01]"
-                    />
-                    <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(135deg,rgba(255,255,255,0.08)_0%,transparent_18%,transparent_75%,rgba(255,255,255,0.04)_100%)]" />
-                  </div>
-                </div>
-              </div>
-            </ScrollReveal>
+          <div className="relative overflow-hidden rounded-[24px] border border-white/[0.08] bg-[#0b1120]">
+            <Image
+              src="/images/dashboard.png"
+              alt="AccessIQ Dashboard Overview"
+              width={720}
+              height={480}
+              className="w-full h-auto scale-[1.01]"
+            />
+            <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(135deg,rgba(255,255,255,0.07)_0%,transparent_18%,transparent_75%,rgba(255,255,255,0.04)_100%)]" />
           </div>
         </div>
+      </div>
+    </ScrollReveal>
+  </div>
+</div>
 
-        <div className="h-16" />
+{/* BOTTOM INFO STRIP */}
+<div className="border-t border-white/[0.06]">
+  <div className="container mx-auto py-4">
+    <div className="flex flex-col md:flex-row items-center justify-center gap-3 md:gap-5 text-center">
+      <span className="text-[16px] md:text-[17px] text-white/85 font-medium">
+        <span className="text-[#22d3ee]">Predictable pricing</span> for serious compliance
+      </span>
+
+      <div className="hidden md:block h-4 w-px bg-white/10" />
+
+      <div className="flex flex-wrap items-center justify-center gap-3 md:gap-4 text-[15px] text-white/55">
+        <span>ADA</span>
+        <span>•</span>
+        <span>WCAG</span>
+        <span>•</span>
+        <span>Section 508</span>
+        <span>•</span>
+        <span>EN 301 549</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div className="h-16" />
 
         {/* PRICING CARDS SECTION */}
         <div className="relative py-20 md:py-28">

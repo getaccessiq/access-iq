@@ -1,91 +1,150 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import AnimatedGradient from "../AnimatedGradient";
+import ScrollReveal from "../ScrollReveal";
 
 const PricingHero = () => {
   return (
-    <div className="relative overflow-hidden bg-[#0a0e1a]">
+    <section className="relative overflow-hidden bg-[#06101a]">
       <AnimatedGradient />
 
+      {/* soft ambient glows */}
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute left-[-8%] top-[8%] h-[420px] w-[420px] rounded-full bg-[#18d4c0]/10 blur-[120px]" />
+        <div className="absolute right-[-6%] top-[14%] h-[440px] w-[440px] rounded-full bg-[#229dff]/10 blur-[140px]" />
+      </div>
+
       <div className="relative z-10">
-        <div className="pt-[120px] pb-16">
-          <div className="container mx-auto text-center">
-            {/* Badge */}
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[#00d4aa]/20 bg-[#00d4aa]/[0.06] mb-7">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-                <path
-                  d="M12 2L3 7v5c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-9-5z"
-                  fill="none"
-                  stroke="#00d4aa"
-                  strokeWidth="1.5"
-                />
-                <path
-                  d="M9 12l2 2 4-4"
-                  stroke="#00d4aa"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-              <span className="text-white text-[13px] font-medium">
-                Transparent Pricing
-              </span>
-            </div>
-
-            {/* Heading */}
-            <h1 className="text-[34px] md:text-[42px] lg:text-[50px] font-bold leading-[1.15] text-white mb-6 tracking-tight max-w-3xl mx-auto">
-              Simple,Transparent Pricing{" "}
-              {/*<br className="hidden md:block" />
-              Less Than One Lawsuit*/}
-            </h1>
-
-            {/* Subtitle */}
-            <p className="text-gray-300 text-base max-w-xl mx-auto mb-10 leading-relaxed">
-              Expert guidance through every accessibility regulation — from
-              federal contracts to Title III lawsuits. Achieve sustainable
-              compliance with comprehensive standards coverage.
-            </p>
-
-            {/* Feature badges */}
-            <div className="flex items-center justify-center gap-4 md:gap-8 flex-wrap">
-              {[
-                { icon: "manual", label: "Manual Testing" },
-                { icon: "users", label: "Real User Scenarios" },
-                { icon: "overlay", label: "No Overlays" },
-                { icon: "false", label: "No False Scenarios" },
-              ].map((item) => (
-                <div
-                  key={item.label}
-                  className="flex items-center gap-2"
-                >
-                  <div
-                    className="w-7 h-7 rounded-full flex items-center justify-center"
-                    style={{
-                      background: "linear-gradient(135deg, rgba(0,212,170,0.15), rgba(0,136,204,0.15))",
-                      border: "1px solid rgba(0,212,170,0.2)",
-                    }}
-                  >
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
-                      <path
-                        d="M5 13l4 4L19 7"
-                        stroke="#00d4aa"
-                        strokeWidth="2.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  </div>
-                  <span className="text-gray-300 text-sm font-medium">
-                    {item.label}
+        <div className="mx-auto max-w-[1400px] px-4 md:px-6 lg:px-8 pt-[124px] md:pt-[136px] lg:pt-[146px] pb-12 md:pb-14 lg:pb-16">
+          <div className="grid min-h-[500px] items-center gap-10 lg:grid-cols-2 lg:gap-10">
+            {/* Left side */}
+            <div className="max-w-[590px]">
+              <ScrollReveal animation="fade-in-up" delay={120}>
+                <div className="mb-6 inline-flex items-center gap-2.5 rounded-full border border-[#1d8fb4]/35 bg-[#0d2235]/65 px-4 py-2.5 shadow-[0_0_0_1px_rgba(255,255,255,0.02)] backdrop-blur-md">
+                  <span className="text-[13px] font-semibold tracking-[-0.01em] text-white">
+                    Transparent Pricing • No Contracts
                   </span>
                 </div>
-              ))}
+              </ScrollReveal>
+
+              <ScrollReveal animation="fade-in-up" delay={200}>
+                <h1 className="mb-6 text-[42px] font-semibold leading-[0.94] tracking-[-0.05em] text-white md:text-[56px] xl:text-[68px]">
+                  Clear Pricing
+                  <br />
+                  for WCAG & ADA
+                  <br />
+                  <span className="bg-gradient-to-r from-[#1fd8c4] via-[#22cfff] to-[#2f98ff] bg-clip-text text-transparent">
+                    Compliance.
+                  </span>
+                </h1>
+              </ScrollReveal>
+
+              <ScrollReveal animation="fade-in-up" delay={280}>
+                <p className="mb-8 max-w-[560px] text-[16px] leading-[1.65] text-white/80 md:text-[18px]">
+                  Choose the right plan for automated scans, expert audits, and
+                  continuous accessibility compliance without hidden fees or
+                  long-term contracts.
+                </p>
+              </ScrollReveal>
+
+              <ScrollReveal animation="fade-in-up" delay={360}>
+                <div className="mb-7 flex flex-col items-start gap-3 sm:flex-row sm:items-center">
+                  <a
+                    href="#pricing"
+                    className="inline-flex min-w-[240px] items-center justify-center rounded-full bg-gradient-to-r from-[#22d9c9] to-[#25beff] px-8 py-4 text-[15px] font-semibold text-white shadow-[0_16px_40px_rgba(36,191,255,0.22)] transition-all duration-300 hover:scale-[1.015] hover:shadow-[0_22px_48px_rgba(36,191,255,0.30)]"
+                  >
+                    View Plans
+                  </a>
+
+                  <a
+                    href="/contact"
+                    className="inline-flex min-w-[220px] items-center justify-center rounded-full border border-white/15 bg-white/[0.02] px-8 py-4 text-[15px] font-semibold text-white transition-all duration-300 hover:border-white/30 hover:bg-white/[0.05] hover:scale-[1.015]"
+                  >
+                    Book Expert Audit
+                  </a>
+                </div>
+              </ScrollReveal>
+
+              <ScrollReveal animation="fade-in-up" delay={420}>
+                <div className="flex items-center gap-3">
+                  <div
+                    className="flex items-center gap-1 text-[20px] leading-none text-[#ffbf1f] drop-shadow-[0_0_12px_rgba(255,191,31,0.18)]"
+                    aria-hidden="true"
+                  >
+                    <span>★</span>
+                    <span>★</span>
+                    <span>★</span>
+                    <span>★</span>
+                    <span>★</span>
+                  </div>
+
+                  <p className="text-[15px] font-medium text-white/90 md:text-[16px]">
+                    Trusted by accessibility and compliance teams
+                  </p>
+                </div>
+              </ScrollReveal>
+            </div>
+
+            {/* Right side */}
+            <ScrollReveal animation="fade-in-right" delay={240} duration={800}>
+              <div className="relative mx-auto w-full max-w-[690px]">
+                <div className="absolute inset-0 scale-[0.96] rounded-[34px] bg-[#24c7ff]/8 blur-[90px]" />
+                <div className="absolute -bottom-8 left-1/2 h-[70px] w-[70%] -translate-x-1/2 bg-[#1fc5ff]/20 blur-[55px]" />
+
+                <div className="relative rounded-[30px] border border-[#2aaeff]/30 bg-[linear-gradient(180deg,rgba(11,20,35,0.96),rgba(10,18,32,0.86))] p-[10px] shadow-[0_28px_80px_rgba(0,0,0,0.45),0_0_0_1px_rgba(34,207,255,0.06)]">
+                  <div className="overflow-hidden rounded-[22px] border border-white/10 bg-white shadow-[inset_0_1px_0_rgba(255,255,255,0.45)]">
+                    <Image
+                      src="/images/Dashboard_i3484.png"
+                      alt="AccessIQ Pricing Dashboard"
+                      width={1600}
+                      height={1100}
+                      className="h-auto w-full object-cover"
+                      priority
+                    />
+                  </div>
+                </div>
+              </div>
+            </ScrollReveal>
+          </div>
+
+          
+        </div>
+
+        {/* Bottom info strip */}
+         <div className="mt-12 border-t border-white/[0.06] md:mt-1 lg:mt-10">
+          <div className="mx-auto max-w-[1400px] px-4 py-4 md:px-6 md:py-5 lg:px-8">
+            <div className="flex flex-col items-center justify-center gap-3 text-center md:flex-row md:gap-4">
+              <p className="text-[15px] font-medium text-white/80 md:text-[16px]">
+                <span className="font-semibold text-[#25c8ff]">
+                  Predictable pricing
+                </span>{" "}
+                for serious compliance
+              </p>
+
+              <div
+                aria-hidden="true"
+                className="hidden h-4 w-px bg-white/10 md:block"
+              />
+
+              <p className="flex flex-wrap items-center justify-center gap-3 text-[12px] font-medium text-white/45 md:text-[13px]">
+                <span>ADA</span>
+                <span aria-hidden="true">•</span>
+                <span>WCAG 2.1 AA</span>
+                <span aria-hidden="true">•</span>
+                <span>Section 508</span>
+                <span aria-hidden="true">•</span>
+                <span>EN 301 549</span>
+              </p>
             </div>
           </div>
         </div>
+
+        {/* extra dark spacer before next section */}
+        <div className="h-12 bg-[#06101a] md:h-16 lg:h-20" />
       </div>
-    </div>
+    </section>
   );
 };
 
