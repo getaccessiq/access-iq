@@ -19,6 +19,15 @@ type FormErrors = {
   message?: string;
 };
 
+type HelpCardIcon = "help" | "demo" | "chat";
+
+type HelpCardItem = {
+  title: string;
+  description: string;
+  cta: string;
+  icon: HelpCardIcon;
+};
+
 const initialFormData: FormDataType = {
   firstName: "",
   email: "",
@@ -39,21 +48,24 @@ const serviceOptions = [
   { value: "not-sure", label: "Not sure – need guidance" },
 ];
 
-const helpCards = [
+const helpCards: HelpCardItem[] = [
   {
     title: "Explore Our Help Center",
     description: "Browse our knowledge base, accessibility guides, and compliance resources.",
     cta: "Visit Help Center",
+    icon: "help",
   },
   {
     title: "Schedule a Personalized Demo",
     description: "See how AccessIQ helps organizations achieve WCAG and ADA compliance.",
     cta: "Book Your Demo",
+    icon: "demo",
   },
   {
     title: "Accessibility Support",
     description: "Get answers from our compliance experts and connect with a specialist.",
     cta: "Start Live Chat",
+    icon: "chat",
   },
 ];
 
@@ -203,6 +215,68 @@ function ChatIcon() {
   );
 }
 
+function HelpCenterIcon() {
+  return (
+    <svg width="30" height="30" viewBox="0 0 30 30" fill="none" aria-hidden="true">
+      <defs>
+        <linearGradient id="helpCardGrad" x1="3" y1="15" x2="27" y2="15" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#24D3A7" />
+          <stop offset="1" stopColor="#5D8BFF" />
+        </linearGradient>
+      </defs>
+      <path
+        d="M8.5 6.5H21.5C24.5376 6.5 27 8.96243 27 12V15C27 18.0376 24.5376 20.5 21.5 20.5H15.4L10.2 24.5C9.54467 25.0041 8.6 24.5369 8.6 23.71V20.5H8.5C5.46243 20.5 3 18.0376 3 15V12C3 8.96243 5.46243 6.5 8.5 6.5Z"
+        fill="url(#helpCardGrad)"
+      />
+      <circle cx="10.5" cy="13.5" r="1.35" fill="white" />
+      <circle cx="15" cy="13.5" r="1.35" fill="white" />
+      <circle cx="19.5" cy="13.5" r="1.35" fill="white" />
+    </svg>
+  );
+}
+
+function DemoCalendarIcon() {
+  return (
+    <svg width="30" height="30" viewBox="0 0 30 30" fill="none" aria-hidden="true">
+      <defs>
+        <linearGradient id="demoCardGrad" x1="5" y1="15" x2="25" y2="15" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#24D3A7" />
+          <stop offset="1" stopColor="#5D8BFF" />
+        </linearGradient>
+      </defs>
+      <rect x="5" y="6.5" width="20" height="19" rx="5" stroke="url(#demoCardGrad)" strokeWidth="2.4" />
+      <path d="M10 4.8V9" stroke="url(#demoCardGrad)" strokeWidth="2.4" strokeLinecap="round" />
+      <path d="M20 4.8V9" stroke="url(#demoCardGrad)" strokeWidth="2.4" strokeLinecap="round" />
+      <path d="M5.8 11.2H24.2" stroke="url(#demoCardGrad)" strokeWidth="2.4" strokeLinecap="round" />
+      <circle cx="11" cy="15.5" r="1.2" fill="#6AA7FF" />
+      <circle cx="15" cy="15.5" r="1.2" fill="#6AA7FF" />
+      <circle cx="19" cy="15.5" r="1.2" fill="#6AA7FF" />
+      <circle cx="11" cy="19.5" r="1.2" fill="#6AA7FF" />
+      <circle cx="15" cy="19.5" r="1.2" fill="#6AA7FF" />
+    </svg>
+  );
+}
+
+function LiveChatIcon() {
+  return (
+    <svg width="30" height="30" viewBox="0 0 30 30" fill="none" aria-hidden="true">
+      <defs>
+        <linearGradient id="liveChatCardGrad" x1="3" y1="15" x2="27" y2="15" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#24D3A7" />
+          <stop offset="1" stopColor="#5D8BFF" />
+        </linearGradient>
+      </defs>
+      <path
+        d="M8.5 6.5H21.5C24.5376 6.5 27 8.96243 27 12V15C27 18.0376 24.5376 20.5 21.5 20.5H15.4L10.2 24.5C9.54467 25.0041 8.6 24.5369 8.6 23.71V20.5H8.5C5.46243 20.5 3 18.0376 3 15V12C3 8.96243 5.46243 6.5 8.5 6.5Z"
+        fill="url(#liveChatCardGrad)"
+      />
+      <circle cx="10.5" cy="13.5" r="1.35" fill="white" />
+      <circle cx="15" cy="13.5" r="1.35" fill="white" />
+      <circle cx="19.5" cy="13.5" r="1.35" fill="white" />
+    </svg>
+  );
+}
+
 function CardIconShell({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-[#1f6fff]/40 bg-white/[0.03]">
@@ -251,18 +325,33 @@ function HelpCard({
   title,
   description,
   cta,
+  icon,
 }: {
   title: string;
   description: string;
   cta: string;
+  icon: HelpCardIcon;
 }) {
+  const renderIcon = () => {
+    switch (icon) {
+      case "help":
+        return <HelpCenterIcon />;
+      case "demo":
+        return <DemoCalendarIcon />;
+      case "chat":
+        return <LiveChatIcon />;
+      default:
+        return <HelpCenterIcon />;
+    }
+  };
+
   return (
     <div className="flex flex-col rounded-[26px] border border-[#d9f5ef] bg-white p-6 shadow-[0_16px_40px_rgba(0,0,0,0.06)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_24px_55px_rgba(0,0,0,0.10)]">
       <div
         className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl"
         style={{ background: "rgba(0,212,170,0.10)" }}
       >
-        <GradientCheckIcon />
+        {renderIcon()}
       </div>
 
       <h3 className="text-[20px] font-semibold tracking-[-0.02em] text-[#0b0f1a]">{title}</h3>
@@ -335,10 +424,10 @@ const ContactPageContent = () => {
     e.preventDefault();
 
     if (!validateForm()) {
-  setStatus("");
-  setStatusType("");
-  return;
-}
+      setStatus("");
+      setStatusType("");
+      return;
+    }
 
     setIsSubmitting(true);
     setStatus("");
@@ -738,6 +827,7 @@ const ContactPageContent = () => {
                   title={card.title}
                   description={card.description}
                   cta={card.cta}
+                  icon={card.icon}
                 />
               ))}
             </div>

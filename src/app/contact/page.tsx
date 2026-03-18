@@ -1,5 +1,6 @@
 import Header from "@/components/Header";
 import ContactPageContent from "@/components/contact/ContactPageContent";
+{/*import HelpSection from "@/components/contact/HelpSection";*/}
 import Footer from "@/components/Footer";
 
 export const metadata = {
@@ -13,6 +14,7 @@ export default function ContactPage() {
     <div className="min-h-screen">
       <Header />
       <ContactPageContent />
+      {/*<HelpSection />*/}
       <Footer />
     </div>
   );
