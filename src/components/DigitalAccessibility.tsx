@@ -1,27 +1,27 @@
 "use client";
 
-import React, { useId, useState } from "react";
+import React, { useEffect, useId, useState } from "react";
 import Image from "next/image";
 import ScrollReveal from "./ScrollReveal";
 
 const testimonials = [
   {
     quote:
-      "AccessIQ provided us with the expertise we needed to understand our legal obligations, and the tools and training we needed to meet them efficiently reducing risk and improving usability for every customer.",
+      "AccessIQ helped us understand our legal obligations, reduce compliance risk, and improve usability across our entire platform.",
     name: "Adam Miller",
     title: "Founder",
-    company: "Globadmin services",
+    company: "Globadmin Services",
   },
   {
     quote:
-      "The compliance documentation alone saved us thousands in legal consultation fees. AccessIQ made our WCAG 2.1 AA certification process seamless and stress-free.",
+      "The compliance documentation alone saved us thousands in legal consultation fees. AccessIQ made the certification process clear, efficient, and stress-free.",
     name: "Michael Chen",
     title: "Head of Compliance",
     company: "FinanceHub Inc.",
   },
   {
     quote:
-      "We went from 47% to 98% accessibility compliance in just three months. The real-time monitoring dashboard keeps us on track and ahead of any potential issues.",
+      "Within three months, we dramatically improved accessibility across our digital experience. The ongoing monitoring helped our team stay ahead of issues.",
     name: "Emily Rodriguez",
     title: "Director of Digital",
     company: "HealthFirst Group",
@@ -115,6 +115,16 @@ const DigitalAccessibility = () => {
     );
   };
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setActiveTestimonial((prev) =>
+        prev === testimonials.length - 1 ? 0 : prev + 1
+      );
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <section
       aria-labelledby="digital-accessibility-heading"
@@ -125,7 +135,7 @@ const DigitalAccessibility = () => {
       }}
     >
       <div
-        className="absolute top-0 left-0 w-[900px] h-[900px] pointer-events-none"
+        className="absolute top-0 left-0 h-[900px] w-[900px] pointer-events-none"
         aria-hidden="true"
         style={{
           background:
@@ -134,7 +144,7 @@ const DigitalAccessibility = () => {
         }}
       />
       <div
-        className="absolute top-[40%] left-0 w-[700px] h-[700px] pointer-events-none"
+        className="absolute top-[40%] left-0 h-[700px] w-[700px] pointer-events-none"
         aria-hidden="true"
         style={{
           background:
@@ -143,7 +153,7 @@ const DigitalAccessibility = () => {
         }}
       />
       <div
-        className="absolute top-[35%] right-[30%] w-[500px] h-[500px] pointer-events-none"
+        className="absolute top-[35%] right-[30%] h-[500px] w-[500px] pointer-events-none"
         aria-hidden="true"
         style={{
           background:
@@ -158,11 +168,11 @@ const DigitalAccessibility = () => {
             <div>
               <h2
                 id="digital-accessibility-heading"
-                className="text-3xl md:text-4xl lg:text-[46px] font-bold text-white leading-tight"
+                className="text-3xl font-bold leading-tight text-white md:text-4xl lg:text-[46px]"
               >
                 Digital Accessibility
               </h2>
-              <p className="mt-3 text-2xl md:text-3xl lg:text-[34px] font-bold leading-tight">
+              <p className="mt-3 text-2xl font-bold leading-tight md:text-3xl lg:text-[34px]">
                 <span className="gradient-text">Services You Can Trust</span>
               </p>
             </div>
@@ -246,10 +256,10 @@ const DigitalAccessibility = () => {
         <div className="mb-28 mt-28 grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
           <ScrollReveal animation="fade-in-left">
             <div>
-              <h2 className="text-3xl md:text-4xl lg:text-[46px] font-bold text-white leading-tight">
+              <h2 className="text-3xl font-bold leading-tight text-white md:text-4xl lg:text-[46px]">
                 Expert audit completed.
               </h2>
-              <p className="mt-3 mb-6 text-2xl md:text-3xl lg:text-[34px] font-bold leading-tight">
+              <p className="mb-6 mt-3 text-2xl font-bold leading-tight md:text-3xl lg:text-[34px]">
                 <span className="gradient-text">Verified. Certified.</span>
               </p>
 
@@ -335,10 +345,18 @@ const DigitalAccessibility = () => {
             <div className="relative z-10 mb-12">
               <h2
                 id={testimonialHeadingId}
-                className="text-3xl md:text-4xl lg:text-[46px] font-bold text-white leading-tight"
+                className="text-3xl font-bold leading-tight text-white md:text-4xl lg:text-[46px]"
               >
-                Trusted by <span className="gradient-text">industry Leaders</span>
+                Trusted by{" "}
+                <span className="gradient-text">industry leaders</span>
               </h2>
+
+              <p className="mt-3 text-sm font-medium text-gray-300 md:text-base">
+                ★★★★★{" "}
+                <span className="text-white">
+                  Trusted by compliance-focused teams
+                </span>
+              </p>
             </div>
           </ScrollReveal>
 
@@ -347,7 +365,7 @@ const DigitalAccessibility = () => {
               aria-labelledby={testimonialHeadingId}
               className="relative z-10"
             >
-              <div className="flex flex-col gap-8 lg:flex-row lg:gap-12 lg:items-stretch">
+              <div className="flex flex-col gap-8 lg:flex-row lg:items-stretch lg:gap-12">
                 <div
                   className="relative w-full max-w-[280px] flex-shrink-0 overflow-hidden"
                   style={{ borderRadius: "12px" }}
@@ -373,7 +391,7 @@ const DigitalAccessibility = () => {
                     aria-atomic="true"
                     className="flex h-full flex-col"
                   >
-                    <p className="text-xl font-light leading-relaxed text-gray-200 md:text-2xl lg:text-[26px]">
+                    <p className="max-w-[900px] text-xl font-light leading-relaxed text-gray-200 md:text-2xl lg:text-[26px]">
                       &ldquo;{activeItem.quote}&rdquo;
                     </p>
 
@@ -527,7 +545,7 @@ const DigitalAccessibility = () => {
               </div>
 
               <div className="relative z-10 px-8 py-14 text-center md:px-16 md:py-16">
-                <h2 className="mb-4 text-2xl font-bold leading-tight text-white md:text-3xl lg:text-[40px] whitespace-nowrap">
+                <h2 className="mb-4 whitespace-nowrap text-2xl font-bold leading-tight text-white md:text-3xl lg:text-[40px]">
                   Get Your Verified Accessibility Report Today
                 </h2>
                 <p className="mx-auto mb-8 max-w-xl text-base text-white/85">

@@ -122,7 +122,7 @@ const Footer = () => {
                   aria-hidden="true"
                 >
                   <Image
-                    src="https://www.getaccessiq.com/_next/image?url=%2Fimages%2Flogos%2Flogo.jpg&w=1080&q=75"
+                    src="/images/Badget_6473.png"
                     alt=""
                     width={540}
                     height={150}
