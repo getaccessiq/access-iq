@@ -2,148 +2,187 @@
 
 import React from "react";
 import Image from "next/image";
-import LogoMarquee from "./LogoMarquee";
+import Link from "next/link";
 import ScrollReveal from "./ScrollReveal";
 
-const processSteps = [
-  { label: "Scan" },
-  { label: "Audit" },
-  { label: "Fix" },
-  { label: "Monitor" },
-  { label: "Certify" },
+const processSteps = ["Scan", "Audit", "Fix", "Monitor", "Certify"] as const;
+
+const auditItems = [
+  "WCAG 2.2 AA & ADA compliance verification",
+  "Automated scans + expert manual audits",
+  "Continuous monitoring & compliance reporting",
+  "Detailed issue evidence with clear prioritization",
 ];
 
-const complianceItems = [
-  "Verify WCAG 2.2 AA & ADA Standards",
-  "Reduce Legal Exposure & Risk",
-  "Continues Accessibility Monitoring",
+const legalItems = [
+  "Legally defensible audit reports",
+  "Verified by certified accessibility experts",
+  "Complete documentation for legal compliance",
 ];
 
-const riskItems = [
-  "Legal-Ready Audit Reports",
-  "Manual Verification by Experts",
-  "Full Audit Trail & Documentation",
+const fixItems = [
+  "AI-detected issues with code-level insights",
+  "WCAG-aligned fixes with developer guidance",
+  "Prioritized remediation based on impact & risk",
+  "Component-level fixes for faster implementation",
+  "Retesting & certification readiness",
+  "Ongoing validation for long-term compliance",
 ];
 
-const fixesItems = [
-  "Expert Remediation Guidance",
-  "WCAG-Aligned Code Fixes",
-  "Retest & Certification",
+const trustedLogos = [
+  { name: "Siemens", src: "/images/logos/siemens.svg", width: 118, height: 26 },
+  { name: "Ford", src: "/images/logos/ford.svg", width: 92, height: 34 },
+  { name: "Accenture", src: "/images/logos/accenture.svg", width: 126, height: 24 },
+  { name: "Edgeward", src: "/images/logos/Logo_Edgeward_7384.png", width: 114, height: 24 },
+  { name: "AccessIQ", src: "/images/logos/accessiq.svg", width: 112, height: 24 },
+  { name: "Target", src: "/images/logos/target.svg", width: 102, height: 26 },
 ];
 
-function CheckIcon({ gradientId }: { gradientId: string }) {
+type CardIconType = "audit" | "legal" | "fix";
+
+function cn(...classes: Array<string | false | null | undefined>) {
+  return classes.filter(Boolean).join(" ");
+}
+
+function ShieldMiniIcon() {
   return (
-    <svg
-      width="20"
-      height="20"
-      viewBox="0 0 24 24"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      aria-hidden="true"
-      focusable="false"
-    >
-      <defs>
-        <linearGradient
-          id={gradientId}
-          x1="22.25"
-          y1="12"
-          x2="1.75"
-          y2="12"
-          gradientUnits="userSpaceOnUse"
-        >
-          <stop stopColor="#2865C7" />
-          <stop offset="1" stopColor="#24A9AC" />
-        </linearGradient>
-      </defs>
+    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" aria-hidden="true">
       <path
-        fillRule="evenodd"
-        clipRule="evenodd"
-        d="M12.057 1.75C14.248 1.75 15.969 1.75001 17.312 1.93101C18.689 2.11601 19.781 2.50301 20.639 3.36101C21.497 4.21901 21.884 5.31099 22.069 6.68799C22.25 8.03099 22.25 9.75199 22.25 11.943V12.057C22.25 14.248 22.25 15.969 22.069 17.312C21.884 18.689 21.497 19.781 20.639 20.639C19.781 21.497 18.689 21.884 17.312 22.069C15.969 22.25 14.248 22.25 12.057 22.25H11.943C9.75199 22.25 8.03099 22.25 6.68799 22.069C5.31099 21.884 4.21901 21.497 3.36101 20.639C2.50301 19.781 2.11601 18.689 1.93101 17.312C1.75001 15.969 1.75 14.248 1.75 12.057V11.943C1.75 9.75199 1.75001 8.03099 1.93101 6.68799C2.11601 5.31099 2.50301 4.21901 3.36101 3.36101C4.21901 2.50301 5.31099 2.11601 6.68799 1.93101C8.03099 1.75001 9.75199 1.75 11.943 1.75H12.057ZM16.676 8.26299C17.083 8.63599 17.11 9.269 16.737 9.676L11.237 15.676C11.053 15.877 10.794 15.994 10.522 16C10.249 16.006 9.98599 15.9 9.79299 15.707L7.29299 13.207C6.90199 12.817 6.90199 12.183 7.29299 11.793C7.68299 11.402 8.31701 11.402 8.70701 11.793L10.469 13.554L15.263 8.324C15.636 7.917 16.269 7.88999 16.676 8.26299Z"
-        fill={`url(#${gradientId})`}
+        d="M12 3.5l6 2.5v4.7c0 4.1-2.6 7.7-6 9.3-3.4-1.6-6-5.2-6-9.3V6l6-2.5z"
+        stroke="#16b89a"
+        strokeWidth="2"
+        strokeLinejoin="round"
       />
     </svg>
   );
 }
 
-function ScanIcon() {
+function SectionBadge() {
   return (
-    <svg
-      width="20"
-      height="20"
-      viewBox="0 0 24 24"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      aria-hidden="true"
-      focusable="false"
-    >
-      <defs>
-        <linearGradient
-          id="scanGrad"
-          x1="1.25006"
-          y1="12"
-          x2="22.75"
-          y2="12"
-          gradientUnits="userSpaceOnUse"
-        >
-          <stop stopColor="#2865C7" />
-          <stop offset="1" stopColor="#24A9AC" />
-        </linearGradient>
-      </defs>
-      <path
-        d="M11.0001 1.25C5.61534 1.25007 1.25006 5.61527 1.25006 11C1.25006 16.3847 5.61534 20.7499 11.0001 20.75C13.4226 20.75 15.6367 19.8638 17.3419 18.4014L21.4698 22.5303C21.7627 22.8231 22.2374 22.8231 22.5303 22.5303C22.8232 22.2374 22.8232 21.7626 22.5303 21.4697L18.4024 17.3408C19.8644 15.6357 20.7501 13.4221 20.7501 11C20.7501 5.61522 16.3848 1.25 11.0001 1.25ZM11.0001 2.75C15.5564 2.75 19.2501 6.44365 19.2501 11C19.2501 15.5563 15.5564 19.25 11.0001 19.25C6.44377 19.2499 2.75006 15.5563 2.75006 11C2.75006 6.4437 6.44377 2.75007 11.0001 2.75Z"
-        fill="url(#scanGrad)"
-      />
+    <div className="inline-flex items-center gap-2 rounded-full border border-[#a9bdf8] bg-white px-4 py-2 shadow-[0_8px_20px_rgba(15,23,42,0.05)]">
+      <span className="inline-flex h-5 w-5 items-center justify-center rounded-full border border-[#dce7ff] bg-[#f7fbff]">
+        <ShieldMiniIcon />
+      </span>
+      <span className="text-sm font-semibold text-[#243247]">
+        Built for Enterprise Teams
+      </span>
+    </div>
+  );
+}
+
+function ProcessIcon({ type }: { type: (typeof processSteps)[number] }) {
+  const common = {
+    stroke: "#1e293b",
+    strokeWidth: 1.8,
+    strokeLinecap: "round" as const,
+    strokeLinejoin: "round" as const,
+  };
+
+  if (type === "Scan") {
+    return (
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <circle cx="11" cy="11" r="6.5" {...common} />
+        <path d="M16 16l4 4" {...common} />
+      </svg>
+    );
+  }
+
+  if (type === "Audit") {
+    return (
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path
+          d="M8 5h6l4 4v8a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2z"
+          {...common}
+        />
+        <path d="M14 5v4h4" {...common} />
+      </svg>
+    );
+  }
+
+  if (type === "Fix") {
+    return (
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path
+          d="M14.5 6.5a4 4 0 0 0-5 5L5 16l3 3 4.5-4.5a4 4 0 0 0 5-5l-2.5 2.5-2-2 2.5-2.5z"
+          {...common}
+        />
+      </svg>
+    );
+  }
+
+  if (type === "Monitor") {
+    return (
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <rect x="4" y="5" width="16" height="11" rx="2.5" {...common} />
+        <path d="M9 19h6" {...common} />
+        <path d="M12 16v3" {...common} />
+      </svg>
+    );
+  }
+
+  return (
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <circle cx="12" cy="12" r="8" {...common} />
+      <path d="M8.5 12l2.2 2.2 4.8-4.8" {...common} />
     </svg>
   );
 }
 
-function MonitorIcon() {
+function ProcessPill() {
   return (
-    <svg
-      width="20"
-      height="20"
-      viewBox="0 0 24 24"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      aria-hidden="true"
-      focusable="false"
-    >
-      <defs>
-        <linearGradient
-          id="monitorGrad"
-          x1="22.5"
-          y1="12.25"
-          x2="2"
-          y2="12.25"
-          gradientUnits="userSpaceOnUse"
-        >
-          <stop stopColor="#2865C7" />
-          <stop offset="1" stopColor="#24A9AC" />
-        </linearGradient>
-      </defs>
-      <path
-        fillRule="evenodd"
-        clipRule="evenodd"
-        d="M2 4.75C2 3.23122 3.23122 2 4.75 2H19.75C21.2688 2 22.5 3.23122 22.5 4.75V19.75C22.5 21.2688 21.2688 22.5 19.75 22.5H4.75C3.23122 22.5 2 21.2688 2 19.75V4.75ZM17.25 12.5C17.6642 12.5 18 12.8358 18 13.25V18.25C18 18.6642 17.6642 19 17.25 19C16.8358 19 16.5 18.6642 16.5 18.25V13.25C16.5 12.8358 16.8358 12.5 17.25 12.5ZM12.25 14.5C12.6642 14.5 13 14.8358 13 15.25V18.25C13 18.6642 12.6642 19 12.25 19C11.8358 19 11.5 18.6642 11.5 18.25V15.25C11.5 14.8358 11.8358 14.5 12.25 14.5ZM7.25 15.5C7.66421 15.5 8 15.8358 8 16.25V18.25C8 18.6642 7.66421 19 7.25 19C6.83579 19 6.5 18.6642 6.5 18.25V16.25C6.5 15.8358 6.83579 15.5 7.25 15.5ZM15.25 5.5C14.9467 5.5 14.6732 5.68273 14.5571 5.96299C14.441 6.24324 14.5052 6.56583 14.7197 6.78033L15.6808 7.74146C15.2658 8.09829 14.77 8.49013 14.2001 8.88197C12.2782 10.2033 9.54989 11.5 6.25 11.5C5.83579 11.5 5.5 11.8358 5.5 12.25C5.5 12.6642 5.83579 13 6.25 13C9.95011 13 12.9718 11.5467 15.0499 10.118C15.7083 9.66539 16.2757 9.21276 16.7442 8.80488L17.7197 9.78033C17.9342 9.99483 18.2568 10.059 18.537 9.94291C18.8173 9.82682 19 9.55335 19 9.25V6.25C19 5.83579 18.6642 5.5 18.25 5.5H15.25Z"
-        fill="url(#monitorGrad)"
-      />
-    </svg>
+    <div className="inline-flex flex-wrap items-center justify-center gap-3 rounded-full border border-[#e3e8f0] bg-white px-5 py-3 shadow-[0_10px_24px_rgba(15,23,42,0.04)] md:gap-4 md:px-6">
+      {processSteps.map((step, index) => (
+        <React.Fragment key={step}>
+          <div className="inline-flex items-center gap-2 text-[14px] font-semibold text-[#1c2635]">
+            <span className="inline-flex h-7 w-7 items-center justify-center rounded-full border border-[#e2e8f0] bg-[#fbfcfe]">
+              <ProcessIcon type={step} />
+            </span>
+            <span>{step}</span>
+          </div>
+
+          {index < processSteps.length - 1 && (
+            <span className="hidden text-[#c8d0dc] md:inline">›</span>
+          )}
+        </React.Fragment>
+      ))}
+    </div>
   );
 }
 
-function ArrowSeparator() {
+function BulletCheck() {
   return (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 24 24"
-      fill="none"
-      className="text-gray-300"
-      aria-hidden="true"
-      focusable="false"
-    >
+    <span className="mt-1 inline-flex h-5 w-5 shrink-0 items-center justify-center">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path
+          d="M5.5 12.5l4 4L18.5 7.5"
+          stroke="#14c987"
+          strokeWidth="2.2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+    </span>
+  );
+}
+
+function FeatureList({ items }: { items: string[] }) {
+  return (
+    <ul className="space-y-3">
+      {items.map((item) => (
+        <li key={item} className="flex items-start gap-3">
+          <BulletCheck />
+          <span className="text-[15px] leading-7 text-[#3e4b61]">{item}</span>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+function ArrowRightMini() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
       <path
-        d="M9 5l7 7-7 7"
+        d="M5 12h14m-6-6 6 6-6 6"
         stroke="currentColor"
         strokeWidth="2"
         strokeLinecap="round"
@@ -153,21 +192,113 @@ function ArrowSeparator() {
   );
 }
 
-function BulletCheckIcon() {
+function GradientButton({
+  href = "#",
+  children,
+}: {
+  href?: string;
+  children: React.ReactNode;
+}) {
   return (
-    <svg
-      width="18"
-      height="18"
-      viewBox="0 0 24 24"
-      fill="none"
-      className="mt-0.5 shrink-0"
-      aria-hidden="true"
-      focusable="false"
+    <Link
+      href={href}
+      className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[#15d0b5] to-[#1f73ff] px-6 py-3 text-sm font-semibold text-white shadow-[0_12px_28px_rgba(31,115,255,0.20)] transition-all duration-200 hover:-translate-y-0.5"
     >
+      {children}
+      <ArrowRightMini />
+    </Link>
+  );
+}
+
+function TextLink({
+  href = "#",
+  children,
+}: {
+  href?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <Link
+      href={href}
+      className="inline-flex items-center gap-2 text-sm font-semibold text-[#182334] transition-colors hover:text-[#1f73ff]"
+    >
+      {children}
+      <ArrowRightMini />
+    </Link>
+  );
+}
+
+function CardIcon({ type }: { type: CardIconType }) {
+  const common = {
+    stroke: "#2a6df6",
+    strokeWidth: 1.85,
+    strokeLinecap: "round" as const,
+    strokeLinejoin: "round" as const,
+  };
+
+  return (
+    <div className="inline-flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl border border-[#edf1f7] bg-white shadow-[0_12px_26px_rgba(15,23,42,0.08)]">
+      {type === "audit" && (
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <rect x="5" y="5" width="10" height="14" rx="2" {...common} />
+          <path d="M8 9h4M8 12h4M8 15h3" {...common} />
+          <circle cx="18" cy="16" r="3" {...common} />
+          <path d="M20.2 18.2 22 20" {...common} />
+        </svg>
+      )}
+
+      {type === "legal" && (
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path
+            d="M12 4 18 6.5v4.8c0 4-2.5 7.4-6 8.9-3.5-1.5-6-4.9-6-8.9V6.5L12 4Z"
+            {...common}
+          />
+          <path d="m9.3 12 1.8 1.8 3.8-3.8" {...common} />
+        </svg>
+      )}
+
+      {type === "fix" && (
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path
+            d="M14.6 6.8a3.7 3.7 0 0 0-4.9 4.8L5 16.3 7.7 19l4.7-4.7a3.7 3.7 0 0 0 4.8-4.9l-2.4 2.4-2.6-2.6 2.4-2.4Z"
+            {...common}
+          />
+          <path d="M7 7v2M7 3v2M3 7h2M9 7h2" {...common} />
+        </svg>
+      )}
+    </div>
+  );
+}
+
+function ComplianceChip({
+  label,
+  icon,
+}: {
+  label: string;
+  icon: React.ReactNode;
+}) {
+  return (
+    <span className="inline-flex items-center gap-2 rounded-[10px] border border-[#e6ebf3] bg-white px-3 py-2 text-[11px] font-semibold text-[#2d3850] shadow-[0_4px_12px_rgba(15,23,42,0.03)]">
+      {icon}
+      {label}
+    </span>
+  );
+}
+
+function ChipDocIcon() {
+  return (
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden="true">
       <path
-        d="M5 13l4 4L19 7"
-        stroke="#00d4aa"
-        strokeWidth="2"
+        d="M7 5h7l3 3v9a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2Z"
+        stroke="#475569"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M14 5v3h3"
+        stroke="#475569"
+        strokeWidth="1.8"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
@@ -175,300 +306,370 @@ function BulletCheckIcon() {
   );
 }
 
-function SearchArrowIcon() {
+function ChipGlobeIcon() {
   return (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden="true"
-      focusable="false"
-    >
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <circle cx="12" cy="12" r="8" stroke="#475569" strokeWidth="1.8" />
       <path
-        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-        stroke="white"
-        strokeWidth="2"
+        d="M4 12h16M12 4c2.5 2.2 2.5 13.8 0 16M12 4c-2.5 2.2-2.5 13.8 0 16"
+        stroke="#475569"
+        strokeWidth="1.8"
         strokeLinecap="round"
       />
     </svg>
   );
 }
 
-function LinkArrowIcon() {
+function ChipBadgeIcon() {
   return (
-    <svg
-      width="14"
-      height="14"
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden="true"
-      focusable="false"
-    >
-      <path
-        d="M5 12h14m-7-7l7 7-7 7"
-        stroke="#0088cc"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <rect x="5" y="5" width="14" height="14" rx="3" stroke="#475569" strokeWidth="1.8" />
+      <path d="M9 12h6" stroke="#475569" strokeWidth="1.8" strokeLinecap="round" />
     </svg>
   );
 }
 
-function FeatureList({ items }: { items: string[] }) {
+function WhiteCard({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
   return (
-    <ul className="space-y-3 mb-7">
-      {items.map((item) => (
-        <li key={item} className="flex items-start gap-2.5">
-          <BulletCheckIcon />
-          <span className="text-gray-600 text-[16px]">{item}</span>
-        </li>
-      ))}
-    </ul>
+    <div
+      className={cn(
+        "min-w-0 rounded-[30px] border border-[#edf1f6] bg-[#fbfbfc] p-7 shadow-[0_18px_44px_rgba(15,23,42,0.05)] md:p-8",
+        className
+      )}
+    >
+      {children}
+    </div>
   );
 }
 
-const AccessibilitySolutions = () => {
+function DarkImageCard({
+  src,
+  alt,
+  width,
+  height,
+  className,
+}: {
+  src: string;
+  alt: string;
+  width: number;
+  height: number;
+  className?: string;
+}) {
   return (
-    <section
-      aria-labelledby="accessibility-solutions-heading"
-      className="relative bg-[#f8f9fb]"
+    <div
+      className={cn(
+        "min-w-0 overflow-hidden rounded-[30px] border border-[#0a1a2d] bg-[#07111e] p-[3px]",
+        className
+      )}
       style={{
-        borderRadius: "24px 24px 0 0",
-        marginTop: "-24px",
-        position: "relative",
-        zIndex: 2,
+        boxShadow:
+          "0 26px 62px rgba(13,31,61,0.22), 0 0 0 1px rgba(18,214,184,0.18)",
       }}
     >
-      <div className="pt-10 pb-8" aria-label="Trusted company logos">
-        <LogoMarquee />
+      <div className="overflow-hidden rounded-[27px] bg-[#07111e]">
+        <Image
+          src={src}
+          alt={alt}
+          width={width}
+          height={height}
+          className="h-auto w-full object-cover"
+        />
       </div>
+    </div>
+  );
+}
 
-      <div className="container mx-auto" aria-hidden="true">
-        <div className="h-px bg-gray-200" />
+function CardHeader({
+  type,
+  title,
+  titleClassName,
+}: {
+  type: CardIconType;
+  title: React.ReactNode;
+  titleClassName?: string;
+}) {
+  return (
+    <div className="flex items-start gap-4">
+      <CardIcon type={type} />
+      <div className="min-w-0 pt-1">
+        <h3
+          className={cn(
+            "text-[28px] font-bold leading-[1.08] tracking-[-0.04em] text-[#0d1628] md:text-[36px]",
+            titleClassName
+          )}
+        >
+          {title}
+        </h3>
       </div>
+    </div>
+  );
+}
 
-      <div className="py-16 md:py-24">
-        <div className="container mx-auto">
-          <ScrollReveal animation="fade-in-up">
-            <div className="text-center mb-6">
-              <h2
-                id="accessibility-solutions-heading"
-                className="text-3xl md:text-4xl lg:text-[46px] font-bold text-[#0b0f1a] leading-tight"
-              >
-                Accessibility Solutions for{" "}
-                <span className="gradient-text">Enterprise Teams</span>
-              </h2>
-            </div>
-          </ScrollReveal>
+function StatsBar() {
+  const stats = [
+    { value: "20M+", label: "Pages Scanned" },
+    { value: "120+", label: "Enterprise Clients" },
+    { value: "99.9%", label: "Uptime & Accuracy" },
+    { value: "4.9 / 5", label: "Rated by Accessibility Teams", isRating: true },
+  ];
 
-          <ScrollReveal animation="fade-in-up" delay={200}>
-            <div className="flex justify-center mb-20">
-              <div className="inline-flex items-center gap-4 px-8 py-4 rounded-full bg-white border border-gray-200 shadow-sm flex-wrap justify-center">
-                <ol
-                  className="flex items-center gap-4 flex-wrap justify-center"
-                  aria-label="Accessibility workflow"
-                >
-                  {processSteps.map((step, i) => (
-                    <li key={step.label} className="flex items-center gap-4">
-                      <div className="flex items-center gap-1.5">
-                        {step.label === "Scan" && <ScanIcon />}
-                        {(step.label === "Audit" ||
-                          step.label === "Fix" ||
-                          step.label === "Certify") && (
-                          <CheckIcon gradientId={`checkGrad-${i}`} />
-                        )}
-                        {step.label === "Monitor" && <MonitorIcon />}
-                        <span className="text-[#1e293b] text-base font-medium">
-                          {step.label}
-                        </span>
-                      </div>
-
-                      {i < processSteps.length - 1 && <ArrowSeparator />}
-                    </li>
+  return (
+    <div className="rounded-[28px] border border-[#e7ecf3] bg-[#f9fafb] px-5 py-5 shadow-[0_16px_40px_rgba(15,23,42,0.04)] md:px-6">
+      <div className="grid gap-6 lg:grid-cols-[1.35fr_1fr] lg:items-stretch">
+        <div className="grid grid-cols-2 gap-5 md:grid-cols-4">
+          {stats.map((stat) => (
+            <div
+              key={stat.label}
+              className="flex min-h-[112px] flex-col justify-center"
+            >
+              {"isRating" in stat && stat.isRating ? (
+                <div className="mb-2 flex items-center gap-1 text-[#f4b400]">
+                  {Array.from({ length: 5 }).map((_, index) => (
+                    <svg
+                      key={index}
+                      width="12"
+                      height="12"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                      aria-hidden="true"
+                    >
+                      <path d="M12 3.8l2.56 5.18 5.72.83-4.14 4.03.98 5.69L12 16.82 6.88 19.53l.98-5.69L3.72 9.81l5.72-.83L12 3.8z" />
+                    </svg>
                   ))}
-                </ol>
+                </div>
+              ) : (
+                <div className="mb-2 h-[12px]" />
+              )}
 
-                <div
-                  className="w-px h-5 bg-gray-200 mx-1"
-                  aria-hidden="true"
-                />
+              <div className="text-[26px] font-bold leading-none tracking-[-0.03em] text-[#0c1526]">
+                {stat.value}
+              </div>
 
-                <button
-                  type="button"
-                  className="text-[#0088cc] text-base font-medium px-5 py-2 rounded-full border border-[#0088cc]/30 hover:bg-[#0088cc]/5 transition-colors"
-                  aria-label="View process"
-                >
-                  View Process
-                </button>
+              <div className="mt-2 text-sm leading-6 text-[#69768b]">
+                {stat.label}
               </div>
             </div>
-          </ScrollReveal>
+          ))}
+        </div>
 
-          <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center mb-20">
-            <ScrollReveal animation="fade-in-left">
-              <div>
-                <h3 className="text-[#0b0f1a] text-2xl md:text-3xl lg:text-[32px] font-bold mb-5">
-                  ADA &amp; WCAG Compliance
-                </h3>
-
-                <FeatureList items={complianceItems} />
-
-                <div className="flex items-center gap-4 mb-5">
-                  <button
-                    type="button"
-                    className="flex items-center gap-2 text-white text-sm font-semibold px-5 py-2.5 rounded-full hover:opacity-90 transition-opacity"
-                    style={{
-                      background: "linear-gradient(135deg, #00d4aa, #0088cc)",
-                    }}
-                    aria-label="Start free scan"
-                  >
-                    Start Free Scan
-                    <SearchArrowIcon />
-                  </button>
-                </div>
-
-                <a
-                  href="#"
-                  className="inline-flex items-center gap-1.5 text-[#0088cc] text-sm font-medium hover:underline mb-6"
-                >
-                  <span>View Compliance Report</span>
-                  <LinkArrowIcon />
-                </a>
-
-                <Image
-                  src="/images/logos/logo.jpg"
-                  alt="WCAG 2.2, ADA, and compliance badges"
-                  width={520}
-                  height={72}
-                  className="h-[60px] md:h-[68px] w-auto object-contain"
-                />
-              </div>
-            </ScrollReveal>
-
-            <ScrollReveal animation="fade-in-right" delay={200}>
-              <div className="relative overflow-visible">
-                <Image
-                  src="/images/image-158.png"
-                  alt="ADA and WCAG compliance dashboard"
-                  width={700}
-                  height={490}
-                  className="w-full h-auto rounded-2xl"
-                />
-
-                <div
-                  className="absolute z-10 rounded-2xl px-5 py-4 right-5"
-                  style={{
-                    background: "linear-gradient(135deg, #00d4aa, #0088cc)",
-                    top: "-32px",
-                  }}
-                  aria-label="AI aided audit summary"
-                >
-                  <div className="text-white text-sm font-medium mb-1">
-                    AI Aided Audit
-                  </div>
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-white text-3xl font-bold leading-tight">
-                      800+
-                    </span>
-                    <span className="text-white/80 text-xs">
-                      Issues
-                      <br />
-                      Scanned
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </ScrollReveal>
+        <div className="flex min-h-[112px] flex-col justify-center border-t border-[#ebeff5] pt-4 lg:border-l lg:border-t-0 lg:pl-8 lg:pt-0">
+          <div className="mb-4 text-sm font-semibold text-[#202c3b]">
+            Trusted by accessibility & compliance teams
           </div>
 
-          <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center mb-20">
-            <ScrollReveal animation="fade-in-left">
-              <div className="order-2 lg:order-1">
+          <div className="grid grid-cols-2 gap-x-6 gap-y-4 sm:grid-cols-3">
+            {trustedLogos.map((logo) => (
+              <div
+                key={logo.name}
+                className="flex h-[28px] items-center"
+              >
                 <Image
-                  src="/images/dashboard-risk.png"
-                  alt="ADA risk level dashboard"
-                  width={700}
-                  height={490}
-                  className="w-full h-auto rounded-2xl"
+                  src={logo.src}
+                  alt={logo.name}
+                  width={logo.width}
+                  height={logo.height}
+                  className="h-auto max-h-[26px] w-auto object-contain opacity-45 grayscale transition duration-200 hover:opacity-65"
                 />
               </div>
-            </ScrollReveal>
-
-            <ScrollReveal animation="fade-in-right" delay={200}>
-              <div className="order-1 lg:order-2 lg:pl-4">
-                <h3 className="text-[#0b0f1a] text-2xl md:text-3xl lg:text-[32px] font-bold mb-5">
-                  Reduce Legal Risk
-                </h3>
-
-                <FeatureList items={riskItems} />
-
-                <div className="flex items-center gap-4 mb-5">
-                  <button
-                    type="button"
-                    className="flex items-center gap-2 text-white text-sm font-semibold px-5 py-2.5 rounded-full hover:opacity-90 transition-opacity"
-                    style={{
-                      background: "linear-gradient(135deg, #00d4aa, #0088cc)",
-                    }}
-                    aria-label="Start free scan"
-                  >
-                    Start Free Scan
-                    <SearchArrowIcon />
-                  </button>
-                </div>
-
-                <a
-                  href="#"
-                  className="inline-flex items-center gap-1.5 text-[#0088cc] text-sm font-medium hover:underline"
-                >
-                  <span>Get Compliance Report</span>
-                  <LinkArrowIcon />
-                </a>
-              </div>
-            </ScrollReveal>
-          </div>
-
-          <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
-            <ScrollReveal animation="fade-in-left">
-              <div>
-                <h3 className="text-[#0b0f1a] text-2xl md:text-3xl lg:text-[32px] font-bold mb-5">
-                  Fast &amp; Reliable Fixes
-                </h3>
-
-                <FeatureList items={fixesItems} />
-
-                <div className="flex items-center gap-4 mb-5">
-                  <button
-                    type="button"
-                    className="flex items-center gap-2 text-white text-sm font-semibold px-5 py-2.5 rounded-full hover:opacity-90 transition-opacity"
-                    style={{
-                      background: "linear-gradient(135deg, #00d4aa, #0088cc)",
-                    }}
-                    aria-label="View accessibility score"
-                  >
-                    View Accessibility Score
-                  </button>
-                </div>
-              </div>
-            </ScrollReveal>
-
-            <ScrollReveal animation="fade-in-right" delay={200}>
-              <div className="-mx-4 md:mx-0">
-                <Image
-                  src="/images/fixes-chart.png"
-                  alt="Chart showing accessibility issues over time"
-                  width={900}
-                  height={640}
-                  className="w-full h-auto rounded-none md:rounded-2xl"
-                />
-              </div>
-            </ScrollReveal>
+            ))}
           </div>
         </div>
       </div>
+    </div>
+  );
+}
+
+export default function AccessibilitySolutions() {
+  return (
+    <section
+      aria-labelledby="accessibility-solutions-heading"
+      className="relative overflow-hidden bg-[#f5f7fb] py-16 md:py-20 lg:py-24"
+    >
+      <div className="relative mx-auto max-w-[1280px] px-4 md:px-6 lg:px-8">
+        <ScrollReveal animation="fade-in-up">
+          <div className="mb-6 flex justify-center">
+            <SectionBadge />
+          </div>
+        </ScrollReveal>
+
+        <ScrollReveal animation="fade-in-up" delay={80}>
+          <div className="mx-auto max-w-[1280px] text-center">
+            <h2
+              id="accessibility-solutions-heading"
+              className="font-bold leading-[1.02] tracking-[-0.045em] text-[#091223]"
+            >
+              <span className="mx-auto block max-w-[900px] whitespace-normal lg:whitespace-nowrap text-[34px] sm:text-[46px] md:text-[58px] lg:text-[68px] xl:text-[74px]">
+                Enterprise Accessibility.
+              </span>
+              <span className="mx-auto block max-w-[1180px] whitespace-normal lg:whitespace-nowrap bg-gradient-to-r from-[#15d2b6] to-[#1f73ff] bg-clip-text pb-1 text-[34px] text-transparent sm:text-[46px] md:text-[58px] lg:text-[68px] xl:text-[74px]">
+                Audit-Ready. Legally Protected.
+              </span>
+            </h2>
+
+            <p className="mx-auto mt-6 max-w-[760px] text-[18px] leading-8 text-[#4c5870] md:text-[22px] md:leading-9">
+              Automated scanning, expert audits, and AI-powered fixes — so you stay
+              WCAG &amp; ADA compliant with confidence.
+            </p>
+          </div>
+        </ScrollReveal>
+
+        <ScrollReveal animation="fade-in-up" delay={140}>
+          <div className="mt-8 flex justify-center md:mt-10">
+            <ProcessPill />
+          </div>
+        </ScrollReveal>
+
+        <div className="mt-12 grid grid-cols-1 gap-6 lg:grid-cols-[0.95fr_1.35fr] xl:mt-14">
+          <ScrollReveal animation="fade-in-left">
+            <WhiteCard className="h-full">
+              <CardHeader
+                type="audit"
+                title={
+                  <>
+                    Pass WCAG &amp; ADA
+                    <br />
+                    Audits Confidently
+                  </>
+                }
+                titleClassName="max-w-[320px]"
+              />
+
+              <div className="mt-6">
+                <FeatureList items={auditItems} />
+              </div>
+
+              <div className="mt-7 flex flex-wrap items-center gap-4">
+                <GradientButton href="#">Start Free Scan</GradientButton>
+                <TextLink href="#">View Compliance Report</TextLink>
+              </div>
+
+              <div className="mt-7 flex flex-wrap gap-3">
+                <ComplianceChip label="WCAG 2.2" icon={<ChipDocIcon />} />
+                <ComplianceChip label="ADA" icon={<ChipGlobeIcon />} />
+                <ComplianceChip label="EN 301 549" icon={<ChipBadgeIcon />} />
+                <ComplianceChip label="508" icon={<ChipBadgeIcon />} />
+              </div>
+            </WhiteCard>
+          </ScrollReveal>
+
+          <ScrollReveal animation="fade-in-right" delay={100}>
+            <DarkImageCard
+              src="/images/image-158.png"
+              alt="Accessibility dashboard showing compliance score and issues"
+              width={1200}
+              height={760}
+              className="h-full"
+            />
+          </ScrollReveal>
+
+          <ScrollReveal animation="fade-in-left" delay={140}>
+            <DarkImageCard
+              src="/images/dashboard-risk.png"
+              alt="ADA risk level dashboard with audit status"
+              width={900}
+              height={620}
+              className="h-full"
+            />
+          </ScrollReveal>
+
+          <ScrollReveal animation="fade-in-right" delay={180}>
+            <WhiteCard className="h-full">
+              <CardHeader
+                type="legal"
+                title={
+                  <>
+                    Avoid Lawsuits &amp; Stay
+                    <br />
+                    Legally Protected
+                  </>
+                }
+                titleClassName="max-w-[390px]"
+              />
+
+              <div className="mt-6">
+                <FeatureList items={legalItems} />
+              </div>
+
+              <div className="mt-7 flex flex-wrap items-center gap-4">
+                <GradientButton href="#">Get Your Audit Report</GradientButton>
+                <TextLink href="#">Learn About Compliance</TextLink>
+              </div>
+            </WhiteCard>
+          </ScrollReveal>
+
+          <ScrollReveal animation="fade-in-left" delay={220}>
+            <WhiteCard className="h-full">
+              <CardHeader
+                type="fix"
+                title={
+                  <>
+                    Expert-Guided
+                    <br />
+                    Accessibility Fixes
+                  </>
+                }
+                titleClassName="max-w-[280px] text-[24px] leading-[1.06] md:text-[30px]"
+              />
+
+              <div className="mt-6">
+                <FeatureList items={fixItems} />
+              </div>
+
+              <div className="mt-7 flex flex-wrap items-center gap-4">
+                <GradientButton href="#">View Accessibility Score</GradientButton>
+                <TextLink href="#">See How It Works</TextLink>
+              </div>
+            </WhiteCard>
+          </ScrollReveal>
+
+          <ScrollReveal animation="fade-in-right" delay={260}>
+            <div className="relative h-full min-w-0">
+              <DarkImageCard
+                src="/images/fixes-chart.png"
+                alt="Accessibility issues trend dashboard"
+                width={1200}
+                height={760}
+                className="h-full"
+              />
+
+              <div className="absolute bottom-5 right-5 w-[185px] rounded-[20px] border border-white/10 bg-[#121a27]/95 p-4 text-white shadow-[0_18px_40px_rgba(0,0,0,0.28)] backdrop-blur">
+                <div className="text-sm font-semibold">AI Suggestions</div>
+
+                <ul className="mt-3 space-y-2 text-xs text-white/80">
+                  <li className="flex items-center gap-2">
+                    <span className="h-1.5 w-1.5 rounded-full bg-[#18d5b5]" />
+                    Missing alt text
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="h-1.5 w-1.5 rounded-full bg-[#18d5b5]" />
+                    Color contrast issues
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="h-1.5 w-1.5 rounded-full bg-[#18d5b5]" />
+                    Keyboard navigation
+                  </li>
+                </ul>
+
+                <div className="mt-4 rounded-full bg-gradient-to-r from-[#13d1b5] to-[#1f73ff] px-3 py-2 text-center text-[11px] font-semibold text-white">
+                  Auto-Fix Available
+                </div>
+              </div>
+            </div>
+          </ScrollReveal>
+        </div>
+
+        <ScrollReveal animation="fade-in-up" delay={300}>
+          <div className="mt-8 md:mt-10">
+            <StatsBar />
+          </div>
+        </ScrollReveal>
+      </div>
     </section>
   );
-};
-
-export default AccessibilitySolutions;
+}

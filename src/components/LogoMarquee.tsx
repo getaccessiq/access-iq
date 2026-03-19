@@ -9,7 +9,7 @@ const logos = [
   { src: "/images/logos/ford.svg", alt: "Ford", width: 100 },
   { src: "/images/logos/accenture.svg", alt: "Accenture", width: 130 },
   { src: "/images/logos/vector.svg", alt: "Vector", width: 130 },
-  { src: "/images/logos/redbull.svg", alt: "Red Bull", width: 120 },
+  { src: "/images/logos/Logo_Edgeward_7384.png", alt: "Edgeward", width: 120 },
   { src: "/images/logos/accessiq.svg", alt: "AccessIQ", width: 120 },
 ];
 
