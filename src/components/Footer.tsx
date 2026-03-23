@@ -24,7 +24,7 @@ const footerLinks = {
     { label: "Careers", href: "/careers" },
   ],
   resources: [
-    { label: "WCAG checklist", href: "/wcag-checklist" },
+    { label: "WCAG checklist", href: "/accessibility-checklist" },
     { label: "Privacy policy", href: "/privacy-policy" },
     { label: "Terms of use", href: "/terms-of-use" },
     { label: "Accessibility Statement", href: "/accessibility-statement" },

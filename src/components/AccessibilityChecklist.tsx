@@ -197,7 +197,7 @@ function FeatureCard({
   );
 }
 
-export default function WCAGChecklistPageContent() {
+export default function AccessibilityChecklist() {
   const [selectedLevel, setSelectedLevel] = useState<FilterLevel>("AA");
   const [query, setQuery] = useState("");
   const resultsId = useId();
