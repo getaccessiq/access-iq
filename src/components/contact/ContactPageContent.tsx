@@ -27,6 +27,7 @@ type HelpCardItem = {
   description: string;
   cta: string;
   icon: HelpCardIcon;
+  href?: string;
 };
 
 const initialFormData: FormDataType = {
@@ -55,6 +56,7 @@ const helpCards: HelpCardItem[] = [
     description: "Browse our knowledge base, accessibility guides, and compliance resources.",
     cta: "Visit Help Center",
     icon: "help",
+    href: "/help-center",
   },
   {
     title: "Schedule a Personalized Demo",
@@ -327,11 +329,13 @@ function HelpCard({
   description,
   cta,
   icon,
+  href,
 }: {
   title: string;
   description: string;
   cta: string;
   icon: HelpCardIcon;
+  href?: string;
 }) {
   const renderIcon = () => {
     switch (icon) {
@@ -347,7 +351,7 @@ function HelpCard({
   };
 
   const ctaClassName =
-  "mt-6 inline-flex min-h-[50px] w-fit items-center justify-center gap-2 rounded-full px-6 py-3 text-[13px] font-semibold text-white transition-all duration-200 hover:scale-[1.02] hover:opacity-90";
+    "mt-6 inline-flex min-h-[50px] w-fit items-center justify-center gap-2 rounded-full px-6 py-3 text-[13px] font-semibold text-white transition-all duration-200 hover:scale-[1.02] hover:opacity-90";
 
   return (
     <div className="flex flex-col rounded-[26px] border border-[#d9f5ef] bg-white p-6 shadow-[0_16px_40px_rgba(0,0,0,0.06)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_24px_55px_rgba(0,0,0,0.10)]">
@@ -362,20 +366,28 @@ function HelpCard({
       <p className="mt-2 flex-1 text-[15px] leading-7 text-slate-500">{description}</p>
 
       {icon === "demo" ? (
-  <BookDemoButton
-    className={`${ctaClassName} bg-[linear-gradient(135deg,#00d4aa,#0088cc)] shadow-[0_10px_24px_rgba(0,136,204,0.22)]`}
-  >
-    {cta}
-  </BookDemoButton>
-) : (
-  <button
-    type="button"
-    className={ctaClassName}
-    style={{ background: "linear-gradient(135deg, #00d4aa, #0088cc)" }}
-  >
-    {cta}
-  </button>
-)}
+        <BookDemoButton
+          className={`${ctaClassName} bg-[linear-gradient(135deg,#00d4aa,#0088cc)] shadow-[0_10px_24px_rgba(0,136,204,0.22)]`}
+        >
+          {cta}
+        </BookDemoButton>
+      ) : href ? (
+        <a
+          href={href}
+          className={ctaClassName}
+          style={{ background: "linear-gradient(135deg, #00d4aa, #0088cc)" }}
+        >
+          {cta}
+        </a>
+      ) : (
+        <button
+          type="button"
+          className={ctaClassName}
+          style={{ background: "linear-gradient(135deg, #00d4aa, #0088cc)" }}
+        >
+          {cta}
+        </button>
+      )}
     </div>
   );
 }
@@ -841,6 +853,7 @@ const ContactPageContent = () => {
                   description={card.description}
                   cta={card.cta}
                   icon={card.icon}
+                  href={card.href}
                 />
               ))}
             </div>
