@@ -327,3 +327,15 @@ body {
   .scroll-animate-visible { transition: none !important; }
   .scroll-stagger-children.scroll-animate-visible > * { animation: none !important; opacity: 1 !important; transform: none !important; }
 }
+
+/* Crisp launcher dauerhaft ausblenden */
+#crisp-chatbox .cc-kv6t,
+#crisp-chatbox .cc-1brb6,
+#crisp-chatbox .cc-1xry,
+#crisp-chatbox .cc-unoo,
+#crisp-chatbox [class*="launcher"],
+#crisp-chatbox [class*="button"] {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}

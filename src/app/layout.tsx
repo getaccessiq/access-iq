@@ -5,6 +5,9 @@ import "./globals.css";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/next";
 
+// 👉 NEU: Chat importieren
+import PremiumAccessiQChat from "@/components/premium-accessiq-chat";
+
 const inter = Inter({
   subsets: ["latin"],
 });
@@ -16,20 +19,22 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="en">
       <body className={`${inter.className} antialiased`}>
         {children}
+
+        {/* ✅ Premium Chat global verfügbar */}
+        <PremiumAccessiQChat />
 
         {/* Vercel Analytics */}
         <Analytics />
 
         {/* Vercel Speed Insights */}
         <SpeedInsights />
-        
       </body>
     </html>
   );

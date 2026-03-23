@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import AnimatedGradient from "../AnimatedGradient";
 import BookDemoButton from "@/components/BookDemoButton";
 import ScrollReveal from "../ScrollReveal";
+import { openAccessiQChat } from "@/components/premium-accessiq-chat";
 
 type FormDataType = {
   firstName: string;
@@ -371,6 +372,15 @@ function HelpCard({
         >
           {cta}
         </BookDemoButton>
+      ) : icon === "chat" ? (
+        <button
+          type="button"
+          onClick={() => openAccessiQChat("question")}
+          className={ctaClassName}
+          style={{ background: "linear-gradient(135deg, #00d4aa, #0088cc)" }}
+        >
+          {cta}
+        </button>
       ) : href ? (
         <a
           href={href}
