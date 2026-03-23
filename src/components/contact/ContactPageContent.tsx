@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useId, useState } from "react";
 import AnimatedGradient from "../AnimatedGradient";
 import BookDemoButton from "@/components/BookDemoButton";
 import ScrollReveal from "../ScrollReveal";
@@ -283,7 +283,7 @@ function LiveChatIcon() {
 
 function CardIconShell({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-[#1f6fff]/40 bg-white/[0.03]">
+    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-[#1f6fff]/40 bg-white/[0.03] sm:h-12 sm:w-12">
       {children}
     </div>
   );
@@ -297,7 +297,7 @@ function InfoCard({
   children: React.ReactNode;
 }) {
   return (
-    <div className="rounded-[24px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.035),rgba(255,255,255,0.02))] px-5 py-5 backdrop-blur-xl shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
+    <div className="rounded-[22px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.035),rgba(255,255,255,0.02))] px-4 py-4 backdrop-blur-xl shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] sm:rounded-[24px] sm:px-5 sm:py-5">
       <div className="text-[11px] font-semibold uppercase tracking-[0.24em] text-slate-400">
         {label}
       </div>
@@ -316,9 +316,9 @@ function InfoRow({
   alignStart?: boolean;
 }) {
   return (
-    <div className={`flex gap-4 ${alignStart ? "items-start" : "items-center"}`}>
+    <div className={`flex gap-3 sm:gap-4 ${alignStart ? "items-start" : "items-center"}`}>
       <CardIconShell>{icon}</CardIconShell>
-      <div className={`${alignStart ? "pt-1" : ""} text-[15px] leading-8 text-slate-200`}>
+      <div className={`${alignStart ? "pt-1" : ""} min-w-0 text-[15px] leading-7 text-slate-200 sm:leading-8`}>
         {children}
       </div>
     </div>
@@ -352,10 +352,10 @@ function HelpCard({
   };
 
   const ctaClassName =
-    "mt-6 inline-flex min-h-[50px] w-fit items-center justify-center gap-2 rounded-full px-6 py-3 text-[13px] font-semibold text-white transition-all duration-200 hover:scale-[1.02] hover:opacity-90";
+    "mt-6 inline-flex min-h-[48px] w-full sm:w-fit items-center justify-center gap-2 rounded-full px-6 py-3 text-[14px] font-semibold text-white transition-all duration-200 hover:scale-[1.02] hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300 focus-visible:ring-offset-2 focus-visible:ring-offset-white";
 
   return (
-    <div className="flex flex-col rounded-[26px] border border-[#d9f5ef] bg-white p-6 shadow-[0_16px_40px_rgba(0,0,0,0.06)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_24px_55px_rgba(0,0,0,0.10)]">
+    <div className="flex h-full flex-col rounded-[24px] border border-[#d9f5ef] bg-white p-5 shadow-[0_16px_40px_rgba(0,0,0,0.06)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_24px_55px_rgba(0,0,0,0.10)] sm:rounded-[26px] sm:p-6">
       <div
         className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl"
         style={{ background: "rgba(0,212,170,0.10)" }}
@@ -363,7 +363,9 @@ function HelpCard({
         {renderIcon()}
       </div>
 
-      <h3 className="text-[20px] font-semibold tracking-[-0.02em] text-[#0b0f1a]">{title}</h3>
+      <h3 className="text-[20px] font-semibold tracking-[-0.02em] text-[#0b0f1a]">
+        {title}
+      </h3>
       <p className="mt-2 flex-1 text-[15px] leading-7 text-slate-500">{description}</p>
 
       {icon === "demo" ? (
@@ -378,6 +380,7 @@ function HelpCard({
           onClick={() => openAccessiQChat("question")}
           className={ctaClassName}
           style={{ background: "linear-gradient(135deg, #00d4aa, #0088cc)" }}
+          aria-label="Start live chat with an accessibility specialist"
         >
           {cta}
         </button>
@@ -403,6 +406,9 @@ function HelpCard({
 }
 
 const ContactPageContent = () => {
+  const statusId = useId();
+  const formDescriptionId = useId();
+
   const [formData, setFormData] = useState<FormDataType>(initialFormData);
   const [errors, setErrors] = useState<FormErrors>({});
   const [status, setStatus] = useState("");
@@ -503,7 +509,7 @@ const ContactPageContent = () => {
   };
 
   const inputBaseClass =
-    "w-full rounded-2xl border bg-[#08111f]/95 px-4 py-3.5 text-sm text-white placeholder:text-slate-500 outline-none transition-all duration-200 focus:border-cyan-300/50 focus:ring-4 focus:ring-cyan-400/10";
+    "w-full rounded-2xl border bg-[#08111f]/95 px-4 py-3.5 text-sm text-white placeholder:text-slate-500 outline-none transition-all duration-200 focus:border-cyan-300/50 focus:ring-4 focus:ring-cyan-400/10 min-h-[52px]";
   const inputNormalClass = "border-white/10";
   const inputErrorClass = "border-red-400/60 ring-4 ring-red-400/10";
 
@@ -512,23 +518,23 @@ const ContactPageContent = () => {
       <AnimatedGradient />
 
       <div className="relative z-10">
-        <section className="relative overflow-hidden pb-12 pt-[108px] md:pb-16 md:pt-[128px]">
+        <section className="relative overflow-hidden pb-10 pt-[88px] sm:pb-12 sm:pt-[96px] md:pb-16 md:pt-[116px]">
           <div className="absolute inset-0 -z-10">
-            <div className="absolute left-1/2 top-0 h-[420px] w-[420px] -translate-x-1/2 rounded-full bg-cyan-400/8 blur-3xl" />
-            <div className="absolute left-[8%] top-[12%] h-[280px] w-[280px] rounded-full bg-teal-400/8 blur-3xl" />
-            <div className="absolute right-[10%] top-[16%] h-[320px] w-[320px] rounded-full bg-sky-500/8 blur-3xl" />
+            <div className="absolute left-1/2 top-0 h-[360px] w-[360px] -translate-x-1/2 rounded-full bg-cyan-400/8 blur-3xl sm:h-[420px] sm:w-[420px]" />
+            <div className="absolute left-[8%] top-[12%] h-[220px] w-[220px] rounded-full bg-teal-400/8 blur-3xl sm:h-[280px] sm:w-[280px]" />
+            <div className="absolute right-[10%] top-[16%] h-[240px] w-[240px] rounded-full bg-sky-500/8 blur-3xl sm:h-[320px] sm:w-[320px]" />
           </div>
 
-          <div className="container mx-auto px-6 text-center lg:px-8">
+          <div className="container mx-auto px-4 text-center sm:px-6 lg:px-8">
             <ScrollReveal animation="fade-in-up" delay={120}>
-              <div className="inline-flex items-center gap-2 rounded-full border border-cyan-400/20 bg-white/[0.03] px-4 py-2 text-[13px] font-medium text-cyan-200 shadow-[0_0_30px_rgba(34,211,238,0.05)] backdrop-blur-xl">
-                <span className="h-2 w-2 rounded-full bg-cyan-300 shadow-[0_0_14px_rgba(103,232,249,0.95)]" />
-                Accessibility Compliance Consultation
+              <div className="inline-flex max-w-full items-center gap-2 rounded-full border border-cyan-400/20 bg-white/[0.03] px-4 py-2 text-[12px] font-medium text-cyan-200 shadow-[0_0_30px_rgba(34,211,238,0.05)] backdrop-blur-xl sm:text-[13px]">
+                <span className="h-2 w-2 shrink-0 rounded-full bg-cyan-300 shadow-[0_0_14px_rgba(103,232,249,0.95)]" />
+                <span className="text-balance">Accessibility Compliance Consultation</span>
               </div>
             </ScrollReveal>
 
             <ScrollReveal animation="fade-in-up" delay={180}>
-              <h1 className="mx-auto mt-7 max-w-5xl text-balance text-4xl font-semibold tracking-[-0.04em] text-white sm:text-5xl lg:text-[64px] lg:leading-[1.02]">
+              <h1 className="mx-auto mt-6 max-w-5xl text-balance text-[34px] font-semibold tracking-[-0.04em] text-white sm:mt-7 sm:text-5xl lg:text-[64px] lg:leading-[1.02]">
                 Speak With a{" "}
                 <span className="bg-gradient-to-r from-white via-cyan-200 to-cyan-400 bg-clip-text text-transparent">
                   WCAG & ADA
@@ -538,24 +544,24 @@ const ContactPageContent = () => {
             </ScrollReveal>
 
             <ScrollReveal animation="fade-in-up" delay={240}>
-              <p className="mx-auto mt-6 max-w-3xl text-base leading-8 text-slate-300 sm:text-lg lg:text-[20px]">
+              <p className="mx-auto mt-5 max-w-3xl text-[16px] leading-7 text-slate-300 sm:mt-6 sm:text-lg sm:leading-8 lg:text-[20px]">
                 Get expert guidance on accessibility compliance, ADA risk, and practical next
                 steps to improve your website and reduce legal exposure.
               </p>
             </ScrollReveal>
 
             <ScrollReveal animation="fade-in-up" delay={290}>
-              <p className="mt-8 text-center text-[11px] font-semibold uppercase tracking-[0.28em] text-cyan-300/75 sm:text-xs">
+              <p className="mt-7 text-center text-[11px] font-semibold uppercase tracking-[0.24em] text-cyan-300/75 sm:mt-8 sm:text-xs">
                 Standards we support
               </p>
             </ScrollReveal>
 
             <ScrollReveal animation="fade-in-up" delay={340}>
-              <div className="mt-5 flex flex-wrap items-center justify-center gap-3 sm:gap-4">
+              <div className="mt-4 flex flex-wrap items-center justify-center gap-3 sm:mt-5 sm:gap-4">
                 {["WCAG 2.2 AA", "ADA", "Section 508", "EN 301 549"].map((badge) => (
                   <div
                     key={badge}
-                    className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-sm font-medium text-slate-200 backdrop-blur-xl transition duration-300 hover:border-cyan-300/25 hover:bg-white/[0.06] hover:text-white"
+                    className="inline-flex min-h-[40px] items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-sm font-medium text-slate-200 backdrop-blur-xl transition duration-300 hover:border-cyan-300/25 hover:bg-white/[0.06] hover:text-white"
                   >
                     <GradientCheckIcon />
                     <span>{badge}</span>
@@ -566,23 +572,23 @@ const ContactPageContent = () => {
           </div>
         </section>
 
-        <section className="container mx-auto px-6 py-8 md:py-14 lg:px-8">
+        <section className="container mx-auto px-4 py-6 sm:px-6 sm:py-8 md:py-14 lg:px-8">
           <ScrollReveal animation="fade-in-up" delay={200} duration={800}>
             <div
-              className="rounded-[28px] p-[1px] shadow-[0_0_60px_rgba(0,212,170,0.08)]"
+              className="rounded-[24px] p-[1px] shadow-[0_0_60px_rgba(0,212,170,0.08)] sm:rounded-[28px]"
               style={{
                 background:
                   "linear-gradient(135deg, rgba(0,212,170,0.85), rgba(0,136,204,0.9), rgba(0,212,170,0.75))",
               }}
             >
-              <div className="overflow-hidden rounded-[27px] bg-[linear-gradient(180deg,#111d2e_0%,#0c1622_100%)]">
+              <div className="overflow-hidden rounded-[23px] bg-[linear-gradient(180deg,#111d2e_0%,#0c1622_100%)] sm:rounded-[27px]">
                 <div className="grid lg:grid-cols-[38%_62%]">
-                  <div className="border-b border-white/8 p-7 md:p-9 lg:border-b-0 lg:border-r lg:border-white/8 xl:p-10">
+                  <div className="border-b border-white/8 p-5 sm:p-7 md:p-9 lg:border-b-0 lg:border-r lg:border-white/8 xl:p-10">
                     <div className="max-w-md">
-                      <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-cyan-300/75">
+                      <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-cyan-300/75 sm:tracking-[0.28em]">
                         Contact details
                       </p>
-                      <h2 className="mt-3 text-[28px] font-semibold tracking-[-0.03em] text-white md:text-[30px]">
+                      <h2 className="mt-3 text-[24px] font-semibold tracking-[-0.03em] text-white sm:text-[28px] md:text-[30px]">
                         Contact AccessIQ
                       </h2>
                       <p className="mt-3 text-[15px] leading-7 text-slate-400">
@@ -591,39 +597,51 @@ const ContactPageContent = () => {
                       </p>
                     </div>
 
-                    <div className="mt-8 space-y-4">
+                    <div className="mt-7 space-y-4 sm:mt-8">
                       <InfoCard label="Email">
                         <InfoRow icon={<EmailIcon />}>
-                          <p className="break-all text-[15px] leading-7 text-slate-200">
+                          <a
+                            href="mailto:support@getaccessiq.com"
+                            className="break-all text-[15px] leading-7 text-slate-200 underline-offset-4 hover:text-white hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0c1622]"
+                          >
                             support@getaccessiq.com
-                          </p>
+                          </a>
                         </InfoRow>
                       </InfoCard>
 
                       <InfoCard label="Phone Number">
                         <InfoRow icon={<PhoneIcon />}>
-                          <p className="text-[15px] leading-7 text-slate-200">(833) 232-2730</p>
+                          <a
+                            href="tel:+18332322730"
+                            className="text-[15px] leading-7 text-slate-200 underline-offset-4 hover:text-white hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0c1622]"
+                          >
+                            (833) 232-2730
+                          </a>
                         </InfoRow>
                       </InfoCard>
 
                       <InfoCard label="Address">
                         <InfoRow icon={<LocationIcon />} alignStart>
-                          <div className="space-y-0.5 text-[15px] leading-7 text-slate-200">
+                          <address className="not-italic text-[15px] leading-7 text-slate-200">
                             <div>Assure Digital Group LLC</div>
                             <div>15257 Amberly Dr Ste 367</div>
                             <div>Tampa, FL 33647, United States</div>
-                          </div>
+                          </address>
                         </InfoRow>
                       </InfoCard>
 
-                      <InfoCard label="Service Hours">
-                        <InfoRow icon={<ClockIcon />} alignStart>
-                          <div className="space-y-0.5 text-[15px] leading-7 text-slate-200">
-                            <div className="whitespace-nowrap">Monday - Friday 9:00 AM - 5:00 PM EST</div>
-                            <div className="whitespace-nowrap">Saturday 9:00 AM - 2:00 PM EST</div>
-                          </div>
-                        </InfoRow>
-                      </InfoCard>
+<InfoCard label="Service Hours">
+  <InfoRow icon={<ClockIcon />} alignStart>
+    <div className="space-y-2 text-[15px] leading-7 text-slate-200">
+      <div className="sm:whitespace-nowrap">
+        Monday - Friday 9:00 AM - 5:00 PM EST
+      </div>
+      <div className="sm:whitespace-nowrap">
+        Saturday 9:00 AM - 2:00 PM EST
+      </div>
+    </div>
+  </InfoRow>
+</InfoCard>
 
                       <InfoCard label="Support Availability">
                         <InfoRow icon={<ChatIcon />} alignStart>
@@ -635,12 +653,12 @@ const ContactPageContent = () => {
                     </div>
                   </div>
 
-                  <div className="p-7 md:p-9 xl:p-10">
+                  <div className="p-5 sm:p-7 md:p-9 xl:p-10">
                     <div className="max-w-2xl">
-                      <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-cyan-300/75">
+                      <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-cyan-300/75 sm:tracking-[0.28em]">
                         Consultation request
                       </p>
-                      <h2 className="mt-3 text-[28px] font-semibold tracking-[-0.03em] text-white md:text-[30px]">
+                      <h2 className="mt-3 text-[24px] font-semibold tracking-[-0.03em] text-white sm:text-[28px] md:text-[30px]">
                         Request Your Consultation
                       </h2>
                       <p className="mt-3 text-[15px] leading-7 text-slate-400">
@@ -649,12 +667,21 @@ const ContactPageContent = () => {
                       </p>
                     </div>
 
-                    <form onSubmit={handleSubmit} className="mt-8 space-y-5" noValidate>
+                    <form
+                      onSubmit={handleSubmit}
+                      className="mt-7 space-y-5 sm:mt-8"
+                      noValidate
+                      aria-describedby={formDescriptionId}
+                    >
+                      <p id={formDescriptionId} className="sr-only">
+                        Required fields are first name, email, service, and message.
+                      </p>
+
                       <div className="grid gap-5 md:grid-cols-2">
                         <div>
                           <label
                             htmlFor="firstName"
-                            className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.24em] text-slate-400"
+                            className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-400 sm:tracking-[0.24em]"
                           >
                             First Name <span className="text-red-300">*</span>
                           </label>
@@ -665,6 +692,7 @@ const ContactPageContent = () => {
                             value={formData.firstName}
                             onChange={handleChange}
                             placeholder="Enter your first name"
+                            autoComplete="given-name"
                             aria-invalid={!!errors.firstName}
                             aria-describedby={errors.firstName ? "firstName-error" : undefined}
                             className={`${inputBaseClass} ${errors.firstName ? inputErrorClass : inputNormalClass}`}
@@ -679,7 +707,7 @@ const ContactPageContent = () => {
                         <div>
                           <label
                             htmlFor="email"
-                            className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.24em] text-slate-400"
+                            className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-400 sm:tracking-[0.24em]"
                           >
                             Email <span className="text-red-300">*</span>
                           </label>
@@ -690,6 +718,8 @@ const ContactPageContent = () => {
                             value={formData.email}
                             onChange={handleChange}
                             placeholder="Enter your email address"
+                            autoComplete="email"
+                            inputMode="email"
                             aria-invalid={!!errors.email}
                             aria-describedby={errors.email ? "email-error" : undefined}
                             className={`${inputBaseClass} ${errors.email ? inputErrorClass : inputNormalClass}`}
@@ -705,7 +735,7 @@ const ContactPageContent = () => {
                       <div>
                         <label
                           htmlFor="businessName"
-                          className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.24em] text-slate-400"
+                          className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-400 sm:tracking-[0.24em]"
                         >
                           Business Name
                         </label>
@@ -716,6 +746,7 @@ const ContactPageContent = () => {
                           value={formData.businessName}
                           onChange={handleChange}
                           placeholder="Your company name"
+                          autoComplete="organization"
                           className={`${inputBaseClass} ${inputNormalClass}`}
                         />
                       </div>
@@ -723,7 +754,7 @@ const ContactPageContent = () => {
                       <div>
                         <label
                           htmlFor="service"
-                          className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.24em] text-slate-400"
+                          className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-400 sm:tracking-[0.24em]"
                         >
                           What kind of service are you looking for? <span className="text-red-300">*</span>
                         </label>
@@ -734,7 +765,7 @@ const ContactPageContent = () => {
                           onChange={handleChange}
                           aria-invalid={!!errors.service}
                           aria-describedby={errors.service ? "service-error" : undefined}
-                          className={`${inputBaseClass} ${errors.service ? inputErrorClass : inputNormalClass} appearance-none`}
+                          className={`${inputBaseClass} ${errors.service ? inputErrorClass : inputNormalClass} appearance-none pr-12`}
                           style={{
                             backgroundImage: `url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%2394a3b8' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")`,
                             backgroundRepeat: "no-repeat",
@@ -757,7 +788,7 @@ const ContactPageContent = () => {
                       <div>
                         <label
                           htmlFor="message"
-                          className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.24em] text-slate-400"
+                          className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-400 sm:tracking-[0.24em]"
                         >
                           Anything else you&apos;d like to share? <span className="text-red-300">*</span>
                         </label>
@@ -767,10 +798,10 @@ const ContactPageContent = () => {
                           value={formData.message}
                           onChange={handleChange}
                           placeholder="Tell us about your website, goals, accessibility issues, or compliance concerns."
-                          rows={5}
+                          rows={6}
                           aria-invalid={!!errors.message}
                           aria-describedby={errors.message ? "message-error" : undefined}
-                          className={`${inputBaseClass} ${errors.message ? inputErrorClass : inputNormalClass} min-h-[148px] resize-none`}
+                          className={`${inputBaseClass} ${errors.message ? inputErrorClass : inputNormalClass} min-h-[152px] resize-y`}
                         />
                         {errors.message && (
                           <p id="message-error" className="mt-2 text-sm text-red-300">
@@ -781,6 +812,9 @@ const ContactPageContent = () => {
 
                       {status && (
                         <div
+                          id={statusId}
+                          role="status"
+                          aria-live="polite"
                           className={`rounded-2xl border px-4 py-3 text-sm ${
                             statusType === "success"
                               ? "border-emerald-400/30 bg-emerald-500/10 text-emerald-200"
@@ -794,32 +828,39 @@ const ContactPageContent = () => {
                       <div className="mt-2 border-t border-white/8 pt-6">
                         <div className="flex flex-col gap-6 xl:flex-row xl:items-start xl:justify-between xl:gap-8">
                           <div className="max-w-[760px]">
-                            <p className="text-[15px] leading-8 text-slate-500">
+                            <p className="text-[15px] leading-7 text-slate-400 sm:leading-8">
                               Fields marked with <span className="text-red-300">*</span> are required.
                               Our team will respond within one business day with the most relevant next steps.
                             </p>
 
                             <div className="mt-5 space-y-3">
-                              <div className="inline-flex items-center gap-3 text-[15px] text-slate-300">
-                                <GradientCheckIcon />
+                              <div className="flex items-start gap-3 text-[15px] text-slate-300">
+                                <span className="mt-0.5 shrink-0">
+                                  <GradientCheckIcon />
+                                </span>
                                 <span>No-obligation consultation</span>
                               </div>
-                              <div className="inline-flex items-center gap-3 text-[15px] text-slate-300">
-                                <GradientCheckIcon />
+                              <div className="flex items-start gap-3 text-[15px] text-slate-300">
+                                <span className="mt-0.5 shrink-0">
+                                  <GradientCheckIcon />
+                                </span>
                                 <span>Reviewed by accessibility specialists</span>
                               </div>
-                              <div className="inline-flex items-center gap-3 text-[15px] text-slate-300">
-                                <GradientCheckIcon />
+                              <div className="flex items-start gap-3 text-[15px] text-slate-300">
+                                <span className="mt-0.5 shrink-0">
+                                  <GradientCheckIcon />
+                                </span>
                                 <span>Response within one business day</span>
                               </div>
                             </div>
                           </div>
 
-                          <div className="shrink-0 xl:pt-1">
+                          <div className="w-full shrink-0 xl:w-auto xl:pt-1">
                             <button
                               type="submit"
                               disabled={isSubmitting}
-                              className="inline-flex min-h-[56px] min-w-[220px] items-center justify-center gap-2 rounded-full px-7 py-3.5 text-[15px] font-semibold text-white transition-all duration-200 hover:scale-[1.01] hover:opacity-95 disabled:cursor-not-allowed disabled:opacity-60"
+                              aria-describedby={status ? statusId : undefined}
+                              className="inline-flex min-h-[56px] w-full items-center justify-center gap-2 rounded-full px-7 py-3.5 text-[15px] font-semibold text-white transition-all duration-200 hover:scale-[1.01] hover:opacity-95 disabled:cursor-not-allowed disabled:opacity-60 sm:min-w-[220px] sm:w-auto focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0c1622]"
                               style={{
                                 background: "linear-gradient(135deg, #00d4aa, #0088cc)",
                                 boxShadow: "0 12px 30px rgba(0, 136, 204, 0.22)",
@@ -839,13 +880,13 @@ const ContactPageContent = () => {
           </ScrollReveal>
         </section>
 
-        <section className="container mx-auto px-6 pb-24 md:pb-32 lg:px-8">
+        <section className="container mx-auto px-4 pb-20 sm:px-6 md:pb-24 lg:px-8 lg:pb-32">
           <ScrollReveal animation="fade-in-up">
             <div className="mx-auto max-w-3xl text-center">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-cyan-300/75">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-cyan-300/75 sm:tracking-[0.28em]">
                 Additional support
               </p>
-              <h2 className="mt-3 text-[28px] font-semibold tracking-[-0.03em] text-white md:text-[40px]">
+              <h2 className="mt-3 text-[26px] font-semibold tracking-[-0.03em] text-white sm:text-[28px] md:text-[40px]">
                 Have Questions? We&apos;re Here to Help.
               </h2>
               <p className="mt-4 text-[15px] leading-7 text-slate-400 md:text-base">
@@ -855,7 +896,7 @@ const ContactPageContent = () => {
           </ScrollReveal>
 
           <ScrollReveal animation="fade-in-up" delay={200} stagger>
-            <div className="mt-10 grid gap-6 md:grid-cols-3">
+            <div className="mt-8 grid gap-5 sm:mt-10 sm:gap-6 md:grid-cols-2 xl:grid-cols-3">
               {helpCards.map((card) => (
                 <HelpCard
                   key={card.title}
