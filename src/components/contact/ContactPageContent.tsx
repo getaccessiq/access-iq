@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import AnimatedGradient from "../AnimatedGradient";
+import BookDemoButton from "@/components/BookDemoButton";
 import ScrollReveal from "../ScrollReveal";
 
 type FormDataType = {
@@ -345,6 +346,9 @@ function HelpCard({
     }
   };
 
+  const ctaClassName =
+  "mt-6 inline-flex min-h-[50px] w-fit items-center justify-center gap-2 rounded-full px-6 py-3 text-[13px] font-semibold text-white transition-all duration-200 hover:scale-[1.02] hover:opacity-90";
+
   return (
     <div className="flex flex-col rounded-[26px] border border-[#d9f5ef] bg-white p-6 shadow-[0_16px_40px_rgba(0,0,0,0.06)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_24px_55px_rgba(0,0,0,0.10)]">
       <div
@@ -357,12 +361,21 @@ function HelpCard({
       <h3 className="text-[20px] font-semibold tracking-[-0.02em] text-[#0b0f1a]">{title}</h3>
       <p className="mt-2 flex-1 text-[15px] leading-7 text-slate-500">{description}</p>
 
-      <button
-        className="mt-6 inline-flex w-fit items-center gap-2 rounded-full px-5 py-2.5 text-[13px] font-semibold text-white transition-opacity hover:opacity-90"
-        style={{ background: "linear-gradient(135deg, #00d4aa, #0088cc)" }}
-      >
-        {cta}
-      </button>
+      {icon === "demo" ? (
+  <BookDemoButton
+    className={`${ctaClassName} bg-[linear-gradient(135deg,#00d4aa,#0088cc)] shadow-[0_10px_24px_rgba(0,136,204,0.22)]`}
+  >
+    {cta}
+  </BookDemoButton>
+) : (
+  <button
+    type="button"
+    className={ctaClassName}
+    style={{ background: "linear-gradient(135deg, #00d4aa, #0088cc)" }}
+  >
+    {cta}
+  </button>
+)}
     </div>
   );
 }
