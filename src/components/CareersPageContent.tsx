@@ -3,7 +3,6 @@
 import React, { useMemo, useState } from "react";
 import Link from "next/link";
 import Header from "@/components/Header";
-import Footer from "@/components/Footer";
 import AnimatedGradient from "@/components/AnimatedGradient";
 import ScrollReveal from "@/components/ScrollReveal";
 
@@ -286,11 +285,10 @@ const hiringSignals = [
   "Accessibility-focused",
 ] as const;
 
-const whyAccessiveItems = [
+const whyAccessiveRows = [
   "Manual WCAG audits and expert validation",
   "Developer-ready remediation guidance",
   "High-trust remote collaboration",
-  "Premium client delivery and communication",
 ] as const;
 
 function ShieldIcon({ className = "h-5 w-5" }: { className?: string }) {
@@ -450,7 +448,7 @@ function PrincipleCard({
         <PrincipleIcon type={icon} />
       </div>
 
-      <h3 className="text-lg sm:text-[22px] font-semibold tracking-tight text-white">
+      <h3 className="text-lg font-semibold tracking-tight text-white sm:text-[22px]">
         {title}
       </h3>
 
@@ -506,21 +504,19 @@ function WhyAccessiveCard({ totalOpenRoles }: { totalOpenRoles: number }) {
       <div className="relative">
         <SectionEyebrow>Why Accessive</SectionEyebrow>
 
-        <h2 className="mt-3 max-w-[16ch] text-2xl font-semibold tracking-tight text-white sm:text-[28px] sm:leading-[1.12]">
+        <h2 className="mt-3 max-w-[14ch] text-[1.9rem] font-semibold leading-[1.08] tracking-tight text-white sm:text-[2.1rem]">
           Accessibility work with real ownership and real impact
         </h2>
 
         <p className="mt-4 max-w-[34rem] text-sm leading-7 text-white/76">
-          This is not generic agency work. Our team helps clients move from
-          uncertainty to real compliance progress through audits, fixes,
-          monitoring, and documentation they can trust.
+          This is not generic agency work. We help clients move from uncertainty to real compliance progress through audits, fixes, and documentation they can trust.
         </p>
 
-        <div className="mt-6 grid gap-3 sm:grid-cols-2">
-          {whyAccessiveItems.map((item) => (
+        <div className="mt-6 space-y-3">
+          {whyAccessiveRows.map((item) => (
             <div
               key={item}
-              className="flex min-h-[76px] items-start gap-3 rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm text-white/82"
+              className="flex items-start gap-3 rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm text-white/82"
             >
               <span className="mt-0.5 inline-flex rounded-full bg-cyan-400/12 p-1.5 text-cyan-200">
                 <CheckIcon className="h-3.5 w-3.5" />
@@ -530,18 +526,18 @@ function WhyAccessiveCard({ totalOpenRoles }: { totalOpenRoles: number }) {
           ))}
         </div>
 
-        <div className="mt-5 grid grid-cols-2 gap-3">
-          <div className="rounded-2xl border border-white/10 bg-white/[0.035] p-4">
+        <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3 border-t border-white/10 pt-5">
+          <div>
             <p className="text-2xl font-semibold tracking-tight text-cyan-200">
               {totalOpenRoles}
             </p>
             <p className="mt-1 text-sm text-white/72">Open roles</p>
           </div>
 
-          <div className="rounded-2xl border border-white/10 bg-white/[0.035] p-4">
-            <p className="text-2xl font-semibold tracking-tight text-cyan-200">
-              Remote
-            </p>
+          <div className="h-10 w-px bg-white/10" aria-hidden="true" />
+
+          <div>
+            <p className="text-2xl font-semibold tracking-tight text-cyan-200">Remote</p>
             <p className="mt-1 text-sm text-white/72">US-based hiring focus</p>
           </div>
         </div>
@@ -585,7 +581,7 @@ function JobAccordionCard({
 
             <h3
               id={titleId}
-              className="mt-4 text-xl sm:text-2xl lg:text-[28px] font-semibold tracking-tight text-white"
+              className="mt-4 text-xl font-semibold tracking-tight text-white sm:text-2xl lg:text-[28px]"
             >
               {job.title}
             </h3>
@@ -1001,7 +997,7 @@ export default function CareersPageContent() {
         </section>
       </main>
 
-      <Footer />
+      
     </div>
   );
 }

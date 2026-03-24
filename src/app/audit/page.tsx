@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import Header from "@/components/Header";
 import AuditHero from "@/components/audit/AuditHero";
-import WhatYouGet from "@/components/audit/WhatYouGet";
-import HowAuditWorks from "@/components/audit/HowAuditWorks";
+import AuditDeliverables from "@/components/audit/AuditDeliverables";
+
 import CTASection from "@/components/CTASection";
 import Footer from "@/components/Footer";
 
@@ -17,8 +17,8 @@ export default function AuditPage() {
     <div className="min-h-screen">
       <Header />
       <AuditHero />
-      <WhatYouGet />
-      <HowAuditWorks />
+      <AuditDeliverables />
+      
       <CTASection />
       <Footer />
     </div>
