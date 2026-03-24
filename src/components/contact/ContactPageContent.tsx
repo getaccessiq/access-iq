@@ -601,10 +601,10 @@ const ContactPageContent = () => {
                       <InfoCard label="Email">
                         <InfoRow icon={<EmailIcon />}>
                           <a
-                            href="mailto:support@getaccessiq.com"
+                            href="mailto:support@accessive.co"
                             className="break-all text-[15px] leading-7 text-slate-200 underline-offset-4 hover:text-white hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0c1622]"
                           >
-                            support@getaccessiq.com
+                            support@accessive.co
                           </a>
                         </InfoRow>
                       </InfoCard>

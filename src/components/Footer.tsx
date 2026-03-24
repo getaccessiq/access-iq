@@ -108,7 +108,7 @@ const Footer = () => {
                 className="mb-8 inline-flex items-center rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#36bfff] focus-visible:ring-offset-2 focus-visible:ring-offset-[#070d18]"
               >
                 <Image
-                  src="/images/logos/accessiq-logo.png"
+                  src="/images/logos/Logo_Accessiv.png"
                   alt="AccessIQ"
                   width={300}
                   height={70}
@@ -397,7 +397,7 @@ const Footer = () => {
             </nav>
 
             <div className="flex flex-col items-center gap-2 text-center text-[13px] text-gray-400 lg:flex-row lg:gap-4">
-              <span>© 2026 AccessIQ. All rights reserved.</span>
+              <span>© 2026 Accessive. All rights reserved.</span>
 
               <span aria-hidden="true" className="hidden text-white/20 lg:inline">
                 ·

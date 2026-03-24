@@ -192,8 +192,8 @@ const Header = () => {
             <div className="relative flex h-full items-center justify-between px-5 sm:px-6 lg:px-7">
               <Link href="/" className="flex shrink-0 items-center">
                 <Image
-                  src="/images/logos/accessiq-logo.png"
-                  alt="AccessIQ"
+                  src="/images/logos/Logo_Accessiv.png"
+                  alt="Accessive"
                   width={158}
                   height={40}
                   className="h-[32px] w-auto object-contain md:h-[34px]"
