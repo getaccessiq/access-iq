@@ -9,7 +9,7 @@ const footerLinks = {
   pages: [
     { label: "Audit Services", href: "/audit" },
     { label: "Compliance Standards", href: "/compliance-standards" },
-    { label: "Pricing", href: "/prices" },
+    { label: "Pricing", href: "/pricing" },
     {
       label: "View Demo",
       href: "https://accessiq.tech/",
