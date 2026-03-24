@@ -2,10 +2,8 @@ import type { Metadata } from "next";
 import Header from "@/components/Header";
 import AuditHero from "@/components/audit/AuditHero";
 import AuditDeliverables from "@/components/audit/AuditDeliverables";
-
 import CTASection from "@/components/CTASection";
 import Footer from "@/components/Footer";
-
 export const metadata: Metadata = {
   title: "Accessibility Audit Services",
   description:
@@ -18,7 +16,6 @@ export default function AuditPage() {
       <Header />
       <AuditHero />
       <AuditDeliverables />
-      
       <CTASection />
       <Footer />
     </div>
