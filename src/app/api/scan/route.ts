@@ -120,13 +120,17 @@ export async function POST(request: NextRequest) {
 
     let executablePath: string | undefined;
 
-    if (process.env.PUPPETEER_EXECUTABLE_PATH) {
-      executablePath = process.env.PUPPETEER_EXECUTABLE_PATH;
-    } else if (!isDev) {
-      executablePath = await chromium.executablePath(
-        process.env.CHROMIUM_REMOTE_EXEC_PATH
-      );
-    }
+if (process.env.PUPPETEER_EXECUTABLE_PATH) {
+  executablePath = process.env.PUPPETEER_EXECUTABLE_PATH;
+} else if (!isDev) {
+  if (!process.env.CHROMIUM_REMOTE_EXEC_PATH) {
+    throw new Error("CHROMIUM_REMOTE_EXEC_PATH is not set");
+  }
+
+  executablePath = await chromium.executablePath(
+    process.env.CHROMIUM_REMOTE_EXEC_PATH
+  );
+}
 
     browser = await puppeteer.launch({
       args: isDev ? [] : chromium.args,
