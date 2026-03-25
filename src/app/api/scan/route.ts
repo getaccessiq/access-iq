@@ -112,7 +112,7 @@ export async function POST(request: NextRequest) {
       "utf-8"
     );
 
-    const chromiumModule = await import("@sparticuz/chromium-min");
+    const chromiumModule = await import("@sparticuz/chromium");
     const puppeteerModule = await import("puppeteer-core");
 
     const chromium = chromiumModule.default ?? chromiumModule;
