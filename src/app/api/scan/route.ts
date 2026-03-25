@@ -6,6 +6,13 @@ import type { Browser } from "puppeteer-core";
 export const runtime = "nodejs";
 export const maxDuration = 60;
 
+// Free-scan Limit zentral anpassbar
+const FREE_SCAN_DAILY_LIMIT = 5;
+const FREE_SCAN_WINDOW_MS = 24 * 60 * 60 * 1000;
+
+// Einfaches In-Memory Rate Limit
+const requests = new Map<string, { count: number; resetTime: number }>();
+
 interface AxeViolation {
   id: string;
   description: string;
@@ -57,14 +64,88 @@ function countByImpact(violations: AxeViolation[]) {
   };
 }
 
+function getClientIp(request: NextRequest) {
+  const forwardedFor = request.headers.get("x-forwarded-for");
+  const realIp = request.headers.get("x-real-ip");
+
+  return forwardedFor?.split(",")[0]?.trim() || realIp || "unknown";
+}
+
+function checkDailyFreeScanLimit(ip: string) {
+  const now = Date.now();
+  const current = requests.get(ip);
+
+  if (!current || now > current.resetTime) {
+    const resetTime = now + FREE_SCAN_WINDOW_MS;
+
+    requests.set(ip, {
+      count: 1,
+      resetTime,
+    });
+
+    return {
+      allowed: true,
+      limit: FREE_SCAN_DAILY_LIMIT,
+      remaining: FREE_SCAN_DAILY_LIMIT - 1,
+      resetTime,
+      used: 1,
+    };
+  }
+
+  if (current.count >= FREE_SCAN_DAILY_LIMIT) {
+    return {
+      allowed: false,
+      limit: FREE_SCAN_DAILY_LIMIT,
+      remaining: 0,
+      resetTime: current.resetTime,
+      used: current.count,
+    };
+  }
+
+  current.count += 1;
+  requests.set(ip, current);
+
+  return {
+    allowed: true,
+    limit: FREE_SCAN_DAILY_LIMIT,
+    remaining: FREE_SCAN_DAILY_LIMIT - current.count,
+    resetTime: current.resetTime,
+    used: current.count,
+  };
+}
+
 export async function GET() {
   return NextResponse.json({
     success: true,
     message: "Scan API is running. Use POST /api/scan with { url }.",
+    freeScanLimit: {
+      limit: FREE_SCAN_DAILY_LIMIT,
+      windowHours: 24,
+    },
   });
 }
 
 export async function POST(request: NextRequest) {
+  const ip = getClientIp(request);
+  const rateLimit = checkDailyFreeScanLimit(ip);
+
+  if (!rateLimit.allowed) {
+    return NextResponse.json(
+      {
+        success: false,
+        code: "DAILY_SCAN_LIMIT_REACHED",
+        error: `Daily limit reached. You have already used all ${FREE_SCAN_DAILY_LIMIT} free scans today. Please try again tomorrow.`,
+        rateLimit: {
+          limit: rateLimit.limit,
+          remaining: rateLimit.remaining,
+          used: rateLimit.used,
+          resetTime: new Date(rateLimit.resetTime).toISOString(),
+        },
+      },
+      { status: 429 }
+    );
+  }
+
   let body: { url?: string };
 
   try {
@@ -120,17 +201,17 @@ export async function POST(request: NextRequest) {
 
     let executablePath: string | undefined;
 
-if (process.env.PUPPETEER_EXECUTABLE_PATH) {
-  executablePath = process.env.PUPPETEER_EXECUTABLE_PATH;
-} else if (!isDev) {
-  if (!process.env.CHROMIUM_REMOTE_EXEC_PATH) {
-    throw new Error("CHROMIUM_REMOTE_EXEC_PATH is not set");
-  }
+    if (process.env.PUPPETEER_EXECUTABLE_PATH) {
+      executablePath = process.env.PUPPETEER_EXECUTABLE_PATH;
+    } else if (!isDev) {
+      if (!process.env.CHROMIUM_REMOTE_EXEC_PATH) {
+        throw new Error("CHROMIUM_REMOTE_EXEC_PATH is not set");
+      }
 
-  executablePath = await chromium.executablePath(
-    process.env.CHROMIUM_REMOTE_EXEC_PATH
-  );
-}
+      executablePath = await chromium.executablePath(
+        process.env.CHROMIUM_REMOTE_EXEC_PATH
+      );
+    }
 
     browser = await puppeteer.launch({
       args: isDev ? [] : chromium.args,
@@ -177,6 +258,12 @@ if (process.env.PUPPETEER_EXECUTABLE_PATH) {
       success: true,
       url: validUrl,
       scannedAt: new Date().toISOString(),
+      rateLimit: {
+        limit: rateLimit.limit,
+        remaining: rateLimit.remaining,
+        used: rateLimit.used,
+        resetTime: new Date(rateLimit.resetTime).toISOString(),
+      },
       counts,
       violations: (results.violations ?? []).map((violation) => ({
         id: violation.id ?? "",
@@ -184,6 +271,7 @@ if (process.env.PUPPETEER_EXECUTABLE_PATH) {
         help: violation.help ?? "",
         helpUrl: violation.helpUrl ?? "",
         impact: violation.impact ?? "minor",
+        count: violation.nodes?.length ?? 0,
         nodes: (violation.nodes ?? []).slice(0, 3).map((node) => ({
           html: node.html ?? "",
           target: node.target ?? [],
@@ -200,7 +288,9 @@ if (process.env.PUPPETEER_EXECUTABLE_PATH) {
     let friendly =
       "This website could not be scanned. Please try again or enter a different URL.";
 
-    if (/Could not find Chrome|Browser was not found|executablePath/i.test(raw)) {
+    if (/DAILY_SCAN_LIMIT_REACHED/i.test(raw)) {
+      friendly = `Daily limit reached. You have already used all ${FREE_SCAN_DAILY_LIMIT} free scans today. Please try again tomorrow.`;
+    } else if (/Could not find Chrome|Browser was not found|executablePath/i.test(raw)) {
       friendly =
         "The scan browser could not be started. Please check the browser configuration.";
     } else if (/TimeoutError|timeout|net::ERR_TIMED_OUT/i.test(raw)) {
