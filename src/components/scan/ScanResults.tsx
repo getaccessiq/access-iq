@@ -404,7 +404,7 @@ export default function ScanResults({ results, onRescan }: ScanResultsProps) {
 
           {/* Key Issues Found */}
           <div className="mb-16">
-            <h2 className="text-[28px] md:text-[32px] font-bold text-[#0b0f1a] mb-8">{counts.total} Key Issues Found</h2>
+            <h2 className="text-[28px] md:text-[32px] font-bold text-[#0b0f1a] mb-8">{results.violations.length} Key Issues Found</h2>
 
             {violations.length === 0 ? (
               <div className="rounded-2xl p-8 border border-green-100 bg-green-50 text-center">
