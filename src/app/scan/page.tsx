@@ -6,7 +6,7 @@ import Footer from "@/components/Footer";
 import ScanHero from "@/components/scan/ScanHero";
 import WhyAccessibility from "@/components/scan/WhyAccessibility";
 import CaseForAccessibility from "@/components/scan/CaseForAccessibility";
-import ScanningView from "@/components/scan/ScanningView";
+import ScanLoadingView from "@/components/scan/ScanLoadingView";
 import ScanResults from "@/components/scan/ScanResults";
 
 type ScanState = "idle" | "scanning" | "complete" | "error";
@@ -86,7 +86,7 @@ export default function ScanPage() {
     return (
       <div className="min-h-screen">
         <Header />
-        <ScanningView url={currentUrl} />
+        <ScanLoadingView url={currentUrl} />
         <Footer />
       </div>
     );
