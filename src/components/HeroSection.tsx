@@ -101,7 +101,7 @@ const HeroSection = () => {
               <ScrollReveal animation="fade-in-up" delay={360}>
                 <div className="mb-7 flex flex-col items-start gap-3 sm:flex-row sm:items-center">
                   <a
-                    href="https://access-iq.vercel.app/scan"
+                    href="/scan"
                     className={primaryButtonClass}
                     aria-label="Run free accessibility scan"
                   >

@@ -1,12 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
-import { readFileSync } from "fs";
-import path from "path";
+import axe from "axe-core";
+import type { Browser } from "puppeteer-core";
 
+export const runtime = "nodejs";
 export const maxDuration = 60;
 
 // Einfaches In-Memory Rate Limit
-// Achtung: funktioniert nur begrenzt zuverlässig bei Serverless/mehreren Instanzen
+// Hinweis: lokal okay, in echter Serverless-Production nur eingeschränkt zuverlässig
 const requests = new Map<string, { count: number; resetTime: number }>();
+
+interface AxeNodeResult {
+  html: string;
+  target: string[];
+}
 
 interface AxeViolation {
   id: string;
@@ -14,13 +20,13 @@ interface AxeViolation {
   impact: "critical" | "serious" | "moderate" | "minor" | null;
   help: string;
   helpUrl: string;
-  nodes: Array<{ html: string; target: string[] }>;
+  nodes: AxeNodeResult[];
 }
 
 interface AxeResults {
   violations: AxeViolation[];
-  passes: Array<unknown>;
-  incomplete: Array<unknown>;
+  passes: unknown[];
+  incomplete: unknown[];
 }
 
 function countByImpact(violations: AxeViolation[]) {
@@ -29,10 +35,10 @@ function countByImpact(violations: AxeViolation[]) {
   let moderate = 0;
   let minor = 0;
 
-  for (const v of violations) {
-    const nodeCount = v.nodes.length;
+  for (const violation of violations) {
+    const nodeCount = violation.nodes?.length ?? 0;
 
-    switch (v.impact) {
+    switch (violation.impact) {
       case "critical":
         critical += nodeCount;
         break;
@@ -44,6 +50,8 @@ function countByImpact(violations: AxeViolation[]) {
         break;
       case "minor":
         minor += nodeCount;
+        break;
+      default:
         break;
     }
   }
@@ -70,15 +78,17 @@ function checkRateLimit(ip: string) {
   const current = requests.get(ip);
 
   if (!current || now > current.resetTime) {
+    const resetTime = now + oneDay;
+
     requests.set(ip, {
       count: 1,
-      resetTime: now + oneDay,
+      resetTime,
     });
 
     return {
       allowed: true,
       remaining: maxRequests - 1,
-      resetTime: now + oneDay,
+      resetTime,
     };
   }
 
@@ -100,6 +110,57 @@ function checkRateLimit(ip: string) {
   };
 }
 
+function validateUrl(rawUrl: string):
+  | { valid: true; url: string }
+  | { valid: false; error: string } {
+  try {
+    const parsed = new URL(rawUrl);
+
+    if (!["http:", "https:"].includes(parsed.protocol)) {
+      return {
+        valid: false,
+        error: "URL must use http or https",
+      };
+    }
+
+    return {
+      valid: true,
+      url: parsed.toString(),
+    };
+  } catch {
+    return {
+      valid: false,
+      error: "Invalid URL format",
+    };
+  }
+}
+
+async function launchBrowser() {
+  const chromiumModule = await import("@sparticuz/chromium-min");
+  const puppeteerModule = await import("puppeteer-core");
+
+  const chromium = chromiumModule.default ?? chromiumModule;
+  const puppeteer = puppeteerModule.default ?? puppeteerModule;
+
+  const executablePath = process.env.CHROMIUM_REMOTE_EXEC_PATH
+    ? await chromium.executablePath(process.env.CHROMIUM_REMOTE_EXEC_PATH)
+    : process.env.PUPPETEER_EXECUTABLE_PATH || "/usr/bin/chromium-browser";
+
+  return puppeteer.launch({
+    args: chromium.args,
+    defaultViewport: { width: 1280, height: 800 },
+    executablePath,
+    headless: true,
+  });
+}
+
+export async function GET() {
+  return NextResponse.json({
+    success: true,
+    message: "Scan API is running. Use POST /api/scan with { url }.",
+  });
+}
+
 export async function POST(request: NextRequest) {
   const ip = getClientIp(request);
   const rateLimit = checkRateLimit(ip);
@@ -109,9 +170,11 @@ export async function POST(request: NextRequest) {
       {
         success: false,
         error: "Tageslimit erreicht. Bitte morgen erneut versuchen.",
-        limit: 5,
-        remaining: 0,
-        resetTime: new Date(rateLimit.resetTime).toISOString(),
+        rateLimit: {
+          limit: 5,
+          remaining: 0,
+          resetTime: new Date(rateLimit.resetTime).toISOString(),
+        },
       },
       { status: 429 }
     );
@@ -131,9 +194,9 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const { url } = body;
+  const rawUrl = body.url?.trim();
 
-  if (!url) {
+  if (!rawUrl) {
     return NextResponse.json(
       {
         success: false,
@@ -143,75 +206,63 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  try {
-    const parsed = new URL(url);
+  const validation = validateUrl(rawUrl);
 
-    if (!["http:", "https:"].includes(parsed.protocol)) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: "URL must use http or https",
-        },
-        { status: 400 }
-      );
-    }
-  } catch {
+  if (!validation.valid) {
     return NextResponse.json(
       {
         success: false,
-        error: "Invalid URL format",
+        error: validation.error,
       },
       { status: 400 }
     );
   }
 
-  let browser;
+  const validUrl = validation.url;
+
+  let browser: Browser | null = null;
 
   try {
-    const axeSource = readFileSync(
-      path.join(process.cwd(), "node_modules/axe-core/axe.min.js"),
-      "utf-8"
-    );
-
-    const chromium = (await import("@sparticuz/chromium-min")).default;
-    const puppeteer = (await import("puppeteer-core")).default;
-
-    const executablePath = process.env.CHROMIUM_REMOTE_EXEC_PATH
-      ? await chromium.executablePath(process.env.CHROMIUM_REMOTE_EXEC_PATH)
-      : process.env.PUPPETEER_EXECUTABLE_PATH || "/usr/bin/chromium-browser";
-
-    browser = await puppeteer.launch({
-      args: chromium.args,
-      defaultViewport: { width: 1280, height: 800 },
-      executablePath,
-      headless: true,
-    });
+    browser = await launchBrowser();
 
     const page = await browser.newPage();
 
     page.setDefaultNavigationTimeout(30000);
+    page.setDefaultTimeout(30000);
 
     await page.setUserAgent(
       "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
     );
 
-    await page.goto(url, {
+    await page.goto(validUrl, {
       waitUntil: "networkidle2",
       timeout: 30000,
     });
 
-    await page.evaluate(axeSource);
+    await page.evaluate(axe.source);
 
-    const results: AxeResults = await page.evaluate(() => {
-      return (window as any).axe.run();
+    const results = await page.evaluate(async () => {
+      const axeGlobal = (
+        window as Window & {
+          axe?: {
+            run: () => Promise<AxeResults>;
+          };
+        }
+      ).axe;
+
+      if (!axeGlobal) {
+        throw new Error("AXE_NOT_LOADED");
+      }
+
+      return axeGlobal.run();
     });
 
-    const counts = countByImpact(results.violations || []);
+    const counts = countByImpact(results.violations ?? []);
 
     return NextResponse.json({
       success: true,
       message: "Scan completed successfully.",
-      url,
+      url: validUrl,
       ip,
       scannedAt: new Date().toISOString(),
       rateLimit: {
@@ -220,15 +271,15 @@ export async function POST(request: NextRequest) {
         resetTime: new Date(rateLimit.resetTime).toISOString(),
       },
       counts,
-      violations: (results.violations || []).map((v) => ({
-        id: v.id ?? "",
-        description: v.description ?? "",
-        help: v.help ?? "",
-        helpUrl: v.helpUrl ?? "",
-        impact: v.impact ?? "minor",
-        nodes: (v.nodes ?? []).slice(0, 3).map((n) => ({
-          html: n.html ?? "",
-          target: n.target ?? [],
+      violations: (results.violations ?? []).map((violation) => ({
+        id: violation.id ?? "",
+        description: violation.description ?? "",
+        help: violation.help ?? "",
+        helpUrl: violation.helpUrl ?? "",
+        impact: violation.impact ?? "minor",
+        nodes: (violation.nodes ?? []).slice(0, 3).map((node) => ({
+          html: node.html ?? "",
+          target: node.target ?? [],
         })),
       })),
       passes: results.passes?.length ?? 0,
@@ -239,20 +290,28 @@ export async function POST(request: NextRequest) {
 
     const raw = err instanceof Error ? err.message : String(err);
 
-    let friendly: string;
+    let friendly =
+      "This website could not be scanned. Please try again or enter a different URL.";
 
-    if (/TimeoutError|timeout|net::ERR_/i.test(raw)) {
+    if (/TimeoutError|timeout|net::ERR_TIMED_OUT/i.test(raw)) {
       friendly =
-        "This website could not be reached. Please check the URL and try again.";
-    } else if (/Navigation|net::ERR_NAME_NOT_RESOLVED|ERR_CONNECTION/i.test(raw)) {
+        "This website could not be reached in time. Please check the URL and try again.";
+    } else if (
+      /ERR_NAME_NOT_RESOLVED|ERR_CONNECTION|ERR_CONNECTION_REFUSED|ERR_CONNECTION_CLOSED/i.test(
+        raw
+      )
+    ) {
       friendly =
         "This website could not be found. Please check the URL and try again.";
-    } else if (/toLowerCase|Cannot read prop|undefined/i.test(raw)) {
+    } else if (/ERR_CERT|SSL|TLS/i.test(raw)) {
+      friendly =
+        "This website could not be scanned because of an SSL or certificate issue.";
+    } else if (/AXE_NOT_LOADED/i.test(raw)) {
+      friendly =
+        "The accessibility engine could not be loaded for this page. Please try again.";
+    } else if (/Cannot read properties|undefined/i.test(raw)) {
       friendly =
         "This website could not be scanned. It may be blocking automated access. Please try a different URL.";
-    } else {
-      friendly =
-        "This website could not be scanned. Please try again or enter a different URL.";
     }
 
     return NextResponse.json(
