@@ -12,7 +12,7 @@
     "@axe-core/playwright": "^4.11.1",
     "@axe-core/react": "^4.11.1",
     "@calcom/embed-react": "^1.5.3",
-    "@sparticuz/chromium-min": "^143.0.4",
+    "@sparticuz/chromium": "^143.0.4",
     "@types/three": "^0.183.1",
     "@upstash/ratelimit": "^2.0.8",
     "@upstash/redis": "^1.36.4",
