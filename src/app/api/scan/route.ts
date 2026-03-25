@@ -7,7 +7,7 @@ export const runtime = "nodejs";
 export const maxDuration = 60;
 
 // Free-scan Limit zentral anpassbar
-const FREE_SCAN_DAILY_LIMIT = 5;
+const FREE_SCAN_DAILY_LIMIT = 50;
 const FREE_SCAN_WINDOW_MS = 24 * 60 * 60 * 1000;
 
 // Einfaches In-Memory Rate Limit
