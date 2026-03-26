@@ -1,8 +1,27 @@
 import Link from "next/link";
 import AnimatedGradient from "./AnimatedGradient";
 
+type AuditPlanKey = "essential" | "business" | "enterprise";
+
+type AuditPlan = {
+  key: AuditPlanKey;
+  label: string;
+  title: string;
+  price: string;
+  priceSuffix: string;
+  shortDescription: string;
+  cta: string;
+  featured: boolean;
+  badge?: string;
+};
+
+type AuditComparisonRow = {
+  feature: string;
+  values: Record<AuditPlanKey, boolean | string>;
+};
+
 export default function AccessIQAuditPricingSection() {
-  const auditPlans = [
+  const auditPlans: AuditPlan[] = [
     {
       key: "essential",
       label: "ESSENTIAL",
@@ -39,7 +58,7 @@ export default function AccessIQAuditPricingSection() {
     },
   ];
 
-  const comparisonRows = [
+  const comparisonRows: AuditComparisonRow[] = [
     {
       feature: "Manual accessibility audit",
       values: { essential: true, business: true, enterprise: true },
@@ -115,11 +134,12 @@ export default function AccessIQAuditPricingSection() {
   };
 
   return (
-    <section className="relative overflow-hidden bg-[#020817] text-white">
-      {/* Animated background */}
+    <section
+      id="audit-pricing-overview"
+      className="relative overflow-hidden bg-[#020817] text-white scroll-mt-24 lg:scroll-mt-32"
+    >
       <AnimatedGradient />
 
-      {/* Dark overlays */}
       <div className="absolute inset-0">
         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(2,8,23,0.72)_0%,rgba(2,8,23,0.82)_30%,rgba(2,8,23,0.90)_65%,rgba(1,5,15,0.96)_100%)]" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(34,211,238,0.08),transparent_28%),radial-gradient(circle_at_bottom,rgba(6,182,212,0.06),transparent_40%)]" />
@@ -128,11 +148,18 @@ export default function AccessIQAuditPricingSection() {
         <div className="absolute inset-0 opacity-[0.04] [background-image:linear-gradient(rgba(255,255,255,0.08)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.08)_1px,transparent_1px)] [background-size:42px_42px]" />
       </div>
 
-      <div className="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
-        
+      <div className="relative mx-auto max-w-7xl px-4 pt-24 pb-16 sm:px-6 lg:px-8 lg:pt-28 lg:pb-20">
+        <div className="mx-auto max-w-6xl -mt-0">
+          <Link
+            href="/pricing#audit-pricing-overview"
+            className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.02] px-3 py-1.5 text-sm text-slate-300 transition duration-300 hover:border-cyan-400/25 hover:bg-cyan-400/5 hover:text-white"
+          >
+            <span aria-hidden="true">←</span>
+            <span>Back to Pricing</span>
+          </Link>
+        </div>
 
-        {/* Header */}
-        <div className="mx-auto max-w-3xl text-center">
+        <div className="mx-auto mt-10 max-w-5xl text-center sm:mt-12">
           <div className="inline-flex items-center rounded-full border border-cyan-400/20 bg-cyan-400/10 px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.2em] text-cyan-300 shadow-[0_0_24px_rgba(34,211,238,0.10)]">
             Audit Pricing
           </div>
@@ -144,14 +171,14 @@ export default function AccessIQAuditPricingSection() {
             </span>
           </h2>
 
-          <p className="mx-auto mt-6 max-w-2xl text-sm leading-6 text-slate-300 sm:text-base">
+          <p className="mx-auto mt-6 max-w-3xl text-sm leading-7 text-slate-300 sm:text-base">
             Compare our three manual audit packages at a glance, then review the
             full deliverables below in a detailed comparison table.
           </p>
+
           <div className="mx-auto mt-12 h-px max-w-4xl bg-gradient-to-r from-transparent via-cyan-400/20 to-transparent" />
         </div>
 
-        {/* Compact pricing cards */}
         <div className="mt-20 grid gap-6 lg:grid-cols-3">
           {auditPlans.map((plan) => (
             <article
@@ -170,14 +197,14 @@ export default function AccessIQAuditPricingSection() {
                 }`}
               />
 
-              {plan.badge && (
+              {plan.badge ? (
                 <div className="absolute left-1/2 -top-3 z-10 -translate-x-1/2">
                   <div className="inline-flex items-center gap-2 rounded-full border border-cyan-200/25 bg-gradient-to-r from-teal-300 to-cyan-400 px-4 py-1.5 text-xs font-semibold text-slate-950 shadow-[0_8px_24px_rgba(34,211,238,0.24)]">
                     <span>✦</span>
-                    {plan.badge}
+                    <span>{plan.badge}</span>
                   </div>
                 </div>
-              )}
+              ) : null}
 
               <div className="p-5 sm:p-6">
                 <div className="flex items-center justify-between gap-3">
@@ -205,15 +232,13 @@ export default function AccessIQAuditPricingSection() {
                   </span>
                 </div>
 
-                <p className="mt-4 text-sm leading-6 text-slate-300">
+                <p className="mt-4 text-sm leading-7 text-slate-300">
                   {plan.shortDescription}
                 </p>
 
                 <div className="mt-5 space-y-2 text-sm text-slate-200">
                   {comparisonRows.slice(0, 4).map((row) => {
-                    const value =
-                      row.values[plan.key as keyof typeof row.values];
-
+                    const value = row.values[plan.key];
                     return (
                       <div
                         key={`${plan.key}-${row.feature}`}
@@ -247,7 +272,6 @@ export default function AccessIQAuditPricingSection() {
           ))}
         </div>
 
-        {/* Comparison table */}
         <div className="mt-8 overflow-hidden rounded-[28px] border border-white/10 bg-white/[0.035] shadow-[0_16px_70px_rgba(0,0,0,0.26)] backdrop-blur-xl">
           <div className="border-b border-white/10 px-5 py-4 sm:px-6">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -311,7 +335,6 @@ export default function AccessIQAuditPricingSection() {
                     <td className="px-5 py-4 text-sm font-medium text-white sm:px-6">
                       {row.feature}
                     </td>
-
                     {auditPlans.map((plan) => (
                       <td
                         key={`${row.feature}-${plan.key}`}
@@ -319,9 +342,7 @@ export default function AccessIQAuditPricingSection() {
                           plan.featured ? "bg-cyan-400/[0.018]" : ""
                         }`}
                       >
-                        {renderCellValue(
-                          row.values[plan.key as keyof typeof row.values]
-                        )}
+                        {renderCellValue(row.values[plan.key])}
                       </td>
                     ))}
                   </tr>
@@ -354,19 +375,20 @@ export default function AccessIQAuditPricingSection() {
           </div>
         </div>
 
-        {/* Bottom trust row */}
-        <div className="mt-8 flex flex-col items-center justify-between gap-3 rounded-2xl border border-white/10 bg-white/[0.03] px-5 py-4 text-center text-sm text-slate-300 sm:flex-row sm:text-left">
-          <div>
-            Manual audits aligned with{" "}
-            <span className="font-semibold text-white">WCAG 2.1 / 2.2</span> and
-            built to support real remediation work.
+        <div className="mt-8 flex flex-col items-center justify-between gap-4 rounded-2xl border border-white/10 bg-white/[0.03] px-5 py-5 text-center text-sm text-slate-300 sm:flex-row sm:text-left">
+          <div className="max-w-3xl">
+            Need broader audit coverage, legal support, or a custom accessibility review scope?
+            <span className="font-semibold text-white">
+              {" "}
+              We can tailor an audit package around your compliance process.
+            </span>
           </div>
 
           <button
             type="button"
-            className="inline-flex items-center justify-center rounded-full border border-cyan-400/20 bg-cyan-400/10 px-4 py-2 text-sm font-semibold text-cyan-300 transition hover:border-cyan-300/40 hover:bg-cyan-400/15 hover:text-white"
+            className="inline-flex items-center justify-center rounded-full border border-cyan-400/20 bg-cyan-400/10 px-5 py-2.5 text-sm font-semibold text-cyan-300 transition hover:border-cyan-300/40 hover:bg-cyan-400/15 hover:text-white"
           >
-            Request custom scope
+            Request Custom Audit Scope
           </button>
         </div>
       </div>

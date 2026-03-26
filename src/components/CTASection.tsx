@@ -2,6 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
+import Link from "next/link";
 import ScrollReveal from "./ScrollReveal";
 
 const CTASection = () => {
@@ -134,13 +135,13 @@ const CTASection = () => {
                         </svg>
                       </button>
 
-                      <button
-                        type="button"
-                        className="inline-flex items-center gap-2 rounded-full border border-white/18 bg-white/8 px-8 py-3.5 text-sm font-semibold text-white backdrop-blur-sm transition-all duration-300 hover:border-white/24 hover:bg-white/12 focus:outline-none focus:ring-2 focus:ring-white/20"
-                        aria-label="View sample report"
-                      >
-                        View Sample Report
-                      </button>
+<Link
+  href="/sample-report"
+  className="inline-flex items-center gap-2 rounded-full border border-white/18 bg-white/8 px-8 py-3.5 text-sm font-semibold text-white backdrop-blur-sm transition-all duration-300 hover:border-white/24 hover:bg-white/12 focus:outline-none focus:ring-2 focus:ring-white/20"
+  aria-label="View sample report"
+>
+  View Sample Report
+</Link>
                     </div>
 
                     <div className="mt-7 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-sm text-white/72">

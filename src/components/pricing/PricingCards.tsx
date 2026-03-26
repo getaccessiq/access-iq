@@ -3,8 +3,24 @@
 import React from "react";
 import ScrollReveal from "../ScrollReveal";
 
-const plans = [
+type Plan = {
+  key: "scan" | "audit" | "monitoring";
+  sectionId: string;
+  label: string;
+  title: string;
+  price: string;
+  period: string;
+  description: string;
+  features: string[];
+  buttonText: string;
+  buttonLink: string;
+  featured: boolean;
+};
+
+const plans: Plan[] = [
   {
+    key: "scan",
+    sectionId: "scan-pricing-overview",
     label: "Free Scan",
     title: "Accessibility Quick Scan",
     price: "Free",
@@ -17,10 +33,12 @@ const plans = [
       "Basic accessibility report",
     ],
     buttonText: "Run Free Scan",
-    buttonLink: "https://access-iq.vercel.app/scan",
+    buttonLink: "/scan",
     featured: false,
   },
   {
+    key: "audit",
+    sectionId: "audit-pricing-overview",
     label: "Most Popular",
     title: "Expert Accessibility Audit",
     price: "from $750",
@@ -37,6 +55,8 @@ const plans = [
     featured: true,
   },
   {
+    key: "monitoring",
+    sectionId: "monitoring-pricing-overview",
     label: "Professional",
     title: "Accessibility Monitoring",
     price: "from $49",
@@ -63,31 +83,31 @@ const getLinkProps = (url = "") =>
 
 const PricingCards = () => {
   return (
-    <section id="pricing" className="relative py-20 md:py-28 scroll-mt-32">
+    <section id="pricing" className="relative scroll-mt-32 py-20 md:py-28">
       <div
-        className="absolute inset-0 pointer-events-none"
+        className="pointer-events-none absolute inset-0"
         style={{
           background:
             "radial-gradient(ellipse at 50% 20%, rgba(0,136,204,0.08) 0%, transparent 60%)",
         }}
       />
 
-      <div className="container mx-auto relative px-4 md:px-6 lg:px-8">
+      <div className="container relative mx-auto px-4 md:px-6 lg:px-8">
         <ScrollReveal animation="fade-in-up">
-          <div className="text-center mb-14">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[#00d4aa]/20 bg-[#00d4aa]/[0.06] mb-6">
-              <span className="text-[#00d4aa] text-[13px] font-medium">
+          <div className="mb-14 text-center">
+            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-[#00d4aa]/20 bg-[#00d4aa]/[0.06] px-4 py-2">
+              <span className="text-[13px] font-medium text-[#00d4aa]">
                 Transparent Pricing
               </span>
             </div>
 
-            <h2 className="text-3xl md:text-4xl lg:text-[46px] font-bold text-white leading-tight mb-5">
+            <h2 className="mb-5 text-3xl font-bold leading-tight text-white md:text-4xl lg:text-[46px]">
               Accessibility &amp; Compliance
               <br />
               Plans for Every Business
             </h2>
 
-            <p className="text-gray-400 text-base max-w-lg mx-auto leading-relaxed">
+            <p className="mx-auto max-w-lg text-base leading-relaxed text-gray-400">
               Expert audits, verified fixes, and continuous monitoring for ADA
               and WCAG compliance.
             </p>
@@ -95,11 +115,12 @@ const PricingCards = () => {
         </ScrollReveal>
 
         <ScrollReveal animation="fade-in-up" delay={200} stagger>
-          <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto items-start">
-            {plans.map((plan, index) => (
+          <div className="mx-auto grid max-w-5xl items-start gap-6 md:grid-cols-3">
+            {plans.map((plan) => (
               <div
-                key={index}
-                className="relative rounded-2xl flex flex-col"
+                key={plan.key}
+                id={plan.sectionId}
+                className="relative flex scroll-mt-28 flex-col rounded-2xl"
                 style={
                   plan.featured
                     ? {
@@ -117,9 +138,9 @@ const PricingCards = () => {
                 }
               >
                 {plan.featured && (
-                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 z-10">
+                  <div className="absolute -top-4 left-1/2 z-10 -translate-x-1/2">
                     <div
-                      className="flex items-center gap-1.5 px-4 py-1.5 rounded-full text-white text-xs font-semibold"
+                      className="flex items-center gap-1.5 rounded-full px-4 py-1.5 text-xs font-semibold text-white"
                       style={{
                         background:
                           "linear-gradient(135deg, #00d4aa, #0088cc)",
@@ -130,6 +151,7 @@ const PricingCards = () => {
                         height="12"
                         viewBox="0 0 24 24"
                         fill="none"
+                        aria-hidden="true"
                       >
                         <path
                           d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
@@ -142,34 +164,34 @@ const PricingCards = () => {
                 )}
 
                 <div
-                  className={`p-7 flex flex-col flex-1 ${
+                  className={`flex flex-1 flex-col p-7 ${
                     plan.featured ? "pt-9" : ""
                   }`}
                 >
-                  <div className="text-[#0088cc] text-xs font-semibold tracking-wider uppercase mb-4">
+                  <div className="mb-4 text-xs font-semibold uppercase tracking-wider text-[#0088cc]">
                     {plan.label}
                   </div>
 
-                  <h3 className="text-white text-xl font-bold mb-4">
+                  <h3 className="mb-4 text-xl font-bold text-white">
                     {plan.title}
                   </h3>
 
-                  <div className="flex items-baseline gap-2 mb-3">
-                    <span className="text-white text-4xl font-bold">
+                  <div className="mb-3 flex items-baseline gap-2">
+                    <span className="text-4xl font-bold text-white">
                       {plan.price}
                     </span>
                     {plan.period && (
-                      <span className="text-gray-400 text-sm font-medium">
+                      <span className="text-sm font-medium text-gray-400">
                         {plan.period}
                       </span>
                     )}
                   </div>
 
-                  <p className="text-gray-400 text-sm leading-relaxed mb-6">
+                  <p className="mb-6 text-sm leading-relaxed text-gray-400">
                     {plan.description}
                   </p>
 
-                  <ul className="space-y-3 mb-8 flex-1">
+                  <ul className="mb-8 flex-1 space-y-3">
                     {plan.features.map((feature, i) => (
                       <li key={i} className="flex items-start gap-3">
                         <svg
@@ -178,6 +200,7 @@ const PricingCards = () => {
                           viewBox="0 0 24 24"
                           fill="none"
                           className="mt-0.5 shrink-0"
+                          aria-hidden="true"
                         >
                           <path
                             d="M5 13l4 4L19 7"
@@ -187,7 +210,7 @@ const PricingCards = () => {
                             strokeLinejoin="round"
                           />
                         </svg>
-                        <span className="text-gray-300 text-sm">{feature}</span>
+                        <span className="text-sm text-gray-300">{feature}</span>
                       </li>
                     ))}
                   </ul>
@@ -195,7 +218,7 @@ const PricingCards = () => {
                   <a
                     href={plan.buttonLink}
                     {...getLinkProps(plan.buttonLink)}
-                    className="w-full flex items-center justify-center gap-2 text-sm font-semibold py-3 rounded-full transition-opacity hover:opacity-90"
+                    className="flex w-full items-center justify-center gap-2 rounded-full py-3 text-sm font-semibold transition-opacity hover:opacity-90"
                     style={
                       plan.featured
                         ? {

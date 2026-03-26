@@ -132,11 +132,11 @@ function GrowthVisual() {
     <div className="relative h-[120px] overflow-hidden rounded-[20px] bg-[#eef4fb] p-4">
       <svg viewBox="0 0 320 120" className="h-full w-full" aria-hidden="true">
         <defs>
-          <linearGradient id="why-growth-fill" x1="0" x2="1" y1="0" y2="1">
+          <linearGradient id="growth-fill-neustart" x1="0" x2="1" y1="0" y2="1">
             <stop offset="0%" stopColor="#8ef0d0" stopOpacity="0.95" />
             <stop offset="100%" stopColor="#b7ecff" stopOpacity="0.25" />
           </linearGradient>
-          <linearGradient id="why-growth-line" x1="0" x2="1">
+          <linearGradient id="growth-line-neustart" x1="0" x2="1">
             <stop offset="0%" stopColor="#00a8ff" />
             <stop offset="100%" stopColor="#00d4aa" />
           </linearGradient>
@@ -144,20 +144,34 @@ function GrowthVisual() {
 
         <path
           d="M10 88 C 48 84, 76 74, 112 60 S 180 36, 224 25 S 278 14, 310 10 L 310 120 L 10 120 Z"
-          fill="url(#why-growth-fill)"
+          fill="url(#growth-fill-neustart)"
         />
         <path
           d="M10 88 C 48 84, 76 74, 112 60 S 180 36, 224 25 S 278 14, 310 10"
           fill="none"
-          stroke="url(#why-growth-line)"
+          stroke="url(#growth-line-neustart)"
           strokeWidth="4"
           strokeLinecap="round"
         />
 
-        <div className="absolute left-4 top-3">
-          <div className="text-[10px] font-medium text-[#7a8799]">inclusive</div>
-          <div className="text-2xl font-semibold text-[#0b1220]">100%</div>
-        </div>
+        <text
+          x="14"
+          y="22"
+          fill="#7a8799"
+          fontSize="10"
+          fontWeight="500"
+        >
+          inclusive
+        </text>
+        <text
+          x="14"
+          y="48"
+          fill="#0b1220"
+          fontSize="28"
+          fontWeight="700"
+        >
+          100%
+        </text>
       </svg>
     </div>
   );

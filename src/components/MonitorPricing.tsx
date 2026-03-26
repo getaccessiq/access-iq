@@ -1,9 +1,10 @@
+import Link from "next/link";
 import AnimatedGradient from "./AnimatedGradient";
 
-type PlanKey = "starter" | "professional" | "enterprise";
+type MonitoringPlanKey = "starter" | "professional" | "enterprise";
 
 type MonitoringPlan = {
-  key: PlanKey;
+  key: MonitoringPlanKey;
   label: string;
   title: string;
   price: string;
@@ -12,247 +13,262 @@ type MonitoringPlan = {
   idealFor: string;
   highlights: string[];
   cta: string;
-  featured?: boolean;
+  featured: boolean;
   badge?: string;
 };
 
-type ComparisonRow = {
+type MonitoringComparisonRow = {
   feature: string;
-  values: Record<PlanKey, boolean | string>;
+  values: Record<MonitoringPlanKey, boolean | string>;
 };
 
-const monitoringPlans: MonitoringPlan[] = [
-  {
-    key: "starter",
-    label: "STARTER",
-    title: "Starter Monitoring",
-    price: "$49",
-    priceSuffix: "/mo",
-    shortDescription:
-      "Recurring accessibility scans for small websites that need essential visibility, issue alerts, and basic reporting.",
-    idealFor:
-      "Best for brochure sites, small business websites, and single-site monitoring.",
-    highlights: [
-      "Monitor up to 500 pages monthly",
-      "Weekly automated scans",
-      "Email alerts for new issues",
-      "Basic reporting dashboard",
-    ],
-    cta: "Start Starter Plan",
-    featured: false,
-  },
-  {
-    key: "professional",
-    label: "MOST POPULAR",
-    title: "Professional Monitoring",
-    price: "$199",
-    priceSuffix: "/mo",
-    shortDescription:
-      "Continuous accessibility monitoring for growing teams that need more coverage, faster scans, smarter alerts, and stronger reporting.",
-    idealFor:
-      "Best for SaaS products, marketing teams, and growing multi-page websites.",
-    highlights: [
-      "Monitor up to 6,000 pages monthly",
-      "Daily automated scans",
-      "Email + Slack alerts",
-      "Advanced reporting dashboard",
-    ],
-    cta: "Start Professional Plan",
-    featured: true,
-    badge: "Recommended",
-  },
-  {
-    key: "enterprise",
-    label: "ENTERPRISE",
-    title: "Enterprise Monitoring",
-    price: "$499",
-    priceSuffix: "/mo",
-    shortDescription:
-      "High-frequency monitoring for organizations that need unlimited coverage, custom workflows, white-label reporting, and premium support.",
-    idealFor:
-      "Best for agencies, enterprise teams, and high-volume multi-site environments.",
-    highlights: [
-      "Unlimited pages monitored",
-      "Hourly automated scans",
-      "Custom integrations",
-      "Dedicated support + SLA",
-    ],
-    cta: "Talk to Sales",
-    featured: false,
-  },
-];
-
-const comparisonRows: ComparisonRow[] = [
-  {
-    feature: "Pages monitored",
-    values: {
-      starter: "Up to 500 pages",
-      professional: "Up to 6000 pages",
-      enterprise: "Unlimited",
-    },
-  },
-  {
-    feature: "Scan frequency",
-    values: {
-      starter: "Weekly",
-      professional: "Daily",
-      enterprise: "Hourly",
-    },
-  },
-  {
-    feature: "Automated accessibility scans",
-    values: {
-      starter: true,
-      professional: true,
-      enterprise: true,
-    },
-  },
-  {
-    feature: "Issue change detection",
-    values: {
-      starter: true,
-      professional: true,
-      enterprise: true,
-    },
-  },
-  {
-    feature: "Email alerts",
-    values: {
-      starter: true,
-      professional: true,
-      enterprise: true,
-    },
-  },
-  {
-    feature: "Slack alerts",
-    values: {
-      starter: false,
-      professional: true,
-      enterprise: true,
-    },
-  },
-  {
-    feature: "Dashboard history tracking",
-    values: {
-      starter: true,
-      professional: true,
-      enterprise: true,
-    },
-  },
-  {
-    feature: "Basic reports",
-    values: {
-      starter: true,
-      professional: true,
-      enterprise: true,
-    },
-  },
-  {
-    feature: "Advanced reports",
-    values: {
-      starter: false,
-      professional: true,
-      enterprise: true,
-    },
-  },
-  {
-    feature: "White-label reports",
-    values: {
-      starter: false,
-      professional: false,
-      enterprise: true,
-    },
-  },
-  {
-    feature: "Team access",
-    values: {
-      starter: "1 user",
-      professional: "Up to 5 users",
-      enterprise: "Custom",
-    },
-  },
-  {
-    feature: "Priority support",
-    values: {
-      starter: false,
-      professional: true,
-      enterprise: true,
-    },
-  },
-  {
-    feature: "Dedicated support contact",
-    values: {
-      starter: false,
-      professional: false,
-      enterprise: true,
-    },
-  },
-  {
-    feature: "Custom integrations",
-    values: {
-      starter: false,
-      professional: false,
-      enterprise: true,
-    },
-  },
-  {
-    feature: "SLA guarantee",
-    values: {
-      starter: false,
-      professional: false,
-      enterprise: true,
-    },
-  },
-  {
-    feature: "Best for",
-    values: {
-      starter: "Small websites",
-      professional: "Growing teams",
-      enterprise: "Agencies & enterprises",
-    },
-  },
-];
-
-function renderCellValue(value: boolean | string) {
-  if (value === true) {
-    return (
-      <span className="inline-flex h-6 w-6 items-center justify-center rounded-full border border-cyan-400/30 bg-cyan-400/10 text-sm font-semibold text-cyan-300">
-        ✓
-      </span>
-    );
-  }
-
-  if (value === false) {
-    return (
-      <span className="inline-flex h-6 w-6 items-center justify-center rounded-full border border-white/10 bg-white/[0.03] text-sm font-semibold text-slate-500">
-        —
-      </span>
-    );
-  }
-
-  return <span className="text-sm leading-6 text-slate-200">{value}</span>;
-}
-
 export default function AccessIQMonitoringPricingSection() {
+  const monitoringPlans: MonitoringPlan[] = [
+    {
+      key: "starter",
+      label: "STARTER",
+      title: "Starter Monitoring",
+      price: "$49",
+      priceSuffix: "/mo",
+      shortDescription:
+        "Recurring accessibility scans for small websites that need essential visibility, issue alerts, and basic reporting.",
+      idealFor:
+        "Best for brochure sites, small business websites, and single-site monitoring.",
+      highlights: [
+        "Monitor up to 500 pages monthly",
+        "Weekly automated scans",
+        "Email alerts for new issues",
+        "Basic reporting dashboard",
+      ],
+      cta: "Start Starter Plan",
+      featured: false,
+    },
+    {
+      key: "professional",
+      label: "MOST POPULAR",
+      title: "Professional Monitoring",
+      price: "$199",
+      priceSuffix: "/mo",
+      shortDescription:
+        "Continuous accessibility monitoring for growing teams that need more coverage, faster scans, smarter alerts, and stronger reporting.",
+      idealFor:
+        "Best for SaaS products, marketing teams, and growing multi-page websites.",
+      highlights: [
+        "Monitor up to 6,000 pages monthly",
+        "Daily automated scans",
+        "Email + Slack alerts",
+        "Advanced reporting dashboard",
+      ],
+      cta: "Start Professional Plan",
+      featured: true,
+      badge: "Recommended",
+    },
+    {
+      key: "enterprise",
+      label: "ENTERPRISE",
+      title: "Enterprise Monitoring",
+      price: "$499",
+      priceSuffix: "/mo",
+      shortDescription:
+        "High-frequency monitoring for organizations that need unlimited coverage, custom workflows, white-label reporting, and premium support.",
+      idealFor:
+        "Best for agencies, enterprise teams, and high-volume multi-site environments.",
+      highlights: [
+        "Unlimited pages monitored",
+        "Hourly automated scans",
+        "Custom integrations",
+        "Dedicated support + SLA",
+      ],
+      cta: "Talk to Sales",
+      featured: false,
+    },
+  ];
+
+  const comparisonRows: MonitoringComparisonRow[] = [
+    {
+      feature: "Pages monitored",
+      values: {
+        starter: "Up to 500 pages",
+        professional: "Up to 6,000 pages",
+        enterprise: "Unlimited",
+      },
+    },
+    {
+      feature: "Scan frequency",
+      values: {
+        starter: "Weekly",
+        professional: "Daily",
+        enterprise: "Hourly",
+      },
+    },
+    {
+      feature: "Automated accessibility scans",
+      values: {
+        starter: true,
+        professional: true,
+        enterprise: true,
+      },
+    },
+    {
+      feature: "Issue change detection",
+      values: {
+        starter: true,
+        professional: true,
+        enterprise: true,
+      },
+    },
+    {
+      feature: "Email alerts",
+      values: {
+        starter: true,
+        professional: true,
+        enterprise: true,
+      },
+    },
+    {
+      feature: "Slack alerts",
+      values: {
+        starter: false,
+        professional: true,
+        enterprise: true,
+      },
+    },
+    {
+      feature: "Dashboard history tracking",
+      values: {
+        starter: true,
+        professional: true,
+        enterprise: true,
+      },
+    },
+    {
+      feature: "Basic reports",
+      values: {
+        starter: true,
+        professional: true,
+        enterprise: true,
+      },
+    },
+    {
+      feature: "Advanced reports",
+      values: {
+        starter: false,
+        professional: true,
+        enterprise: true,
+      },
+    },
+    {
+      feature: "White-label reports",
+      values: {
+        starter: false,
+        professional: false,
+        enterprise: true,
+      },
+    },
+    {
+      feature: "Team access",
+      values: {
+        starter: "1 user",
+        professional: "Up to 5 users",
+        enterprise: "Custom",
+      },
+    },
+    {
+      feature: "Priority support",
+      values: {
+        starter: false,
+        professional: true,
+        enterprise: true,
+      },
+    },
+    {
+      feature: "Dedicated support contact",
+      values: {
+        starter: false,
+        professional: false,
+        enterprise: true,
+      },
+    },
+    {
+      feature: "Custom integrations",
+      values: {
+        starter: false,
+        professional: false,
+        enterprise: true,
+      },
+    },
+    {
+      feature: "SLA guarantee",
+      values: {
+        starter: false,
+        professional: false,
+        enterprise: true,
+      },
+    },
+    {
+      feature: "Best for",
+      values: {
+        starter: "Small websites",
+        professional: "Growing teams",
+        enterprise: "Agencies & enterprises",
+      },
+    },
+  ];
+      
+  const renderCellValue = (value: boolean | string) => {
+    if (value === true) {
+      return (
+        <span className="inline-flex h-6 w-6 items-center justify-center rounded-full border border-cyan-400/30 bg-cyan-400/10 text-sm font-semibold text-cyan-300">
+          ✓
+        </span>
+      );
+    }
+
+    if (value === false) {
+      return (
+        <span className="inline-flex h-6 w-6 items-center justify-center rounded-full border border-white/10 bg-white/[0.03] text-sm font-semibold text-slate-500">
+          —
+        </span>
+      );
+    }
+
+    return <span className="text-sm leading-6 text-slate-200">{value}</span>;
+  };
+
   return (
-    <section className="relative bg-[#020817] text-white">
+    <section
+      id="monitoring-pricing-overview"
+      className="relative overflow-hidden bg-[#020817] text-white scroll-mt-24 lg:scroll-mt-32"
+    >
       <AnimatedGradient />
 
-      <div className="pointer-events-none absolute inset-0">
-        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(2,8,23,0.68)_0%,rgba(2,8,23,0.84)_28%,rgba(2,8,23,0.92)_62%,rgba(1,5,15,0.98)_100%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(34,211,238,0.12),transparent_28%),radial-gradient(circle_at_bottom,rgba(6,182,212,0.07),transparent_42%)]" />
-        <div className="absolute inset-0 opacity-[0.035] [background-image:linear-gradient(rgba(255,255,255,0.08)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.08)_1px,transparent_1px)] [background-size:42px_42px]" />
+      <div className="absolute inset-0">
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(2,8,23,0.72)_0%,rgba(2,8,23,0.82)_30%,rgba(2,8,23,0.90)_65%,rgba(1,5,15,0.96)_100%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(34,211,238,0.08),transparent_28%),radial-gradient(circle_at_bottom,rgba(6,182,212,0.06),transparent_40%)]" />
+        <div className="absolute -left-20 top-1/3 h-60 w-60 rounded-full bg-sky-500/8 blur-3xl" />
+        <div className="absolute -right-20 bottom-10 h-72 w-72 rounded-full bg-teal-400/8 blur-3xl" />
+        <div className="absolute inset-0 opacity-[0.04] [background-image:linear-gradient(rgba(255,255,255,0.08)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.08)_1px,transparent_1px)] [background-size:42px_42px]" />
       </div>
 
-      <div className="relative mx-auto max-w-7xl px-4 pt-24 pb-16 sm:px-6 lg:px-8 lg:pt-28 lg:pb-20">
-        <div className="mx-auto max-w-5xl text-center">
+<div className="relative mx-auto max-w-7xl px-4 pt-24 pb-16 sm:px-6 lg:px-8 lg:pt-28 lg:pb-20">
+        <div className="mx-auto max-w-6xl -mt-16">
+          <Link
+            href="/pricing#monitoring-pricing-overview"
+            className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.02] px-3 py-1.5 text-sm text-slate-300 transition duration-300 hover:border-cyan-400/25 hover:bg-cyan-400/5 hover:text-white"
+          >
+            <span aria-hidden="true">←</span>
+            <span>Back to Pricing</span>
+          </Link>
+        </div>
+
+        <div className="mx-auto mt-10 max-w-5xl text-center sm:mt-12">
           <div className="inline-flex items-center rounded-full border border-cyan-400/20 bg-cyan-400/10 px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.2em] text-cyan-300 shadow-[0_0_24px_rgba(34,211,238,0.10)]">
             Accessibility Monitoring
           </div>
 
           <h2 className="mx-auto mt-5 max-w-4xl text-3xl font-semibold tracking-tight text-white sm:text-4xl lg:text-5xl">
             Continuous accessibility monitoring
-            <span className="block pb-1 bg-gradient-to-r from-white via-cyan-100 to-cyan-300 bg-clip-text text-transparent">
+            <span className="block bg-gradient-to-r from-white via-cyan-100 to-cyan-300 bg-clip-text text-transparent">
               built for ongoing compliance
             </span>
           </h2>
@@ -262,36 +278,35 @@ export default function AccessIQMonitoringPricingSection() {
             Compare plans for scan coverage, alerting, reporting, and support.
           </p>
 
-
           <div className="mx-auto mt-12 h-px max-w-4xl bg-gradient-to-r from-transparent via-cyan-400/20 to-transparent" />
         </div>
 
-        <div className="mt-24 grid gap-6 lg:grid-cols-3">
+        <div className="mt-20 grid gap-6 lg:grid-cols-3">
           {monitoringPlans.map((plan) => (
             <article
               key={plan.key}
-              className={`group relative rounded-[26px] border backdrop-blur-xl transition-all duration-300 ${
+              className={`group relative rounded-[24px] border backdrop-blur-xl transition-all duration-300 ${
                 plan.featured
-                  ? "translate-y-[-4px] border-cyan-300/45 bg-white/[0.055] shadow-[0_0_0_1px_rgba(34,211,238,0.14),0_18px_55px_rgba(6,182,212,0.16),0_0_60px_rgba(34,211,238,0.06)]"
-                  : "border-white/10 bg-white/[0.03] shadow-[0_18px_60px_rgba(0,0,0,0.30)] hover:border-cyan-400/20 hover:bg-white/[0.04]"
+                  ? "border-cyan-300/45 bg-white/[0.05] shadow-[0_0_0_1px_rgba(34,211,238,0.14),0_16px_50px_rgba(6,182,212,0.14),0_0_50px_rgba(34,211,238,0.05)]"
+                  : "border-white/10 bg-white/[0.03] shadow-[0_16px_60px_rgba(0,0,0,0.28)] hover:border-cyan-400/20 hover:bg-white/[0.04]"
               }`}
             >
               <div
                 className={`pointer-events-none absolute inset-x-0 top-0 h-px ${
                   plan.featured
-                    ? "bg-gradient-to-r from-transparent via-cyan-300/80 to-transparent"
+                    ? "bg-gradient-to-r from-transparent via-cyan-300/70 to-transparent"
                     : "bg-gradient-to-r from-transparent via-white/15 to-transparent"
                 }`}
               />
 
-              {plan.badge && (
-                <div className="absolute left-1/2 -top-5 z-10 -translate-x-1/2">
+              {plan.badge ? (
+                <div className="absolute left-1/2 -top-3 z-10 -translate-x-1/2">
                   <div className="inline-flex items-center gap-2 rounded-full border border-cyan-200/25 bg-gradient-to-r from-teal-300 to-cyan-400 px-4 py-1.5 text-xs font-semibold text-slate-950 shadow-[0_8px_24px_rgba(34,211,238,0.24)]">
                     <span>✦</span>
-                    {plan.badge}
+                    <span>{plan.badge}</span>
                   </div>
                 </div>
-              )}
+              ) : null}
 
               <div className="p-5 sm:p-6">
                 <div className="flex items-center justify-between gap-3">
@@ -364,7 +379,7 @@ export default function AccessIQMonitoringPricingSection() {
           ))}
         </div>
 
-        <div className="mt-10 overflow-hidden rounded-[30px] border border-white/10 bg-white/[0.04] shadow-[0_18px_80px_rgba(0,0,0,0.28)] backdrop-blur-xl">
+        <div className="mt-8 overflow-hidden rounded-[28px] border border-white/10 bg-white/[0.035] shadow-[0_16px_70px_rgba(0,0,0,0.26)] backdrop-blur-xl">
           <div className="border-b border-white/10 px-5 py-4 sm:px-6">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div>
@@ -426,7 +441,6 @@ export default function AccessIQMonitoringPricingSection() {
                     <td className="px-5 py-4 text-sm font-medium text-white sm:px-6">
                       {row.feature}
                     </td>
-
                     {monitoringPlans.map((plan) => (
                       <td
                         key={`${row.feature}-${plan.key}`}
