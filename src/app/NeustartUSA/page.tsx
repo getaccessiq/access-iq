@@ -62,7 +62,7 @@ export default function ScanPage() {
       const startedAt = Date.now();
       setScanState("scanning");
 
-      const response = await fetch("/api/scan", {
+      const response = await fetch("/api/scan-unlimited", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ url, mode: "scan" }),
