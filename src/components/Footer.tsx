@@ -221,11 +221,11 @@ const Footer = () => {
                       </svg>
                     </div>
                     <a
-                      href="mailto:support@getaccessiq.com"
-                      aria-label="Email support@getaccessiq.com"
+                      href="mailto:support@accessive.co"
+                      aria-label="Email support@accessive.co"
                       className={baseLinkClass}
                     >
-                      support@getaccessiq.com
+                      support@accessive.co
                     </a>
                   </li>
 
