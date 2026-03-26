@@ -35,7 +35,7 @@ const helpCards = [
     ),
     title: "Book a Demo",
     description:
-      "Get a guided walkthrough and understand exactly how to fix your issues.",
+      "Get a guided walkthrough of the Accessive dashboard and see how to turn audit results into compliant, real-world fixes.",
     cta: "Book expert session",
     featured: false,
   },

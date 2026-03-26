@@ -35,6 +35,15 @@ const CTASection = () => {
                 />
 
                 <div
+                  className="pointer-events-none absolute inset-0"
+                  aria-hidden="true"
+                  style={{
+                    background:
+                      "radial-gradient(circle at 30% 20%, rgba(255,255,255,0.12) 0%, transparent 42%), radial-gradient(circle at 70% 80%, rgba(0,212,170,0.22) 0%, transparent 42%)",
+                  }}
+                />
+
+                <div
                   className="pointer-events-none absolute left-0 top-0 h-full w-full"
                   aria-hidden="true"
                   style={{
@@ -79,7 +88,7 @@ const CTASection = () => {
                 <div
                   className="pointer-events-none absolute -right-10 -top-6 md:-right-8 md:-top-4"
                   aria-hidden="true"
-                  style={{ opacity: 0.05, transform: "rotate(-24deg)" }}
+                  style={{ opacity: 0.1, transform: "rotate(-24deg)" }}
                 >
                   <Image
                     src="/images/favicon-icon.png"
@@ -100,8 +109,8 @@ const CTASection = () => {
                       Verified accessibility reporting
                     </div>
 
-                    <h2 className="mx-auto max-w-[1020px] text-balance text-3xl font-bold leading-[1.01] tracking-[-0.01em] text-white md:text-5xl lg:text-[58px]">
-                      Get Your Verified Accessibility Report Today
+                    <h2 className="mx-auto max-w-[1040px] text-balance text-3xl font-bold leading-[1.01] tracking-[-0.02em] text-white md:text-5xl lg:text-[58px]">
+                      Get a Verified Accessibility Report Your Team Can Act On
                     </h2>
 
                     <p className="mx-auto mt-5 max-w-[780px] text-base leading-relaxed text-white/85 md:text-lg">
@@ -112,7 +121,11 @@ const CTASection = () => {
                     <div className="mt-9 flex flex-col items-center justify-center gap-4 sm:flex-row">
                       <button
                         type="button"
-                        className="group inline-flex items-center gap-2 rounded-full bg-white px-8 py-3.5 text-sm font-semibold text-[#0b1a2a] shadow-[0_14px_40px_rgba(255,255,255,0.22)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-white/95 focus:outline-none focus:ring-2 focus:ring-white/30"
+                        className="group inline-flex items-center gap-2 rounded-full px-8 py-3.5 text-sm font-semibold text-[#0b1a2a] shadow-[0_14px_40px_rgba(255,255,255,0.22),0_10px_30px_rgba(0,212,170,0.18)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-white/95 focus:outline-none focus:ring-2 focus:ring-white/30"
+                        style={{
+                          background:
+                            "linear-gradient(135deg, #ffffff 0%, #edfdfa 100%)",
+                        }}
                         aria-label="Start your audit"
                       >
                         Start Your Audit
@@ -135,13 +148,13 @@ const CTASection = () => {
                         </svg>
                       </button>
 
-<Link
-  href="/sample-report"
-  className="inline-flex items-center gap-2 rounded-full border border-white/18 bg-white/8 px-8 py-3.5 text-sm font-semibold text-white backdrop-blur-sm transition-all duration-300 hover:border-white/24 hover:bg-white/12 focus:outline-none focus:ring-2 focus:ring-white/20"
-  aria-label="View sample report"
->
-  View Sample Report
-</Link>
+                      <Link
+                        href="/sample-report"
+                        className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-8 py-3.5 text-sm font-semibold text-white backdrop-blur-sm shadow-[0_8px_24px_rgba(255,255,255,0.06)] transition-all duration-300 hover:-translate-y-0.5 hover:border-white/45 hover:bg-white/14 hover:shadow-[0_12px_28px_rgba(255,255,255,0.10)] focus:outline-none focus:ring-2 focus:ring-white/20"
+                        aria-label="View sample report"
+                      >
+                        View Sample Report
+                      </Link>
                     </div>
 
                     <div className="mt-7 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-sm text-white/72">

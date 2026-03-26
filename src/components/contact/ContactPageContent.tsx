@@ -61,7 +61,7 @@ const helpCards: HelpCardItem[] = [
   {
     title: "Book a Demo",
     description:
-      "Get a guided walkthrough and understand exactly how to fix your issues.",
+      "Explore the Accessive dashboard and see how continuous monitoring keeps you ahead of issues.",
     cta: "Book expert session",
     icon: "demo",
   },

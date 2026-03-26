@@ -2,6 +2,7 @@ import Header from "@/components/Header";
 import HeroSection from "@/components/HeroSection";
 import AccessibilitySolutions from "@/components/AccessibilitySolutions";
 import DigitalAccessibility from "@/components/DigitalAccessibility";
+import CTASection from "@/components/CTASection";
 import Footer from "@/components/Footer";
 
 export default function Home() {
@@ -13,6 +14,7 @@ export default function Home() {
         <HeroSection />
         <AccessibilitySolutions />
         <DigitalAccessibility />
+        <CTASection />
       </main>
 
       <Footer />
