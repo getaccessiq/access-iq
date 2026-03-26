@@ -71,7 +71,7 @@ function ActiveDot() {
   );
 }
 
-function FinalizingDot() {
+function FinalizingDot({ label }: { label: string }) {
   return (
     <div
       className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[11px] font-bold text-white"
@@ -79,8 +79,9 @@ function FinalizingDot() {
         background: "linear-gradient(135deg, #00d4aa, #0088cc)",
         boxShadow: "0 10px 24px rgba(0,212,170,0.20)",
       }}
+      aria-hidden="true"
     >
-      N
+      {label.charAt(0).toUpperCase()}
     </div>
   );
 }
@@ -401,7 +402,7 @@ export default function ScanLoadingView({ url }: ScanLoadingViewProps) {
                           ) : isActive ? (
                             <ActiveDot />
                           ) : isLastPending ? (
-                            <FinalizingDot />
+                            <FinalizingDot label={item} />
                           ) : (
                             <PlaceholderDot />
                           )}
