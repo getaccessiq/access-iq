@@ -2,16 +2,15 @@ import { NextRequest, NextResponse } from "next/server";
 import { readFileSync } from "fs";
 import path from "path";
 import type { Browser } from "puppeteer-core";
+import {
+  consumeFreeScan,
+  FREE_SCAN_DAILY_LIMIT,
+  formatRemainingTime,
+  getRateLimitStatus,
+} from "@/lib/scan-rate-limit";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
-
-// Free-scan Limit zentral anpassbar
-const FREE_SCAN_DAILY_LIMIT = 50;
-const FREE_SCAN_WINDOW_MS = 24 * 60 * 60 * 1000;
-
-// Einfaches In-Memory Rate Limit
-const requests = new Map<string, { count: number; resetTime: number }>();
 
 interface AxeViolation {
   id: string;
@@ -71,53 +70,28 @@ function getClientIp(request: NextRequest) {
   return forwardedFor?.split(",")[0]?.trim() || realIp || "unknown";
 }
 
-function checkDailyFreeScanLimit(ip: string) {
-  const now = Date.now();
-  const current = requests.get(ip);
+function toSafeIsoString(resetTime: unknown) {
+  const safeResetTime =
+    typeof resetTime === "number" && Number.isFinite(resetTime)
+      ? resetTime
+      : Date.now() + 24 * 60 * 60 * 1000;
 
-  if (!current || now > current.resetTime) {
-    const resetTime = now + FREE_SCAN_WINDOW_MS;
+  return new Date(safeResetTime).toISOString();
+}
 
-    requests.set(ip, {
-      count: 1,
-      resetTime,
-    });
+function getRemainingMs(resetTime: unknown) {
+  const safeResetTime =
+    typeof resetTime === "number" && Number.isFinite(resetTime)
+      ? resetTime
+      : Date.now() + 24 * 60 * 60 * 1000;
 
-    return {
-      allowed: true,
-      limit: FREE_SCAN_DAILY_LIMIT,
-      remaining: FREE_SCAN_DAILY_LIMIT - 1,
-      resetTime,
-      used: 1,
-    };
-  }
-
-  if (current.count >= FREE_SCAN_DAILY_LIMIT) {
-    return {
-      allowed: false,
-      limit: FREE_SCAN_DAILY_LIMIT,
-      remaining: 0,
-      resetTime: current.resetTime,
-      used: current.count,
-    };
-  }
-
-  current.count += 1;
-  requests.set(ip, current);
-
-  return {
-    allowed: true,
-    limit: FREE_SCAN_DAILY_LIMIT,
-    remaining: FREE_SCAN_DAILY_LIMIT - current.count,
-    resetTime: current.resetTime,
-    used: current.count,
-  };
+  return Math.max(safeResetTime - Date.now(), 0);
 }
 
 export async function GET() {
   return NextResponse.json({
     success: true,
-    message: "Scan API is running. Use POST /api/scan with { url }.",
+    message: "Scan API is running. Use POST /api/scan with { url, mode }.",
     freeScanLimit: {
       limit: FREE_SCAN_DAILY_LIMIT,
       windowHours: 24,
@@ -127,26 +101,8 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   const ip = getClientIp(request);
-  const rateLimit = checkDailyFreeScanLimit(ip);
 
-  if (!rateLimit.allowed) {
-    return NextResponse.json(
-      {
-        success: false,
-        code: "DAILY_SCAN_LIMIT_REACHED",
-        error: `Daily limit reached. You have already used all ${FREE_SCAN_DAILY_LIMIT} free scans today. Please try again tomorrow.`,
-        rateLimit: {
-          limit: rateLimit.limit,
-          remaining: rateLimit.remaining,
-          used: rateLimit.used,
-          resetTime: new Date(rateLimit.resetTime).toISOString(),
-        },
-      },
-      { status: 429 }
-    );
-  }
-
-  let body: { url?: string };
+  let body: { url?: string; mode?: "check" | "scan" };
 
   try {
     body = await request.json();
@@ -154,6 +110,58 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       { success: false, error: "Invalid request body" },
       { status: 400 }
+    );
+  }
+
+  const mode = body.mode ?? "scan";
+
+  if (mode === "check") {
+    const rateLimit = await getRateLimitStatus(ip);
+
+    if (!rateLimit.allowed) {
+      return NextResponse.json({
+        allowed: false,
+        message: `Daily free scan limit reached. Try again in ${formatRemainingTime(
+          getRemainingMs(rateLimit.resetTime)
+        )} or upgrade.`,
+        rateLimit: {
+          limit: rateLimit.limit,
+          remaining: rateLimit.remaining,
+          used: rateLimit.used,
+          resetTime: toSafeIsoString(rateLimit.resetTime),
+        },
+      });
+    }
+
+    return NextResponse.json({
+      allowed: true,
+      rateLimit: {
+        limit: rateLimit.limit,
+        remaining: rateLimit.remaining,
+        used: rateLimit.used,
+        resetTime: toSafeIsoString(rateLimit.resetTime),
+      },
+    });
+  }
+
+  const rateLimit = await consumeFreeScan(ip);
+
+  if (!rateLimit.allowed) {
+    return NextResponse.json(
+      {
+        success: false,
+        code: "DAILY_SCAN_LIMIT_REACHED",
+        error: `Daily free scan limit reached. Try again in ${formatRemainingTime(
+          getRemainingMs(rateLimit.resetTime)
+        )} or upgrade.`,
+        rateLimit: {
+          limit: rateLimit.limit,
+          remaining: rateLimit.remaining,
+          used: rateLimit.used,
+          resetTime: toSafeIsoString(rateLimit.resetTime),
+        },
+      },
+      { status: 429 }
     );
   }
 
@@ -262,7 +270,7 @@ export async function POST(request: NextRequest) {
         limit: rateLimit.limit,
         remaining: rateLimit.remaining,
         used: rateLimit.used,
-        resetTime: new Date(rateLimit.resetTime).toISOString(),
+        resetTime: toSafeIsoString(rateLimit.resetTime),
       },
       counts,
       violations: (results.violations ?? []).map((violation) => ({
@@ -288,9 +296,7 @@ export async function POST(request: NextRequest) {
     let friendly =
       "This website could not be scanned. Please try again or enter a different URL.";
 
-    if (/DAILY_SCAN_LIMIT_REACHED/i.test(raw)) {
-      friendly = `Daily limit reached. You have already used all ${FREE_SCAN_DAILY_LIMIT} free scans today. Please try again tomorrow.`;
-    } else if (/Could not find Chrome|Browser was not found|executablePath/i.test(raw)) {
+    if (/Could not find Chrome|Browser was not found|executablePath/i.test(raw)) {
       friendly =
         "The scan browser could not be started. Please check the browser configuration.";
     } else if (/TimeoutError|timeout|net::ERR_TIMED_OUT/i.test(raw)) {

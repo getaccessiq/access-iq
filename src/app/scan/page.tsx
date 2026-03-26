@@ -51,6 +51,16 @@ interface ScanErrorResponse {
   rateLimit?: RateLimitInfo;
 }
 
+interface CheckLimitResponse {
+  allowed: boolean;
+  limit?: number;
+  remaining?: string;
+  message?: string;
+  rateLimit?: RateLimitInfo;
+}
+
+const MIN_SCAN_DURATION_MS = 8000;
+
 function formatTimeUntil(resetTime: string) {
   const reset = new Date(resetTime).getTime();
   const now = Date.now();
@@ -69,11 +79,12 @@ function formatTimeUntil(resetTime: string) {
 
 function buildDailyLimitMessage(rateLimit?: RateLimitInfo) {
   if (!rateLimit?.resetTime) {
-    return "The daily limit of 5 free scans has been reached. Please try again tomorrow.";
+    return "Daily free scan limit reached. Try again later or upgrade.";
   }
 
   const remaining = formatTimeUntil(rateLimit.resetTime);
-  return `The daily limit of ${rateLimit.limit} free scans has been reached.`;
+
+  return `Daily free scan limit reached. Try again in ${remaining} or upgrade.`;
 }
 
 export default function ScanPage() {
@@ -84,17 +95,53 @@ export default function ScanPage() {
 
   const handleScan = async (url: string) => {
     setCurrentUrl(url);
-    setScanState("scanning");
+    setResults(null);
     setErrorMessage(undefined);
 
     try {
-      const response = await fetch("/api/scan", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url }),
-      });
+      // 1) PRE-CHECK: erst Limit prüfen
+      const limitResponse = await fetch("/api/scan", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ url, mode: "check" }),
+});
+
+      const limitData = (await limitResponse.json()) as CheckLimitResponse;
+
+      if (!limitResponse.ok) {
+        throw new Error(
+          limitData.message || "Unable to verify scan availability. Please try again."
+        );
+      }
+
+      if (!limitData.allowed) {
+        const limitMessage =
+          limitData.message || buildDailyLimitMessage(limitData.rateLimit);
+
+        setErrorMessage(limitMessage);
+        setScanState("error");
+        return;
+      }
+
+      // 2) Erst wenn erlaubt: Scan-State aktivieren
+      const startedAt = Date.now();
+      setScanState("scanning");
+
+      // 3) Echter Scan
+     const response = await fetch("/api/scan", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ url, mode: "scan" }),
+});
 
       const data = (await response.json()) as ScanResultsData | ScanErrorResponse;
+
+      const elapsed = Date.now() - startedAt;
+      const remaining = Math.max(MIN_SCAN_DURATION_MS - elapsed, 0);
+
+      if (remaining > 0) {
+        await new Promise((resolve) => setTimeout(resolve, remaining));
+      }
 
       if (!response.ok) {
         if (response.status === 429) {
@@ -116,7 +163,7 @@ export default function ScanPage() {
 
       const message =
         raw &&
-        /daily limit|free scans|minute|hour|timeout|not be reached|not be found|blocking|different URL|could not be scanned/i.test(
+        /daily limit|free scans|minute|hour|upgrade|timeout|not be reached|not be found|blocking|different URL|could not be scanned|verify scan availability/i.test(
           raw
         )
           ? raw
