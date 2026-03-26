@@ -110,9 +110,9 @@ export default function ScanHero({ onScan, error }: ScanHeroProps) {
       />
 
       <div className="relative z-10">
-        <div className="mx-auto max-w-[1440px] px-4 pb-12 pt-[88px] sm:px-6 md:pb-14 md:pt-[100px] lg:px-8 lg:pb-16 lg:pt-[112px]">
-          <div className="flex min-h-[calc(100svh-88px)] items-center justify-center md:min-h-[calc(100svh-100px)] lg:min-h-[calc(100svh-112px)]">
-            <div className="w-full max-w-[1120px] text-center">
+        <div className="mx-auto max-w-[1440px] px-4 pb-12 pt-[124px] sm:px-6 md:pb-14 md:pt-[136px] lg:px-8 lg:pb-16 lg:pt-[146px]">
+  <div className="flex items-center justify-center">
+    <div className="w-full max-w-[1120px] text-center">
               {/* Heading */}
               <ScrollReveal animation="fade-in-up" delay={80}>
                 <h1
