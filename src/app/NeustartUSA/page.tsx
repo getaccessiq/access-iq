@@ -3,11 +3,11 @@
 import { useState } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import ScanHero from "@/components/scan/ScanHero";
-import AccessibilityWhy from "@/components/scan/WhyAccessibility";
-import CaseForAccessibility from "@/components/scan/CaseForAccessibility";
-import ScanLoadingView from "@/components/scan/ScanLoadingView";
-import ScanResults from "@/components/scan/ScanResults";
+import ScanHero from "@/components/NeustartUSA/ScanHero";
+import AccessibilityWhy from "@/components/NeustartUSA/WhyAccessibility";
+import CaseForAccessibility from "@/components/NeustartUSA/CaseForAccessibility";
+import ScanLoadingView from "@/components/NeustartUSA/ScanLoadingView";
+import ScanResults from "@/components/NeustartUSA/ScanResults";
 
 type ScanState = "idle" | "scanning" | "complete" | "error";
 
@@ -37,57 +37,13 @@ interface ScanResultsData {
   incomplete: number;
 }
 
-interface RateLimitInfo {
-  limit: number;
-  remaining: number;
-  used?: number;
-  resetTime: string;
-}
-
 interface ScanErrorResponse {
   success?: false;
   code?: string;
   error?: string;
-  rateLimit?: RateLimitInfo;
-}
-
-interface CheckLimitResponse {
-  allowed: boolean;
-  limit?: number;
-  remaining?: string;
-  message?: string;
-  rateLimit?: RateLimitInfo;
 }
 
 const MIN_SCAN_DURATION_MS = 8000;
-
-function formatTimeUntil(resetTime: string) {
-  const reset = new Date(resetTime).getTime();
-  const now = Date.now();
-  const diffMs = Math.max(reset - now, 0);
-
-  const totalMinutes = Math.ceil(diffMs / 1000 / 60);
-  const hours = Math.floor(totalMinutes / 60);
-  const minutes = totalMinutes % 60;
-
-  if (hours <= 0) {
-    return `${minutes} minute${minutes === 1 ? "" : "s"}`;
-  }
-
-  return `${hours}:${minutes.toString().padStart(2, "0")} hour${
-    hours === 1 ? "" : "s"
-  }`;
-}
-
-function buildDailyLimitMessage(rateLimit?: RateLimitInfo) {
-  if (!rateLimit?.resetTime) {
-    return "Daily free scan limit reached. Try again later or upgrade.";
-  }
-
-  const remaining = formatTimeUntil(rateLimit.resetTime);
-
-  return `Daily free scan limit reached. Try again in ${remaining} or upgrade.`;
-}
 
 export default function ScanPage() {
   const [scanState, setScanState] = useState<ScanState>("idle");
@@ -103,30 +59,6 @@ export default function ScanPage() {
     setErrorMessage(undefined);
 
     try {
-      const limitResponse = await fetch("/api/scan", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url, mode: "check" }),
-      });
-
-      const limitData = (await limitResponse.json()) as CheckLimitResponse;
-
-      if (!limitResponse.ok) {
-        throw new Error(
-          limitData.message ||
-            "Unable to verify scan availability. Please try again."
-        );
-      }
-
-      if (!limitData.allowed) {
-        const limitMessage =
-          limitData.message || buildDailyLimitMessage(limitData.rateLimit);
-
-        setErrorMessage(limitMessage);
-        setScanState("error");
-        return;
-      }
-
       const startedAt = Date.now();
       setScanState("scanning");
 
@@ -148,13 +80,6 @@ export default function ScanPage() {
       }
 
       if (!response.ok) {
-        if (response.status === 429) {
-          const message = buildDailyLimitMessage(
-            "rateLimit" in data ? data.rateLimit : undefined
-          );
-          throw new Error(message);
-        }
-
         throw new Error(
           ("error" in data && data.error) || "Scan failed. Please try again."
         );
@@ -166,10 +91,7 @@ export default function ScanPage() {
       const raw = err instanceof Error ? err.message : "";
 
       const message =
-        raw &&
-        /daily limit|free scans|minute|hour|upgrade|timeout|not be reached|not be found|blocking|different URL|could not be scanned|verify scan availability/i.test(
-          raw
-        )
+        raw && raw.trim().length > 0
           ? raw
           : "This website could not be scanned. Please try again or enter a different URL.";
 
