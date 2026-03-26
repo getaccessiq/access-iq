@@ -285,7 +285,7 @@ export default function ScanLoadingView({ url }: ScanLoadingViewProps) {
         <div className="relative z-10 mx-auto flex min-h-screen max-w-[1160px] items-center px-4 py-[88px] sm:px-6 lg:px-8">
           <div className="w-full">
             <div className="mx-auto max-w-[1040px]">
-              <div className="mb-4 flex justify-center">
+              <div className="mt-8 mb-2 flex justify-center">
                 <div className="inline-flex items-center gap-2 rounded-full border border-white/12 bg-[linear-gradient(135deg,rgba(8,12,24,0.84),rgba(10,18,34,0.72))] px-5 py-2.5 shadow-[0_0_0_1px_rgba(255,255,255,0.04),0_10px_32px_rgba(0,0,0,0.22)] backdrop-blur-md">
                   <SparklesIcon />
                   <span className="text-[13px] font-medium tracking-[-0.01em] text-white">
