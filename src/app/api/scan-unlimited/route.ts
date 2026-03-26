@@ -2,12 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { readFileSync } from "fs";
 import path from "path";
 import type { Browser } from "puppeteer-core";
-import {
-  consumeFreeScan,
-  FREE_SCAN_DAILY_LIMIT,
-  formatRemainingTime,
-  getRateLimitStatus,
-} from "@/lib/scan-rate-limit";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -49,8 +43,6 @@ function countByImpact(violations: AxeViolation[]) {
       case "minor":
         minor += nodeCount;
         break;
-      default:
-        break;
     }
   }
 
@@ -63,46 +55,15 @@ function countByImpact(violations: AxeViolation[]) {
   };
 }
 
-function getClientIp(request: NextRequest) {
-  const forwardedFor = request.headers.get("x-forwarded-for");
-  const realIp = request.headers.get("x-real-ip");
-
-  return forwardedFor?.split(",")[0]?.trim() || realIp || "unknown";
-}
-
-function toSafeIsoString(resetTime: unknown) {
-  const safeResetTime =
-    typeof resetTime === "number" && Number.isFinite(resetTime)
-      ? resetTime
-      : Date.now() + 24 * 60 * 60 * 1000;
-
-  return new Date(safeResetTime).toISOString();
-}
-
-function getRemainingMs(resetTime: unknown) {
-  const safeResetTime =
-    typeof resetTime === "number" && Number.isFinite(resetTime)
-      ? resetTime
-      : Date.now() + 24 * 60 * 60 * 1000;
-
-  return Math.max(safeResetTime - Date.now(), 0);
-}
-
 export async function GET() {
   return NextResponse.json({
     success: true,
-    message: "Scan API is running. Use POST /api/scan with { url, mode }.",
-    freeScanLimit: {
-      limit: FREE_SCAN_DAILY_LIMIT,
-      windowHours: 24,
-    },
+    message: "Scan API is running. Use POST /api/scan-unlimited with { url }.",
   });
 }
 
 export async function POST(request: NextRequest) {
-  const ip = getClientIp(request);
-
-  let body: { url?: string; mode?: "check" | "scan" };
+  let body: { url?: string };
 
   try {
     body = await request.json();
@@ -110,58 +71,6 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       { success: false, error: "Invalid request body" },
       { status: 400 }
-    );
-  }
-
-  const mode = body.mode ?? "scan";
-
-  if (mode === "check") {
-    const rateLimit = await getRateLimitStatus(ip);
-
-    if (!rateLimit.allowed) {
-      return NextResponse.json({
-        allowed: false,
-        message: `Daily free scan limit reached. Try again in ${formatRemainingTime(
-          getRemainingMs(rateLimit.resetTime)
-        )} or upgrade.`,
-        rateLimit: {
-          limit: rateLimit.limit,
-          remaining: rateLimit.remaining,
-          used: rateLimit.used,
-          resetTime: toSafeIsoString(rateLimit.resetTime),
-        },
-      });
-    }
-
-    return NextResponse.json({
-      allowed: true,
-      rateLimit: {
-        limit: rateLimit.limit,
-        remaining: rateLimit.remaining,
-        used: rateLimit.used,
-        resetTime: toSafeIsoString(rateLimit.resetTime),
-      },
-    });
-  }
-
-  const rateLimit = await consumeFreeScan(ip);
-
-  if (!rateLimit.allowed) {
-    return NextResponse.json(
-      {
-        success: false,
-        code: "DAILY_SCAN_LIMIT_REACHED",
-        error: `Daily free scan limit reached. Try again in ${formatRemainingTime(
-          getRemainingMs(rateLimit.resetTime)
-        )} or upgrade.`,
-        rateLimit: {
-          limit: rateLimit.limit,
-          remaining: rateLimit.remaining,
-          used: rateLimit.used,
-          resetTime: toSafeIsoString(rateLimit.resetTime),
-        },
-      },
-      { status: 429 }
     );
   }
 
@@ -234,7 +143,7 @@ export async function POST(request: NextRequest) {
     page.setDefaultTimeout(15000);
 
     await page.setUserAgent(
-      "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+      "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
     );
 
     await page.goto(validUrl, {
@@ -245,13 +154,7 @@ export async function POST(request: NextRequest) {
     await page.evaluate(axeSource);
 
     const results: AxeResults = await page.evaluate(() => {
-      const axeGlobal = (
-        window as Window & {
-          axe?: {
-            run: () => Promise<AxeResults>;
-          };
-        }
-      ).axe;
+      const axeGlobal = (window as any).axe;
 
       if (!axeGlobal) {
         throw new Error("AXE_NOT_LOADED");
@@ -266,24 +169,15 @@ export async function POST(request: NextRequest) {
       success: true,
       url: validUrl,
       scannedAt: new Date().toISOString(),
-      rateLimit: {
-        limit: rateLimit.limit,
-        remaining: rateLimit.remaining,
-        used: rateLimit.used,
-        resetTime: toSafeIsoString(rateLimit.resetTime),
-      },
       counts,
-      violations: (results.violations ?? []).map((violation) => ({
-        id: violation.id ?? "",
-        description: violation.description ?? "",
-        help: violation.help ?? "",
-        helpUrl: violation.helpUrl ?? "",
-        impact: violation.impact ?? "minor",
-        count: violation.nodes?.length ?? 0,
-        nodes: (violation.nodes ?? []).slice(0, 3).map((node) => ({
-          html: node.html ?? "",
-          target: node.target ?? [],
-        })),
+      violations: (results.violations ?? []).map((v) => ({
+        id: v.id ?? "",
+        description: v.description ?? "",
+        help: v.help ?? "",
+        helpUrl: v.helpUrl ?? "",
+        impact: v.impact ?? "minor",
+        count: v.nodes?.length ?? 0,
+        nodes: (v.nodes ?? []).slice(0, 3),
       })),
       passes: results.passes?.length ?? 0,
       incomplete: results.incomplete?.length ?? 0,
@@ -291,42 +185,11 @@ export async function POST(request: NextRequest) {
   } catch (err) {
     console.error("Scan error:", err);
 
-    const raw = err instanceof Error ? err.message : String(err);
-
-    let friendly =
-      "This website could not be scanned. Please try again or enter a different URL.";
-
-    if (/Could not find Chrome|Browser was not found|executablePath/i.test(raw)) {
-      friendly =
-        "The scan browser could not be started. Please check the browser configuration.";
-    } else if (/TimeoutError|timeout|net::ERR_TIMED_OUT/i.test(raw)) {
-      friendly =
-        "This website could not be reached in time. Please check the URL and try again.";
-    } else if (
-      /Navigation|ERR_NAME_NOT_RESOLVED|ERR_CONNECTION|ERR_CONNECTION_REFUSED|ERR_CONNECTION_CLOSED/i.test(
-        raw
-      )
-    ) {
-      friendly =
-        "This website could not be found. Please check the URL and try again.";
-    } else if (/ERR_CERT|SSL|TLS/i.test(raw)) {
-      friendly =
-        "This website could not be scanned because of an SSL or certificate issue.";
-    } else if (/AXE_NOT_LOADED/i.test(raw)) {
-      friendly =
-        "The accessibility engine could not be loaded for this page. Please try again.";
-    } else if (
-      /toLowerCase|Cannot read prop|Cannot read properties|undefined/i.test(raw)
-    ) {
-      friendly =
-        "This website could not be scanned. It may be blocking automated access. Please try a different URL.";
-    }
-
     return NextResponse.json(
       {
         success: false,
-        error: friendly,
-        debug: raw,
+        error:
+          "This website could not be scanned. Please try again or enter a different URL.",
       },
       { status: 500 }
     );
