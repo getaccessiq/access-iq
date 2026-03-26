@@ -53,23 +53,23 @@ const helpCards: HelpCardItem[] = [
   {
     title: "Help Center",
     description:
-      "Browse practical resources, accessibility guidance, and answers to common compliance questions.",
-    cta: "Visit Help Center",
+      "Browse remediation guides, step-by-step WCAG fixes, and practical examples.",
+    cta: "Explore fixes",
     icon: "help",
     href: "/help-center",
   },
   {
     title: "Book a Demo",
     description:
-      "Schedule a live walkthrough to see how our accessibility audit and monitoring process works.",
-    cta: "Book Demo",
+      "Get a guided walkthrough and understand exactly how to fix your issues.",
+    cta: "Book expert session",
     icon: "demo",
   },
   {
     title: "Live Chat",
     description:
-      "Start a conversation with our team for quick guidance on audits, ADA risk, or accessibility fixes.",
-    cta: "Start Live Chat",
+      "Get immediate guidance on your audit results, ADA risk, remediation priorities, and the best next steps for your team.",
+    cta: "Start conversation",
     icon: "chat",
   },
 ];
@@ -152,6 +152,8 @@ function HelpCard({
   icon: HelpCardIcon;
   href?: string;
 }) {
+  const isFeatured = icon === "chat";
+
   const renderIcon = () => {
     switch (icon) {
       case "help":
@@ -165,57 +167,66 @@ function HelpCard({
     }
   };
 
-  const ctaClassName =
-    "mt-6 inline-flex min-h-[48px] w-full items-center justify-center gap-2 rounded-full px-6 py-3 text-[14px] font-semibold text-white transition-all duration-200 hover:scale-[1.02] hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300 focus-visible:ring-offset-2 focus-visible:ring-offset-white sm:w-fit";
+  const cardClassName = isFeatured
+    ? "group relative flex h-full min-h-[370px] flex-col overflow-hidden rounded-[30px] border border-cyan-300/40 bg-[linear-gradient(180deg,rgba(16,44,82,0.95),rgba(8,27,56,0.95))] p-6 shadow-[0_0_0_1px_rgba(103,232,249,0.10),0_0_36px_rgba(34,211,238,0.12),0_24px_64px_rgba(0,0,0,0.30)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_0_1px_rgba(103,232,249,0.14),0_0_46px_rgba(34,211,238,0.18),0_28px_80px_rgba(0,0,0,0.34)] sm:p-7"
+    : "group relative flex h-full min-h-[370px] flex-col overflow-hidden rounded-[30px] border border-white/10 bg-[linear-gradient(180deg,rgba(10,24,46,0.94),rgba(6,18,36,0.96))] p-6 shadow-[0_18px_46px_rgba(0,0,0,0.22)] transition-all duration-300 hover:-translate-y-1 hover:border-cyan-300/20 hover:shadow-[0_24px_60px_rgba(0,0,0,0.28)] sm:p-7";
+
+  const iconShellClass = isFeatured
+    ? "relative flex h-16 w-16 items-center justify-center rounded-[20px] border border-cyan-200/30 bg-[linear-gradient(180deg,rgba(223,255,251,0.98),rgba(210,248,244,0.92))] text-[#0b8ed3] shadow-[0_14px_34px_rgba(0,0,0,0.18)]"
+    : "relative flex h-16 w-16 items-center justify-center rounded-[20px] border border-cyan-200/20 bg-[linear-gradient(180deg,rgba(232,252,248,0.95),rgba(218,246,242,0.90))] text-[#0b8ed3] shadow-[0_10px_26px_rgba(0,0,0,0.14)]";
+
+  const secondaryCtaClass =
+    "mt-8 inline-flex min-h-[52px] w-full items-center justify-center gap-2 rounded-full bg-[linear-gradient(135deg,#00d4aa,#0088cc)] px-6 py-3.5 text-[15px] font-semibold text-white shadow-[0_12px_30px_rgba(0,136,204,0.20)] transition-all duration-200 hover:scale-[1.01] hover:opacity-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300 focus-visible:ring-offset-2 focus-visible:ring-offset-[#081427] sm:w-fit";
+
+  const featuredCtaClass =
+    "mt-8 inline-flex min-h-[52px] w-full items-center justify-center gap-2 rounded-full border border-cyan-200/50 bg-[linear-gradient(135deg,rgba(24,211,223,0.18),rgba(0,136,204,0.28))] px-6 py-3.5 text-[15px] font-semibold text-white shadow-[0_10px_28px_rgba(34,211,238,0.14)] transition-all duration-200 hover:scale-[1.01] hover:border-cyan-200/70 hover:bg-[linear-gradient(135deg,rgba(24,211,223,0.24),rgba(0,136,204,0.34))] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300 focus-visible:ring-offset-2 focus-visible:ring-offset-[#081427] sm:w-fit";
 
   return (
-    <article className="flex h-full flex-col rounded-[24px] border border-[#d9f5ef] bg-white p-5 shadow-[0_16px_40px_rgba(0,0,0,0.06)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_24px_55px_rgba(0,0,0,0.10)] sm:rounded-[26px] sm:p-6">
-      <div
-        className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl"
-        style={{ background: "rgba(0,212,170,0.10)" }}
-        aria-hidden="true"
-      >
-        {renderIcon()}
+    <article className={cardClassName}>
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0">
+        <div
+          className={
+            isFeatured
+              ? "absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(103,232,249,0.16),transparent_26%),radial-gradient(circle_at_bottom_left,rgba(0,212,170,0.10),transparent_28%)]"
+              : "absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(34,211,238,0.08),transparent_22%),radial-gradient(circle_at_bottom_left,rgba(0,212,170,0.06),transparent_26%)]"
+          }
+        />
+        <div className="absolute bottom-0 left-0 right-0 h-px bg-[linear-gradient(90deg,transparent,rgba(255,255,255,0.24),transparent)]" />
       </div>
 
-      <h3 className="text-[20px] font-semibold tracking-[-0.02em] text-[#0b0f1a]">
-        {title}
-      </h3>
-      <p className="mt-2 flex-1 text-[15px] leading-7 text-slate-600">{description}</p>
+      <div className="relative flex h-full flex-col">
+        <div className={iconShellClass}>{renderIcon()}</div>
 
-      {icon === "demo" ? (
-        <BookDemoButton
-          className={`${ctaClassName} bg-[linear-gradient(135deg,#00d4aa,#0088cc)] shadow-[0_10px_24px_rgba(0,136,204,0.22)]`}
-        >
-          {cta}
-        </BookDemoButton>
-      ) : icon === "chat" ? (
-        <button
-          type="button"
-          onClick={() => openAccessiQChat("question")}
-          className={ctaClassName}
-          style={{ background: "linear-gradient(135deg, #00d4aa, #0088cc)" }}
-          aria-label="Start live chat with an accessibility specialist"
-        >
-          {cta}
-        </button>
-      ) : href ? (
-        <a
-          href={href}
-          className={ctaClassName}
-          style={{ background: "linear-gradient(135deg, #00d4aa, #0088cc)" }}
-        >
-          {cta}
-        </a>
-      ) : (
-        <button
-          type="button"
-          className={ctaClassName}
-          style={{ background: "linear-gradient(135deg, #00d4aa, #0088cc)" }}
-        >
-          {cta}
-        </button>
-      )}
+        <h3 className="mt-8 max-w-[14ch] text-[30px] font-semibold leading-[1.05] tracking-[-0.04em] text-white">
+          {title}
+        </h3>
+
+        <p className="mt-4 max-w-[30ch] flex-1 text-[17px] leading-8 text-slate-300">
+          {description}
+        </p>
+
+        {icon === "demo" ? (
+          <BookDemoButton className={secondaryCtaClass}>{cta}</BookDemoButton>
+        ) : icon === "chat" ? (
+          <button
+            type="button"
+            onClick={() => openAccessiQChat("question")}
+            className={featuredCtaClass}
+            aria-label="Start live chat with an accessibility specialist"
+          >
+            {cta}
+            <ArrowRightIcon />
+          </button>
+        ) : href ? (
+          <a href={href} className={secondaryCtaClass}>
+            {cta}
+          </a>
+        ) : (
+          <button type="button" className={secondaryCtaClass}>
+            {cta}
+          </button>
+        )}
+      </div>
     </article>
   );
 }
@@ -528,8 +539,6 @@ const ContactPageContent = () => {
                           </address>
                         </InfoRow>
                       </InfoCard>
-
-
                     </div>
                   </div>
 
@@ -761,16 +770,15 @@ const ContactPageContent = () => {
 
         <section className="container mx-auto px-4 pb-20 sm:px-6 md:pb-24 lg:px-8 lg:pb-32">
           <ScrollReveal animation="fade-in-up">
-            <div className="mx-auto max-w-3xl text-center">
+            <div className="mx-auto max-w-4xl text-center">
               <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-cyan-300/75 sm:tracking-[0.28em]">
-                Additional support
+                Support options
               </p>
               <h2 className="mt-3 text-[26px] font-semibold tracking-[-0.03em] text-white sm:text-[28px] md:text-[40px]">
-                Have Questions? We&apos;re Here to Help.
+                Not sure how to fix your accessibility issues?
               </h2>
               <p className="mt-4 text-[15px] leading-7 text-slate-300 md:text-base">
-                Explore support resources, schedule a live walkthrough, or connect with a
-                specialist.
+                Based on your audit results, here are your next steps.
               </p>
             </div>
           </ScrollReveal>
@@ -788,6 +796,12 @@ const ContactPageContent = () => {
                 />
               ))}
             </div>
+          </ScrollReveal>
+
+          <ScrollReveal animation="fade-in-up" delay={260}>
+            <p className="mt-10 text-center text-[15px] leading-7 text-slate-300 md:mt-12 md:text-[18px]">
+              Fix critical accessibility issues before they become a legal risk.
+            </p>
           </ScrollReveal>
         </section>
       </div>
@@ -935,7 +949,7 @@ function HelpCenterIcon() {
     <svg
       aria-hidden="true"
       viewBox="0 0 24 24"
-      className="h-6 w-6 text-[#0088cc]"
+      className="h-6 w-6"
       fill="none"
       stroke="currentColor"
       strokeWidth="1.8"
@@ -954,7 +968,7 @@ function DemoCalendarIcon() {
     <svg
       aria-hidden="true"
       viewBox="0 0 24 24"
-      className="h-6 w-6 text-[#0088cc]"
+      className="h-6 w-6"
       fill="none"
       stroke="currentColor"
       strokeWidth="1.8"
@@ -974,7 +988,7 @@ function LiveChatIcon() {
     <svg
       aria-hidden="true"
       viewBox="0 0 24 24"
-      className="h-6 w-6 text-[#0088cc]"
+      className="h-6 w-6"
       fill="none"
       stroke="currentColor"
       strokeWidth="1.8"
