@@ -12,6 +12,14 @@ import {
 export const runtime = "nodejs";
 export const maxDuration = 60;
 
+const AXE_SOURCE = readFileSync(
+  path.join(process.cwd(), "node_modules/axe-core/axe.min.js"),
+  "utf-8"
+);
+
+const USER_AGENT =
+  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36";
+
 interface AxeViolation {
   id: string;
   description: string;
@@ -122,9 +130,6 @@ function serializeRateLimit(rateLimit: {
 }
 
 function getFriendlyErrorMessage(raw: string) {
-  let friendly =
-    "This website could not be scanned. Please try again or enter a different URL.";
-
   if (/Could not find Chrome|Browser was not found|executablePath/i.test(raw)) {
     return "The scan browser could not be started. Please check the browser configuration.";
   }
@@ -155,7 +160,7 @@ function getFriendlyErrorMessage(raw: string) {
     return "This website could not be scanned. It may be blocking automated access. Please try a different URL.";
   }
 
-  return friendly;
+  return "This website could not be scanned. Please try again or enter a different URL.";
 }
 
 async function createBrowser() {
@@ -189,7 +194,7 @@ async function createBrowser() {
 export async function GET() {
   return NextResponse.json({
     success: true,
-    message: "Scan API is running. Use POST /api/scan with { url, mode }.",
+    message: "Scan API is running. Use POST /api/scan with { url }.",
     freeScanLimit: {
       limit: FREE_SCAN_DAILY_LIMIT,
       windowHours: 24,
@@ -200,7 +205,7 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   const ip = getClientIp(request);
 
-  let body: { url?: string; mode?: "check" | "scan" };
+  let body: { url?: string };
 
   try {
     body = await request.json();
@@ -209,27 +214,6 @@ export async function POST(request: NextRequest) {
       { success: false, error: "Invalid request body" },
       { status: 400 }
     );
-  }
-
-  const mode = body.mode ?? "scan";
-
-  if (mode === "check") {
-    const rateLimit = await getRateLimitStatus(ip);
-
-    if (!rateLimit.allowed) {
-      return NextResponse.json({
-        allowed: false,
-        message: `Daily free scan limit reached. Try again in ${formatRemainingTime(
-          getRemainingMs(rateLimit.resetTime)
-        )} or upgrade.`,
-        rateLimit: serializeRateLimit(rateLimit),
-      });
-    }
-
-    return NextResponse.json({
-      allowed: true,
-      rateLimit: serializeRateLimit(rateLimit),
-    });
   }
 
   const rawUrl = body.url?.trim();
@@ -263,17 +247,17 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const rateLimitBeforeScan = await getRateLimitStatus(ip);
+  const rateLimit = await getRateLimitStatus(ip);
 
-  if (!rateLimitBeforeScan.allowed) {
+  if (!rateLimit.allowed) {
     return NextResponse.json(
       {
         success: false,
         code: "DAILY_SCAN_LIMIT_REACHED",
         error: `Daily free scan limit reached. Try again in ${formatRemainingTime(
-          getRemainingMs(rateLimitBeforeScan.resetTime)
+          getRemainingMs(rateLimit.resetTime)
         )} or upgrade.`,
-        rateLimit: serializeRateLimit(rateLimitBeforeScan),
+        rateLimit: serializeRateLimit(rateLimit),
       },
       { status: 429 }
     );
@@ -282,11 +266,6 @@ export async function POST(request: NextRequest) {
   let browser: Browser | null = null;
 
   try {
-    const axeSource = readFileSync(
-      path.join(process.cwd(), "node_modules/axe-core/axe.min.js"),
-      "utf-8"
-    );
-
     browser = await createBrowser();
 
     const page = await browser.newPage();
@@ -294,16 +273,14 @@ export async function POST(request: NextRequest) {
     page.setDefaultNavigationTimeout(15000);
     page.setDefaultTimeout(15000);
 
-    await page.setUserAgent(
-      "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
-    );
+    await page.setUserAgent(USER_AGENT);
 
     await page.goto(validUrl, {
       waitUntil: "domcontentloaded",
       timeout: 15000,
     });
 
-    await page.evaluate(axeSource);
+    await page.evaluate(AXE_SOURCE);
 
     const results: AxeResults = await page.evaluate(() => {
       const axeGlobal = (
@@ -322,8 +299,6 @@ export async function POST(request: NextRequest) {
     });
 
     const counts = countByImpact(results.violations ?? []);
-
-    // Limit erst erhöhen, wenn der Scan wirklich erfolgreich war.
     const rateLimitAfterScan = await consumeFreeScan(ip);
 
     return NextResponse.json({

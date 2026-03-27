@@ -51,14 +51,6 @@ interface ScanErrorResponse {
   rateLimit?: RateLimitInfo;
 }
 
-interface CheckLimitResponse {
-  allowed: boolean;
-  limit?: number;
-  remaining?: string;
-  message?: string;
-  rateLimit?: RateLimitInfo;
-}
-
 const MIN_SCAN_DURATION_MS = 8000;
 
 function formatTimeUntil(resetTime: string) {
@@ -85,8 +77,11 @@ function buildDailyLimitMessage(rateLimit?: RateLimitInfo) {
   }
 
   const remaining = formatTimeUntil(rateLimit.resetTime);
-
   return `Daily free scan limit reached. Try again in ${remaining} or upgrade.`;
+}
+
+function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 export default function ScanPage() {
@@ -98,43 +93,28 @@ export default function ScanPage() {
   );
 
   const handleScan = async (url: string) => {
-    setCurrentUrl(url);
+    const trimmedUrl = url.trim();
+
+    if (!trimmedUrl) {
+      setCurrentUrl("");
+      setResults(null);
+      setErrorMessage("Please enter a website URL.");
+      setScanState("error");
+      return;
+    }
+
+    setCurrentUrl(trimmedUrl);
     setResults(null);
     setErrorMessage(undefined);
-    setScanState("idle");
+    setScanState("scanning");
+
+    const startedAt = Date.now();
 
     try {
-      const limitResponse = await fetch("/api/scan", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url, mode: "check" }),
-      });
-
-      const limitData = (await limitResponse.json()) as CheckLimitResponse;
-
-      if (!limitResponse.ok) {
-        throw new Error(
-          limitData.message ||
-            "Unable to verify scan availability. Please try again."
-        );
-      }
-
-      if (!limitData.allowed) {
-        const limitMessage =
-          limitData.message || buildDailyLimitMessage(limitData.rateLimit);
-
-        setErrorMessage(limitMessage);
-        setScanState("error");
-        return;
-      }
-
-      setScanState("scanning");
-      const startedAt = Date.now();
-
       const response = await fetch("/api/scan", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url, mode: "scan" }),
+        body: JSON.stringify({ url: trimmedUrl }),
       });
 
       const data = (await response.json()) as
@@ -143,14 +123,16 @@ export default function ScanPage() {
 
       if (!response.ok) {
         if (response.status === 429) {
-          const message = buildDailyLimitMessage(
-            "rateLimit" in data ? data.rateLimit : undefined
+          throw new Error(
+            buildDailyLimitMessage(
+              "rateLimit" in data ? data.rateLimit : undefined
+            )
           );
-          throw new Error(message);
         }
 
         throw new Error(
-          ("error" in data && data.error) || "Scan failed. Please try again."
+          ("error" in data && data.error) ||
+            "Scan failed. Please try again."
         );
       }
 
@@ -158,7 +140,7 @@ export default function ScanPage() {
       const remaining = Math.max(MIN_SCAN_DURATION_MS - elapsed, 0);
 
       if (remaining > 0) {
-        await new Promise((resolve) => setTimeout(resolve, remaining));
+        await sleep(remaining);
       }
 
       setResults(data as ScanResultsData);
@@ -168,8 +150,8 @@ export default function ScanPage() {
 
       const message =
         raw &&
-        /daily limit|free scan|minute|hour|upgrade|timeout|not reachable|not be reached|not be found|blocking|different URL|could not be scanned|valid website URL|website URL|verify scan availability/i.test(
-          raw
+        /daily limit|free scan|minute|hour|upgrade|timeout|not reachable|not be reached|not be found|blocking|different url|could not be scanned|valid website url|website url|ssl|certificate/i.test(
+          raw.toLowerCase()
         )
           ? raw
           : "This website could not be scanned. Please try again or enter a different URL.";
