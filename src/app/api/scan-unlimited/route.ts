@@ -43,6 +43,8 @@ function countByImpact(violations: AxeViolation[]) {
       case "minor":
         minor += nodeCount;
         break;
+      default:
+        break;
     }
   }
 
@@ -53,6 +55,93 @@ function countByImpact(violations: AxeViolation[]) {
     minor,
     total: critical + serious + moderate + minor,
   };
+}
+
+function normalizeUrl(input: string) {
+  const trimmed = input.trim();
+
+  if (!trimmed) return "";
+
+  if (/^https?:\/\//i.test(trimmed)) {
+    return trimmed;
+  }
+
+  return `https://${trimmed}`;
+}
+
+async function checkWebsiteAvailability(url: string) {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 5000);
+
+  try {
+    const response = await fetch(url, {
+      method: "HEAD",
+      redirect: "follow",
+      signal: controller.signal,
+    });
+
+    clearTimeout(timeout);
+
+    if (response.ok) {
+      return { ok: true as const };
+    }
+
+    if (response.status === 404) {
+      return {
+        ok: false as const,
+        message: "This website could not be found.",
+      };
+    }
+
+    if (response.status >= 400) {
+      return {
+        ok: false as const,
+        message: "This website is not reachable right now.",
+      };
+    }
+
+    return { ok: true as const };
+  } catch {
+    clearTimeout(timeout);
+
+    try {
+      const fallbackController = new AbortController();
+      const fallbackTimeout = setTimeout(
+        () => fallbackController.abort(),
+        5000
+      );
+
+      const fallbackResponse = await fetch(url, {
+        method: "GET",
+        redirect: "follow",
+        signal: fallbackController.signal,
+      });
+
+      clearTimeout(fallbackTimeout);
+
+      if (fallbackResponse.ok) {
+        return { ok: true as const };
+      }
+
+      if (fallbackResponse.status === 404) {
+        return {
+          ok: false as const,
+          message: "This website could not be found.",
+        };
+      }
+
+      return {
+        ok: false as const,
+        message: "This website is not reachable right now.",
+      };
+    } catch {
+      return {
+        ok: false as const,
+        message:
+          "This website could not be reached. Please check the URL and try again.",
+      };
+    }
+  }
 }
 
 export async function GET() {
@@ -78,15 +167,17 @@ export async function POST(request: NextRequest) {
 
   if (!rawUrl) {
     return NextResponse.json(
-      { success: false, error: "URL is required" },
+      { success: false, error: "Please enter a website URL." },
       { status: 400 }
     );
   }
 
+  const normalizedUrl = normalizeUrl(rawUrl);
+
   let validUrl: string;
 
   try {
-    const parsed = new URL(rawUrl);
+    const parsed = new URL(normalizedUrl);
 
     if (!["http:", "https:"].includes(parsed.protocol)) {
       return NextResponse.json(
@@ -98,7 +189,19 @@ export async function POST(request: NextRequest) {
     validUrl = parsed.toString();
   } catch {
     return NextResponse.json(
-      { success: false, error: "Invalid URL format" },
+      { success: false, error: "Please enter a valid website URL." },
+      { status: 400 }
+    );
+  }
+
+  const availability = await checkWebsiteAvailability(validUrl);
+
+  if (!availability.ok) {
+    return NextResponse.json(
+      {
+        success: false,
+        error: availability.message,
+      },
       { status: 400 }
     );
   }
@@ -143,7 +246,7 @@ export async function POST(request: NextRequest) {
     page.setDefaultTimeout(15000);
 
     await page.setUserAgent(
-      "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+      "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
     );
 
     await page.goto(validUrl, {
@@ -154,7 +257,13 @@ export async function POST(request: NextRequest) {
     await page.evaluate(axeSource);
 
     const results: AxeResults = await page.evaluate(() => {
-      const axeGlobal = (window as any).axe;
+      const axeGlobal = (
+        window as Window & {
+          axe?: {
+            run: () => Promise<AxeResults>;
+          };
+        }
+      ).axe;
 
       if (!axeGlobal) {
         throw new Error("AXE_NOT_LOADED");
@@ -177,7 +286,10 @@ export async function POST(request: NextRequest) {
         helpUrl: v.helpUrl ?? "",
         impact: v.impact ?? "minor",
         count: v.nodes?.length ?? 0,
-        nodes: (v.nodes ?? []).slice(0, 3),
+        nodes: (v.nodes ?? []).slice(0, 3).map((node) => ({
+          html: node.html ?? "",
+          target: node.target ?? [],
+        })),
       })),
       passes: results.passes?.length ?? 0,
       incomplete: results.incomplete?.length ?? 0,
@@ -185,11 +297,44 @@ export async function POST(request: NextRequest) {
   } catch (err) {
     console.error("Scan error:", err);
 
+    const raw = err instanceof Error ? err.message : String(err);
+
+    let friendly =
+      "This website could not be scanned. Please try again or enter a different URL.";
+
+    if (
+      /Could not find Chrome|Browser was not found|executablePath/i.test(raw)
+    ) {
+      friendly =
+        "The scan browser could not be started. Please check the browser configuration.";
+    } else if (/TimeoutError|timeout|net::ERR_TIMED_OUT/i.test(raw)) {
+      friendly =
+        "This website could not be reached in time. Please check the URL and try again.";
+    } else if (
+      /Navigation|ERR_NAME_NOT_RESOLVED|ERR_CONNECTION|ERR_CONNECTION_REFUSED|ERR_CONNECTION_CLOSED/i.test(
+        raw
+      )
+    ) {
+      friendly =
+        "This website could not be found. Please check the URL and try again.";
+    } else if (/ERR_CERT|SSL|TLS/i.test(raw)) {
+      friendly =
+        "This website could not be scanned because of an SSL or certificate issue.";
+    } else if (/AXE_NOT_LOADED/i.test(raw)) {
+      friendly =
+        "The accessibility engine could not be loaded for this page. Please try again.";
+    } else if (
+      /toLowerCase|Cannot read prop|Cannot read properties|undefined/i.test(raw)
+    ) {
+      friendly =
+        "This website could not be scanned. It may be blocking automated access. Please try a different URL.";
+    }
+
     return NextResponse.json(
       {
         success: false,
-        error:
-          "This website could not be scanned. Please try again or enter a different URL.",
+        error: friendly,
+        debug: raw,
       },
       { status: 500 }
     );

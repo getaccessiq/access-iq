@@ -57,20 +57,28 @@ export default function ScanPage() {
     setCurrentUrl(url);
     setResults(null);
     setErrorMessage(undefined);
+    setScanState("idle");
 
     try {
       const startedAt = Date.now();
-      setScanState("scanning");
 
       const response = await fetch("/api/scan-unlimited", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url, mode: "scan" }),
+        body: JSON.stringify({ url }),
       });
 
       const data = (await response.json()) as
         | ScanResultsData
         | ScanErrorResponse;
+
+      if (!response.ok) {
+        throw new Error(
+          ("error" in data && data.error) || "Scan failed. Please try again."
+        );
+      }
+
+      setScanState("scanning");
 
       const elapsed = Date.now() - startedAt;
       const remaining = Math.max(MIN_SCAN_DURATION_MS - elapsed, 0);
@@ -79,19 +87,16 @@ export default function ScanPage() {
         await new Promise((resolve) => setTimeout(resolve, remaining));
       }
 
-      if (!response.ok) {
-        throw new Error(
-          ("error" in data && data.error) || "Scan failed. Please try again."
-        );
-      }
-
       setResults(data as ScanResultsData);
       setScanState("complete");
     } catch (err) {
       const raw = err instanceof Error ? err.message : "";
 
       const message =
-        raw && raw.trim().length > 0
+        raw &&
+        /valid website URL|website URL|not reachable|not be reached|not be found|different URL|could not be scanned|ssl|certificate|timeout/i.test(
+          raw
+        )
           ? raw
           : "This website could not be scanned. Please try again or enter a different URL.";
 

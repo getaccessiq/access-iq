@@ -101,8 +101,10 @@ export default function ScanPage() {
     setCurrentUrl(url);
     setResults(null);
     setErrorMessage(undefined);
+    setScanState("idle");
 
     try {
+      // 1) Nur Limit prüfen
       const limitResponse = await fetch("/api/scan", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -127,8 +129,9 @@ export default function ScanPage() {
         return;
       }
 
+      // 2) Scan-Request starten, aber Loading View erst zeigen,
+      //    wenn die URL/Website-Prüfung auf Server-Seite bestanden hat.
       const startedAt = Date.now();
-      setScanState("scanning");
 
       const response = await fetch("/api/scan", {
         method: "POST",
@@ -139,13 +142,6 @@ export default function ScanPage() {
       const data = (await response.json()) as
         | ScanResultsData
         | ScanErrorResponse;
-
-      const elapsed = Date.now() - startedAt;
-      const remaining = Math.max(MIN_SCAN_DURATION_MS - elapsed, 0);
-
-      if (remaining > 0) {
-        await new Promise((resolve) => setTimeout(resolve, remaining));
-      }
 
       if (!response.ok) {
         if (response.status === 429) {
@@ -160,6 +156,17 @@ export default function ScanPage() {
         );
       }
 
+      // 3) Erst jetzt Loading View anzeigen, weil wir wissen:
+      //    URL ist valide, Website erreichbar, Scan erfolgreich gestartet/gelaufen.
+      setScanState("scanning");
+
+      const elapsed = Date.now() - startedAt;
+      const remaining = Math.max(MIN_SCAN_DURATION_MS - elapsed, 0);
+
+      if (remaining > 0) {
+        await new Promise((resolve) => setTimeout(resolve, remaining));
+      }
+
       setResults(data as ScanResultsData);
       setScanState("complete");
     } catch (err) {
@@ -167,7 +174,7 @@ export default function ScanPage() {
 
       const message =
         raw &&
-        /daily limit|free scans|minute|hour|upgrade|timeout|not be reached|not be found|blocking|different URL|could not be scanned|verify scan availability/i.test(
+        /daily limit|free scan|minute|hour|upgrade|timeout|not reachable|not be reached|not be found|blocking|different URL|could not be scanned|valid website URL|website URL|verify scan availability/i.test(
           raw
         )
           ? raw

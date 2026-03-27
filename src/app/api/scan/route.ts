@@ -88,6 +88,93 @@ function getRemainingMs(resetTime: unknown) {
   return Math.max(safeResetTime - Date.now(), 0);
 }
 
+function normalizeUrl(input: string) {
+  const trimmed = input.trim();
+
+  if (!trimmed) return "";
+
+  if (/^https?:\/\//i.test(trimmed)) {
+    return trimmed;
+  }
+
+  return `https://${trimmed}`;
+}
+
+async function checkWebsiteAvailability(url: string) {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 5000);
+
+  try {
+    const response = await fetch(url, {
+      method: "HEAD",
+      redirect: "follow",
+      signal: controller.signal,
+    });
+
+    clearTimeout(timeout);
+
+    if (response.ok) {
+      return { ok: true as const };
+    }
+
+    if (response.status === 404) {
+      return {
+        ok: false as const,
+        message: "This website could not be found.",
+      };
+    }
+
+    if (response.status >= 400) {
+      return {
+        ok: false as const,
+        message: "This website is not reachable right now.",
+      };
+    }
+
+    return { ok: true as const };
+  } catch {
+    clearTimeout(timeout);
+
+    try {
+      const fallbackController = new AbortController();
+      const fallbackTimeout = setTimeout(
+        () => fallbackController.abort(),
+        5000
+      );
+
+      const fallbackResponse = await fetch(url, {
+        method: "GET",
+        redirect: "follow",
+        signal: fallbackController.signal,
+      });
+
+      clearTimeout(fallbackTimeout);
+
+      if (fallbackResponse.ok) {
+        return { ok: true as const };
+      }
+
+      if (fallbackResponse.status === 404) {
+        return {
+          ok: false as const,
+          message: "This website could not be found.",
+        };
+      }
+
+      return {
+        ok: false as const,
+        message: "This website is not reachable right now.",
+      };
+    } catch {
+      return {
+        ok: false as const,
+        message:
+          "This website could not be reached. Please check the URL and try again.",
+      };
+    }
+  }
+}
+
 export async function GET() {
   return NextResponse.json({
     success: true,
@@ -144,6 +231,49 @@ export async function POST(request: NextRequest) {
     });
   }
 
+  const rawUrl = body.url?.trim();
+
+  if (!rawUrl) {
+    return NextResponse.json(
+      { success: false, error: "Please enter a website URL." },
+      { status: 400 }
+    );
+  }
+
+  const normalizedUrl = normalizeUrl(rawUrl);
+
+  let validUrl: string;
+
+  try {
+    const parsed = new URL(normalizedUrl);
+
+    if (!["http:", "https:"].includes(parsed.protocol)) {
+      return NextResponse.json(
+        { success: false, error: "URL must use http or https" },
+        { status: 400 }
+      );
+    }
+
+    validUrl = parsed.toString();
+  } catch {
+    return NextResponse.json(
+      { success: false, error: "Please enter a valid website URL." },
+      { status: 400 }
+    );
+  }
+
+  const availability = await checkWebsiteAvailability(validUrl);
+
+  if (!availability.ok) {
+    return NextResponse.json(
+      {
+        success: false,
+        error: availability.message,
+      },
+      { status: 400 }
+    );
+  }
+
   const rateLimit = await consumeFreeScan(ip);
 
   if (!rateLimit.allowed) {
@@ -162,35 +292,6 @@ export async function POST(request: NextRequest) {
         },
       },
       { status: 429 }
-    );
-  }
-
-  const rawUrl = body.url?.trim();
-
-  if (!rawUrl) {
-    return NextResponse.json(
-      { success: false, error: "URL is required" },
-      { status: 400 }
-    );
-  }
-
-  let validUrl: string;
-
-  try {
-    const parsed = new URL(rawUrl);
-
-    if (!["http:", "https:"].includes(parsed.protocol)) {
-      return NextResponse.json(
-        { success: false, error: "URL must use http or https" },
-        { status: 400 }
-      );
-    }
-
-    validUrl = parsed.toString();
-  } catch {
-    return NextResponse.json(
-      { success: false, error: "Invalid URL format" },
-      { status: 400 }
     );
   }
 
@@ -296,7 +397,9 @@ export async function POST(request: NextRequest) {
     let friendly =
       "This website could not be scanned. Please try again or enter a different URL.";
 
-    if (/Could not find Chrome|Browser was not found|executablePath/i.test(raw)) {
+    if (
+      /Could not find Chrome|Browser was not found|executablePath/i.test(raw)
+    ) {
       friendly =
         "The scan browser could not be started. Please check the browser configuration.";
     } else if (/TimeoutError|timeout|net::ERR_TIMED_OUT/i.test(raw)) {
