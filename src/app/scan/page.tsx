@@ -49,9 +49,10 @@ interface ScanErrorResponse {
   code?: string;
   error?: string;
   rateLimit?: RateLimitInfo;
+  debug?: string;
 }
 
-const MIN_SCAN_DURATION_MS = 8000;
+const MIN_SUCCESS_LOADING_MS = 2500;
 
 function formatTimeUntil(resetTime: string) {
   const reset = new Date(resetTime).getTime();
@@ -82,6 +83,21 @@ function buildDailyLimitMessage(rateLimit?: RateLimitInfo) {
 
 function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+function isScanResultsData(data: unknown): data is ScanResultsData {
+  if (!data || typeof data !== "object") return false;
+
+  const value = data as Record<string, unknown>;
+
+  return (
+    typeof value.url === "string" &&
+    typeof value.scannedAt === "string" &&
+    typeof value.passes === "number" &&
+    typeof value.incomplete === "number" &&
+    typeof value.counts === "object" &&
+    Array.isArray(value.violations)
+  );
 }
 
 export default function ScanPage() {
@@ -132,25 +148,29 @@ export default function ScanPage() {
 
         throw new Error(
           ("error" in data && data.error) ||
-            "Scan failed. Please try again."
+            "This website could not be scanned. Please try again."
         );
       }
 
+      if (!isScanResultsData(data)) {
+        throw new Error("Invalid scan response.");
+      }
+
       const elapsed = Date.now() - startedAt;
-      const remaining = Math.max(MIN_SCAN_DURATION_MS - elapsed, 0);
+      const remaining = Math.max(MIN_SUCCESS_LOADING_MS - elapsed, 0);
 
       if (remaining > 0) {
         await sleep(remaining);
       }
 
-      setResults(data as ScanResultsData);
+      setResults(data);
       setScanState("complete");
     } catch (err) {
       const raw = err instanceof Error ? err.message : "";
 
       const message =
         raw &&
-        /daily limit|free scan|minute|hour|upgrade|timeout|not reachable|not be reached|not be found|blocking|different url|could not be scanned|valid website url|website url|ssl|certificate/i.test(
+        /daily free scan limit|daily limit|free scan|minute|hour|upgrade|timeout|not reachable|not be reached|not be found|blocking access|blocking|different url|could not be scanned|valid website url|website url|ssl|certificate|refused the connection|unavailable|invalid scan response/i.test(
           raw.toLowerCase()
         )
           ? raw

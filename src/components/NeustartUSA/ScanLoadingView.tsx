@@ -16,7 +16,7 @@ const CHECKLIST = [
 
 const CHECKLIST_DELAYS = [700, 2200, 4300, 6500] as const;
 const TARGET_DURATION_MS = 8000;
-const MAX_PROGRESS_PERCENT = 94;
+const MAX_PROGRESS_PERCENT = 99;
 
 function cn(...classes: Array<string | false | null | undefined>) {
   return classes.filter(Boolean).join(" ");
@@ -242,10 +242,12 @@ export default function ScanLoadingView({ url }: ScanLoadingViewProps) {
     return url.replace(/^https?:\/\//i, "");
   }, [url]);
 
-  const progress = Math.min(
-    Math.round((elapsed / TARGET_DURATION_MS) * 100),
-    MAX_PROGRESS_PERCENT
-  );
+  const progress = useMemo(() => {
+    return Math.min(
+      Math.round((elapsed / TARGET_DURATION_MS) * 100),
+      MAX_PROGRESS_PERCENT
+    );
+  }, [elapsed]);
 
   const activeIndex = CHECKLIST.findIndex((_, index) => {
     const isDone = completedItems.includes(index);
@@ -254,7 +256,9 @@ export default function ScanLoadingView({ url }: ScanLoadingViewProps) {
   });
 
   const shortStatus =
-    activeIndex >= 0 ? CHECKLIST[activeIndex] : "Finalizing accessibility summary";
+    activeIndex >= 0
+      ? CHECKLIST[activeIndex]
+      : "Finalizing accessibility summary";
 
   return (
     <div className="min-h-screen overflow-hidden bg-[#06101a]">
@@ -285,7 +289,7 @@ export default function ScanLoadingView({ url }: ScanLoadingViewProps) {
         <div className="relative z-10 mx-auto flex min-h-screen max-w-[1160px] items-center px-4 py-[88px] sm:px-6 lg:px-8">
           <div className="w-full">
             <div className="mx-auto max-w-[1040px]">
-              <div className="mt-8 mb-2 flex justify-center">
+              <div className="mb-2 mt-8 flex justify-center">
                 <div className="inline-flex items-center gap-2 rounded-full border border-white/12 bg-[linear-gradient(135deg,rgba(8,12,24,0.84),rgba(10,18,34,0.72))] px-5 py-2.5 shadow-[0_0_0_1px_rgba(255,255,255,0.04),0_10px_32px_rgba(0,0,0,0.22)] backdrop-blur-md">
                   <SparklesIcon />
                   <span className="text-[13px] font-medium tracking-[-0.01em] text-white">
@@ -377,7 +381,8 @@ export default function ScanLoadingView({ url }: ScanLoadingViewProps) {
                     {CHECKLIST.map((item, index) => {
                       const isDone = completedItems.includes(index);
                       const isActive = index === activeIndex;
-                      const isLastPending = index === CHECKLIST.length - 1 && !isDone;
+                      const isLastPending =
+                        index === CHECKLIST.length - 1 && !isDone;
 
                       return (
                         <div

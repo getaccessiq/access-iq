@@ -41,9 +41,29 @@ interface ScanErrorResponse {
   success?: false;
   code?: string;
   error?: string;
+  debug?: string;
 }
 
-const MIN_SCAN_DURATION_MS = 8000;
+const MIN_SUCCESS_LOADING_MS = 2500;
+
+function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+function isScanResultsData(data: unknown): data is ScanResultsData {
+  if (!data || typeof data !== "object") return false;
+
+  const value = data as Record<string, unknown>;
+
+  return (
+    typeof value.url === "string" &&
+    typeof value.scannedAt === "string" &&
+    typeof value.passes === "number" &&
+    typeof value.incomplete === "number" &&
+    typeof value.counts === "object" &&
+    Array.isArray(value.violations)
+  );
+}
 
 export default function ScanPage() {
   const [scanState, setScanState] = useState<ScanState>("idle");
@@ -55,6 +75,14 @@ export default function ScanPage() {
 
   const handleScan = async (url: string) => {
     const trimmedUrl = url.trim();
+
+    if (!trimmedUrl) {
+      setCurrentUrl("");
+      setResults(null);
+      setErrorMessage("Please enter a website URL.");
+      setScanState("error");
+      return;
+    }
 
     setCurrentUrl(trimmedUrl);
     setResults(null);
@@ -74,28 +102,33 @@ export default function ScanPage() {
         | ScanResultsData
         | ScanErrorResponse;
 
-      const elapsed = Date.now() - startedAt;
-      const remaining = Math.max(MIN_SCAN_DURATION_MS - elapsed, 0);
-
-      if (remaining > 0) {
-        await new Promise((resolve) => setTimeout(resolve, remaining));
-      }
-
       if (!response.ok) {
         throw new Error(
-          ("error" in data && data.error) || "Scan failed. Please try again."
+          ("error" in data && data.error) ||
+            "This website could not be scanned. Please try again."
         );
       }
 
-      setResults(data as ScanResultsData);
+      if (!isScanResultsData(data)) {
+        throw new Error("Invalid scan response.");
+      }
+
+      const elapsed = Date.now() - startedAt;
+      const remaining = Math.max(MIN_SUCCESS_LOADING_MS - elapsed, 0);
+
+      if (remaining > 0) {
+        await sleep(remaining);
+      }
+
+      setResults(data);
       setScanState("complete");
     } catch (err) {
       const raw = err instanceof Error ? err.message : "";
 
       const message =
         raw &&
-        /valid website URL|website URL|not reachable|not be reached|not be found|different URL|could not be scanned|ssl|certificate|timeout|verify this website|cannot be scanned/i.test(
-          raw
+        /please enter a website url|valid website url|website url|not reachable|not be reached|not be found|different url|could not be scanned|ssl|certificate|timeout|verify this website|cannot be scanned|refused the connection|unavailable|invalid scan response/i.test(
+          raw.toLowerCase()
         )
           ? raw
           : "This website could not be scanned. Please try again or enter a different URL.";

@@ -33,7 +33,10 @@ const benefitCards: BenefitCard[] = [
 export default function AccessibilityWhy() {
   return (
     <section className="relative overflow-hidden bg-[#f5f7fb] text-[#0b1220]">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(0,153,255,0.06),transparent_34%)]" />
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(0,153,255,0.06),transparent_34%)]"
+      />
 
       <div className="relative mx-auto max-w-7xl px-6 py-20 sm:px-8 lg:px-12">
         <ScrollReveal>
@@ -85,12 +88,16 @@ function GaugeVisual() {
     <div className="flex h-[120px] items-center justify-center rounded-[20px] bg-[#eef4fb]">
       <div className="relative h-20 w-32">
         <div className="absolute inset-0 rounded-t-full border-[8px] border-b-0 border-[#d8e0ea]" />
+
         <div
           className="absolute inset-0 rounded-t-full border-[8px] border-b-0 border-transparent border-l-[#1098f7] border-t-[#1098f7]"
           style={{ clipPath: "inset(0 40% 0 0)" }}
         />
+
         <div className="absolute inset-0 flex flex-col items-center justify-center pt-4">
-          <span className="text-[10px] font-medium text-[#7a8799]">Of users</span>
+          <span className="text-[10px] font-medium text-[#7a8799]">
+            Of users
+          </span>
           <span className="text-2xl font-semibold text-[#0b1220]">25%</span>
         </div>
       </div>
@@ -108,6 +115,7 @@ function ChartVisual() {
             <stop offset="100%" stopColor="#00a8ff" />
           </linearGradient>
         </defs>
+
         <path
           d="M8 70 C 50 50, 70 45, 105 55 S 170 68, 205 54 S 260 42, 312 24"
           fill="none"
@@ -153,12 +161,12 @@ function GrowthVisual() {
           strokeWidth="4"
           strokeLinecap="round"
         />
-
-        <div className="absolute left-4 top-3">
-          <div className="text-[10px] font-medium text-[#7a8799]">inclusive</div>
-          <div className="text-2xl font-semibold text-[#0b1220]">100%</div>
-        </div>
       </svg>
+
+      <div className="absolute left-4 top-3">
+        <div className="text-[10px] font-medium text-[#7a8799]">inclusive</div>
+        <div className="text-2xl font-semibold text-[#0b1220]">100%</div>
+      </div>
     </div>
   );
 }
