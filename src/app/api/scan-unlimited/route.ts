@@ -6,6 +6,11 @@ import type { Browser } from "puppeteer-core";
 export const runtime = "nodejs";
 export const maxDuration = 60;
 
+const axeSource = readFileSync(
+  path.join(process.cwd(), "node_modules/axe-core/axe.min.js"),
+  "utf-8"
+);
+
 interface AxeViolation {
   id: string;
   description: string;
@@ -69,6 +74,45 @@ function normalizeUrl(input: string) {
   return `https://${trimmed}`;
 }
 
+async function checkWebsiteReachable(url: string) {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 5000);
+
+  try {
+    let response: Response;
+
+    try {
+      response = await fetch(url, {
+        method: "HEAD",
+        redirect: "follow",
+        signal: controller.signal,
+        headers: {
+          "user-agent":
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+        },
+      });
+    } catch {
+      response = await fetch(url, {
+        method: "GET",
+        redirect: "follow",
+        signal: controller.signal,
+        headers: {
+          "user-agent":
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+        },
+      });
+    }
+
+    return {
+      ok: response.ok,
+      status: response.status,
+      statusText: response.statusText,
+    };
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
 export async function GET() {
   return NextResponse.json({
     success: true,
@@ -119,14 +163,66 @@ export async function POST(request: NextRequest) {
     );
   }
 
+  try {
+    const reachability = await checkWebsiteReachable(validUrl);
+
+    if (!reachability.ok) {
+      let friendly =
+        "This website is not reachable right now. Please check the URL and try again.";
+
+      if (reachability.status === 404) {
+        friendly =
+          "This website could not be found. Please check the URL and try again.";
+      } else if (reachability.status === 403) {
+        friendly =
+          "This website is blocking access right now. Please try again or enter a different URL.";
+      } else if (reachability.status >= 500) {
+        friendly =
+          "This website is currently unavailable. Please try again later.";
+      }
+
+      return NextResponse.json(
+        {
+          success: false,
+          error: friendly,
+          debug: `Reachability check failed with status ${reachability.status} ${reachability.statusText}`,
+        },
+        { status: 400 }
+      );
+    }
+  } catch (err) {
+    const raw = err instanceof Error ? err.message : String(err);
+
+    let friendly =
+      "This website is not reachable right now. Please check the URL and try again.";
+
+    if (/ENOTFOUND|ERR_NAME_NOT_RESOLVED/i.test(raw)) {
+      friendly =
+        "This website could not be found. Please check the URL and try again.";
+    } else if (/ECONNREFUSED|ERR_CONNECTION_REFUSED/i.test(raw)) {
+      friendly =
+        "This website refused the connection. Please try again or enter a different URL.";
+    } else if (/abort|timeout|timed out/i.test(raw)) {
+      friendly =
+        "This website could not be reached in time. Please check the URL and try again.";
+    } else if (/ERR_CERT|SSL|TLS/i.test(raw)) {
+      friendly =
+        "This website could not be reached because of an SSL or certificate issue.";
+    }
+
+    return NextResponse.json(
+      {
+        success: false,
+        error: friendly,
+        debug: raw,
+      },
+      { status: 400 }
+    );
+  }
+
   let browser: Browser | null = null;
 
   try {
-    const axeSource = readFileSync(
-      path.join(process.cwd(), "node_modules/axe-core/axe.min.js"),
-      "utf-8"
-    );
-
     const chromium = (await import("@sparticuz/chromium")).default;
     const puppeteer = (await import("puppeteer-core")).default;
 

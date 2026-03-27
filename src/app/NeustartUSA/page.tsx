@@ -43,14 +43,6 @@ interface ScanErrorResponse {
   error?: string;
 }
 
-interface ScanCheckResponse {
-  success?: boolean;
-  allowed?: boolean;
-  url?: string;
-  message?: string;
-  error?: string;
-}
-
 const MIN_SCAN_DURATION_MS = 8000;
 
 export default function ScanPage() {
@@ -62,53 +54,26 @@ export default function ScanPage() {
   );
 
   const handleScan = async (url: string) => {
-    setCurrentUrl(url);
+    const trimmedUrl = url.trim();
+
+    setCurrentUrl(trimmedUrl);
     setResults(null);
     setErrorMessage(undefined);
-    setScanState("idle");
+    setScanState("scanning");
+
+    const startedAt = Date.now();
 
     try {
-      // 1) URL / Erreichbarkeit vorab prüfen
-      const checkResponse = await fetch("/api/scan-unlimited", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url, mode: "check" }),
-      });
-
-      const checkData = (await checkResponse.json()) as ScanCheckResponse;
-
-      if (!checkResponse.ok) {
-        throw new Error(
-          checkData.error ||
-            checkData.message ||
-            "Unable to verify this website. Please try again."
-        );
-      }
-
-      if (checkData.allowed === false) {
-        throw new Error(
-          checkData.message ||
-            checkData.error ||
-            "This website cannot be scanned right now."
-        );
-      }
-
-      // 2) Loading View sofort anzeigen
-      setScanState("scanning");
-      const startedAt = Date.now();
-
-      // 3) Eigentlichen Scan starten
       const response = await fetch("/api/scan-unlimited", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url, mode: "scan" }),
+        body: JSON.stringify({ url: trimmedUrl }),
       });
 
       const data = (await response.json()) as
         | ScanResultsData
         | ScanErrorResponse;
 
-      // 4) Mindestens 8 Sekunden sichtbare Ladezeit
       const elapsed = Date.now() - startedAt;
       const remaining = Math.max(MIN_SCAN_DURATION_MS - elapsed, 0);
 
