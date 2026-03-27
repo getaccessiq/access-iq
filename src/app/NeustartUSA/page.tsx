@@ -68,6 +68,7 @@ export default function ScanPage() {
     setScanState("idle");
 
     try {
+      // 1) URL / Erreichbarkeit vorab prüfen
       const checkResponse = await fetch("/api/scan-unlimited", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -84,9 +85,19 @@ export default function ScanPage() {
         );
       }
 
+      if (checkData.allowed === false) {
+        throw new Error(
+          checkData.message ||
+            checkData.error ||
+            "This website cannot be scanned right now."
+        );
+      }
+
+      // 2) Loading View sofort anzeigen
       setScanState("scanning");
       const startedAt = Date.now();
 
+      // 3) Eigentlichen Scan starten
       const response = await fetch("/api/scan-unlimited", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -97,6 +108,7 @@ export default function ScanPage() {
         | ScanResultsData
         | ScanErrorResponse;
 
+      // 4) Mindestens 8 Sekunden sichtbare Ladezeit
       const elapsed = Date.now() - startedAt;
       const remaining = Math.max(MIN_SCAN_DURATION_MS - elapsed, 0);
 
@@ -117,7 +129,7 @@ export default function ScanPage() {
 
       const message =
         raw &&
-        /valid website URL|website URL|not reachable|not be reached|not be found|different URL|could not be scanned|ssl|certificate|timeout|verify this website/i.test(
+        /valid website URL|website URL|not reachable|not be reached|not be found|different URL|could not be scanned|ssl|certificate|timeout|verify this website|cannot be scanned/i.test(
           raw
         )
           ? raw

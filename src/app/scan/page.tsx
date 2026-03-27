@@ -104,7 +104,6 @@ export default function ScanPage() {
     setScanState("idle");
 
     try {
-      // 1) Nur Limit prüfen
       const limitResponse = await fetch("/api/scan", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -129,8 +128,7 @@ export default function ScanPage() {
         return;
       }
 
-      // 2) Scan-Request starten, aber Loading View erst zeigen,
-      //    wenn die URL/Website-Prüfung auf Server-Seite bestanden hat.
+      setScanState("scanning");
       const startedAt = Date.now();
 
       const response = await fetch("/api/scan", {
@@ -155,10 +153,6 @@ export default function ScanPage() {
           ("error" in data && data.error) || "Scan failed. Please try again."
         );
       }
-
-      // 3) Erst jetzt Loading View anzeigen, weil wir wissen:
-      //    URL ist valide, Website erreichbar, Scan erfolgreich gestartet/gelaufen.
-      setScanState("scanning");
 
       const elapsed = Date.now() - startedAt;
       const remaining = Math.max(MIN_SCAN_DURATION_MS - elapsed, 0);
