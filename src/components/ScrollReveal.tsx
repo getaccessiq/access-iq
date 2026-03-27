@@ -9,8 +9,12 @@ type AnimationType =
   | "fade-in-left"
   | "fade-in-right"
   | "scale-in"
+  | "scale-in-soft"
   | "scale-in-bounce"
-  | "fade-in";
+  | "fade-in"
+  | "blur-in-up"
+  | "blur-in"
+  | "reveal-up";
 
 interface ScrollRevealProps {
   children: React.ReactNode;
@@ -21,19 +25,26 @@ interface ScrollRevealProps {
   as?: React.ElementType;
   threshold?: number;
   stagger?: boolean;
+  distance?: number;
+  once?: boolean;
 }
 
 export default function ScrollReveal({
   children,
   animation = "fade-in-up",
   delay = 0,
-  duration = 600,
+  duration = 800,
   className = "",
   as: Component = "div",
   threshold = 0.15,
   stagger = false,
+  distance = 28,
+  once = true,
 }: ScrollRevealProps) {
-  const { ref, isVisible } = useScrollAnimation({ threshold });
+  const { ref, isVisible } = useScrollAnimation({
+    threshold,
+    once,
+  });
 
   const animClass = isVisible ? "scroll-animate-visible" : "scroll-animate-hidden";
   const staggerClass = stagger ? "scroll-stagger-children" : "";
@@ -41,11 +52,20 @@ export default function ScrollReveal({
   return (
     <Component
       ref={ref}
-      className={`scroll-animate scroll-${animation} ${animClass} ${staggerClass} ${className}`}
+      className={[
+        "scroll-animate",
+        `scroll-${animation}`,
+        animClass,
+        staggerClass,
+        className,
+      ]
+        .filter(Boolean)
+        .join(" ")}
       style={
         {
           "--scroll-delay": `${delay}ms`,
           "--scroll-duration": `${duration}ms`,
+          "--scroll-distance": `${distance}px`,
         } as React.CSSProperties
       }
     >

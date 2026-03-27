@@ -339,3 +339,111 @@ body {
   visibility: hidden !important;
   pointer-events: none !important;
 }
+.scroll-animate {
+  opacity: 0;
+  will-change: transform, opacity, filter;
+  transition:
+    opacity var(--scroll-duration, 800ms) cubic-bezier(0.22, 1, 0.36, 1),
+    transform var(--scroll-duration, 800ms) cubic-bezier(0.22, 1, 0.36, 1),
+    filter var(--scroll-duration, 800ms) cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--scroll-delay, 0ms);
+  backface-visibility: hidden;
+}
+
+.scroll-animate-visible {
+  opacity: 1;
+  transform: none;
+  filter: blur(0);
+}
+
+.scroll-animate-hidden.scroll-fade-in-up {
+  transform: translate3d(0, var(--scroll-distance, 28px), 0);
+}
+
+.scroll-animate-hidden.scroll-fade-in-down {
+  transform: translate3d(0, calc(var(--scroll-distance, 28px) * -1), 0);
+}
+
+.scroll-animate-hidden.scroll-fade-in-left {
+  transform: translate3d(calc(var(--scroll-distance, 28px) * -1), 0, 0);
+}
+
+.scroll-animate-hidden.scroll-fade-in-right {
+  transform: translate3d(var(--scroll-distance, 28px), 0, 0);
+}
+
+.scroll-animate-hidden.scroll-fade-in {
+  transform: none;
+}
+
+.scroll-animate-hidden.scroll-scale-in {
+  transform: scale(0.94);
+}
+
+.scroll-animate-hidden.scroll-scale-in-soft {
+  transform: scale(0.975);
+}
+
+.scroll-animate-hidden.scroll-scale-in-bounce {
+  transform: translate3d(0, 18px, 0) scale(0.94);
+}
+
+.scroll-animate-hidden.scroll-blur-in-up {
+  transform: translate3d(0, var(--scroll-distance, 28px), 0) scale(0.985);
+  filter: blur(10px);
+}
+
+.scroll-animate-hidden.scroll-blur-in {
+  transform: scale(0.985);
+  filter: blur(10px);
+}
+
+.scroll-animate-hidden.scroll-reveal-up {
+  transform: translate3d(0, 20px, 0) scale(0.985);
+  filter: blur(6px);
+}
+
+.scroll-stagger-children > * {
+  opacity: 0;
+  transform: translate3d(0, 18px, 0);
+  filter: blur(6px);
+  transition:
+    opacity var(--scroll-duration, 800ms) cubic-bezier(0.22, 1, 0.36, 1),
+    transform var(--scroll-duration, 800ms) cubic-bezier(0.22, 1, 0.36, 1),
+    filter var(--scroll-duration, 800ms) cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.scroll-animate-visible.scroll-stagger-children > * {
+  opacity: 1;
+  transform: none;
+  filter: blur(0);
+}
+
+.scroll-animate-visible.scroll-stagger-children > *:nth-child(1) {
+  transition-delay: calc(var(--scroll-delay, 0ms) + 40ms);
+}
+.scroll-animate-visible.scroll-stagger-children > *:nth-child(2) {
+  transition-delay: calc(var(--scroll-delay, 0ms) + 100ms);
+}
+.scroll-animate-visible.scroll-stagger-children > *:nth-child(3) {
+  transition-delay: calc(var(--scroll-delay, 0ms) + 160ms);
+}
+.scroll-animate-visible.scroll-stagger-children > *:nth-child(4) {
+  transition-delay: calc(var(--scroll-delay, 0ms) + 220ms);
+}
+.scroll-animate-visible.scroll-stagger-children > *:nth-child(5) {
+  transition-delay: calc(var(--scroll-delay, 0ms) + 280ms);
+}
+.scroll-animate-visible.scroll-stagger-children > *:nth-child(6) {
+  transition-delay: calc(var(--scroll-delay, 0ms) + 340ms);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-animate,
+  .scroll-stagger-children > * {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    transition: none !important;
+  }
+}

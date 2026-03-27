@@ -5,41 +5,43 @@ import { useEffect, useRef, useState } from "react";
 interface UseScrollAnimationOptions {
   threshold?: number;
   rootMargin?: string;
-  triggerOnce?: boolean;
+  once?: boolean;
 }
 
-export function useScrollAnimation<T extends HTMLElement = HTMLDivElement>(
-  options: UseScrollAnimationOptions = {}
-) {
-  const {
-    threshold = 0.15,
-    rootMargin = "0px 0px -50px 0px",
-    triggerOnce = true,
-  } = options;
-  const ref = useRef<T>(null);
+export function useScrollAnimation({
+  threshold = 0.15,
+  rootMargin = "0px 0px -8% 0px",
+  once = true,
+}: UseScrollAnimationOptions = {}) {
+  const ref = useRef<HTMLElement | null>(null);
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    const element = ref.current;
-    if (!element) return;
+    const node = ref.current;
+    if (!node) return;
 
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
           setIsVisible(true);
-          if (triggerOnce) {
-            observer.unobserve(element);
+
+          if (once) {
+            observer.unobserve(node);
           }
-        } else if (!triggerOnce) {
+        } else if (!once) {
           setIsVisible(false);
         }
       },
-      { threshold, rootMargin }
+      {
+        threshold,
+        rootMargin,
+      }
     );
 
-    observer.observe(element);
+    observer.observe(node);
+
     return () => observer.disconnect();
-  }, [threshold, rootMargin, triggerOnce]);
+  }, [threshold, rootMargin, once]);
 
   return { ref, isVisible };
 }
