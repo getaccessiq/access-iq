@@ -69,81 +69,6 @@ function normalizeUrl(input: string) {
   return `https://${trimmed}`;
 }
 
-async function checkWebsiteAvailability(url: string) {
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 5000);
-
-  try {
-    const response = await fetch(url, {
-      method: "HEAD",
-      redirect: "follow",
-      signal: controller.signal,
-    });
-
-    clearTimeout(timeout);
-
-    if (response.ok) {
-      return { ok: true as const };
-    }
-
-    if (response.status === 404) {
-      return {
-        ok: false as const,
-        message: "This website could not be found.",
-      };
-    }
-
-    if (response.status >= 400) {
-      return {
-        ok: false as const,
-        message: "This website is not reachable right now.",
-      };
-    }
-
-    return { ok: true as const };
-  } catch {
-    clearTimeout(timeout);
-
-    try {
-      const fallbackController = new AbortController();
-      const fallbackTimeout = setTimeout(
-        () => fallbackController.abort(),
-        5000
-      );
-
-      const fallbackResponse = await fetch(url, {
-        method: "GET",
-        redirect: "follow",
-        signal: fallbackController.signal,
-      });
-
-      clearTimeout(fallbackTimeout);
-
-      if (fallbackResponse.ok) {
-        return { ok: true as const };
-      }
-
-      if (fallbackResponse.status === 404) {
-        return {
-          ok: false as const,
-          message: "This website could not be found.",
-        };
-      }
-
-      return {
-        ok: false as const,
-        message: "This website is not reachable right now.",
-      };
-    } catch {
-      return {
-        ok: false as const,
-        message:
-          "This website could not be reached. Please check the URL and try again.",
-      };
-    }
-  }
-}
-
 export async function GET() {
   return NextResponse.json({
     success: true,
@@ -190,18 +115,6 @@ export async function POST(request: NextRequest) {
   } catch {
     return NextResponse.json(
       { success: false, error: "Please enter a valid website URL." },
-      { status: 400 }
-    );
-  }
-
-  const availability = await checkWebsiteAvailability(validUrl);
-
-  if (!availability.ok) {
-    return NextResponse.json(
-      {
-        success: false,
-        error: availability.message,
-      },
       { status: 400 }
     );
   }

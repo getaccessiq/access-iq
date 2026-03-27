@@ -27,6 +27,13 @@ interface AxeResults {
   incomplete: Array<unknown>;
 }
 
+interface RateLimitPayload {
+  limit: number;
+  remaining: number;
+  used: number;
+  resetTime: string;
+}
+
 function countByImpact(violations: AxeViolation[]) {
   let critical = 0;
   let serious = 0;
@@ -100,79 +107,83 @@ function normalizeUrl(input: string) {
   return `https://${trimmed}`;
 }
 
-async function checkWebsiteAvailability(url: string) {
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 5000);
+function serializeRateLimit(rateLimit: {
+  limit: number;
+  remaining: number;
+  used: number;
+  resetTime: unknown;
+}): RateLimitPayload {
+  return {
+    limit: rateLimit.limit,
+    remaining: rateLimit.remaining,
+    used: rateLimit.used,
+    resetTime: toSafeIsoString(rateLimit.resetTime),
+  };
+}
 
-  try {
-    const response = await fetch(url, {
-      method: "HEAD",
-      redirect: "follow",
-      signal: controller.signal,
-    });
+function getFriendlyErrorMessage(raw: string) {
+  let friendly =
+    "This website could not be scanned. Please try again or enter a different URL.";
 
-    clearTimeout(timeout);
-
-    if (response.ok) {
-      return { ok: true as const };
-    }
-
-    if (response.status === 404) {
-      return {
-        ok: false as const,
-        message: "This website could not be found.",
-      };
-    }
-
-    if (response.status >= 400) {
-      return {
-        ok: false as const,
-        message: "This website is not reachable right now.",
-      };
-    }
-
-    return { ok: true as const };
-  } catch {
-    clearTimeout(timeout);
-
-    try {
-      const fallbackController = new AbortController();
-      const fallbackTimeout = setTimeout(
-        () => fallbackController.abort(),
-        5000
-      );
-
-      const fallbackResponse = await fetch(url, {
-        method: "GET",
-        redirect: "follow",
-        signal: fallbackController.signal,
-      });
-
-      clearTimeout(fallbackTimeout);
-
-      if (fallbackResponse.ok) {
-        return { ok: true as const };
-      }
-
-      if (fallbackResponse.status === 404) {
-        return {
-          ok: false as const,
-          message: "This website could not be found.",
-        };
-      }
-
-      return {
-        ok: false as const,
-        message: "This website is not reachable right now.",
-      };
-    } catch {
-      return {
-        ok: false as const,
-        message:
-          "This website could not be reached. Please check the URL and try again.",
-      };
-    }
+  if (/Could not find Chrome|Browser was not found|executablePath/i.test(raw)) {
+    return "The scan browser could not be started. Please check the browser configuration.";
   }
+
+  if (/TimeoutError|timeout|net::ERR_TIMED_OUT/i.test(raw)) {
+    return "This website could not be reached in time. Please check the URL and try again.";
+  }
+
+  if (
+    /Navigation|ERR_NAME_NOT_RESOLVED|ERR_CONNECTION|ERR_CONNECTION_REFUSED|ERR_CONNECTION_CLOSED/i.test(
+      raw
+    )
+  ) {
+    return "This website could not be found. Please check the URL and try again.";
+  }
+
+  if (/ERR_CERT|SSL|TLS/i.test(raw)) {
+    return "This website could not be scanned because of an SSL or certificate issue.";
+  }
+
+  if (/AXE_NOT_LOADED/i.test(raw)) {
+    return "The accessibility engine could not be loaded for this page. Please try again.";
+  }
+
+  if (
+    /toLowerCase|Cannot read prop|Cannot read properties|undefined/i.test(raw)
+  ) {
+    return "This website could not be scanned. It may be blocking automated access. Please try a different URL.";
+  }
+
+  return friendly;
+}
+
+async function createBrowser() {
+  const chromium = (await import("@sparticuz/chromium")).default;
+  const puppeteer = (await import("puppeteer-core")).default;
+
+  const isDev = process.env.NODE_ENV !== "production";
+
+  let executablePath: string | undefined;
+
+  if (process.env.PUPPETEER_EXECUTABLE_PATH) {
+    executablePath = process.env.PUPPETEER_EXECUTABLE_PATH;
+  } else if (!isDev) {
+    if (!process.env.CHROMIUM_REMOTE_EXEC_PATH) {
+      throw new Error("CHROMIUM_REMOTE_EXEC_PATH is not set");
+    }
+
+    executablePath = await chromium.executablePath(
+      process.env.CHROMIUM_REMOTE_EXEC_PATH
+    );
+  }
+
+  return puppeteer.launch({
+    args: isDev ? [] : chromium.args,
+    defaultViewport: { width: 1280, height: 800 },
+    executablePath,
+    headless: true,
+  });
 }
 
 export async function GET() {
@@ -211,23 +222,13 @@ export async function POST(request: NextRequest) {
         message: `Daily free scan limit reached. Try again in ${formatRemainingTime(
           getRemainingMs(rateLimit.resetTime)
         )} or upgrade.`,
-        rateLimit: {
-          limit: rateLimit.limit,
-          remaining: rateLimit.remaining,
-          used: rateLimit.used,
-          resetTime: toSafeIsoString(rateLimit.resetTime),
-        },
+        rateLimit: serializeRateLimit(rateLimit),
       });
     }
 
     return NextResponse.json({
       allowed: true,
-      rateLimit: {
-        limit: rateLimit.limit,
-        remaining: rateLimit.remaining,
-        used: rateLimit.used,
-        resetTime: toSafeIsoString(rateLimit.resetTime),
-      },
+      rateLimit: serializeRateLimit(rateLimit),
     });
   }
 
@@ -249,7 +250,7 @@ export async function POST(request: NextRequest) {
 
     if (!["http:", "https:"].includes(parsed.protocol)) {
       return NextResponse.json(
-        { success: false, error: "URL must use http or https" },
+        { success: false, error: "URL must use http or https." },
         { status: 400 }
       );
     }
@@ -262,34 +263,17 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const availability = await checkWebsiteAvailability(validUrl);
+  const rateLimitBeforeScan = await getRateLimitStatus(ip);
 
-  if (!availability.ok) {
-    return NextResponse.json(
-      {
-        success: false,
-        error: availability.message,
-      },
-      { status: 400 }
-    );
-  }
-
-  const rateLimit = await consumeFreeScan(ip);
-
-  if (!rateLimit.allowed) {
+  if (!rateLimitBeforeScan.allowed) {
     return NextResponse.json(
       {
         success: false,
         code: "DAILY_SCAN_LIMIT_REACHED",
         error: `Daily free scan limit reached. Try again in ${formatRemainingTime(
-          getRemainingMs(rateLimit.resetTime)
+          getRemainingMs(rateLimitBeforeScan.resetTime)
         )} or upgrade.`,
-        rateLimit: {
-          limit: rateLimit.limit,
-          remaining: rateLimit.remaining,
-          used: rateLimit.used,
-          resetTime: toSafeIsoString(rateLimit.resetTime),
-        },
+        rateLimit: serializeRateLimit(rateLimitBeforeScan),
       },
       { status: 429 }
     );
@@ -303,31 +287,7 @@ export async function POST(request: NextRequest) {
       "utf-8"
     );
 
-    const chromium = (await import("@sparticuz/chromium")).default;
-    const puppeteer = (await import("puppeteer-core")).default;
-
-    const isDev = process.env.NODE_ENV !== "production";
-
-    let executablePath: string | undefined;
-
-    if (process.env.PUPPETEER_EXECUTABLE_PATH) {
-      executablePath = process.env.PUPPETEER_EXECUTABLE_PATH;
-    } else if (!isDev) {
-      if (!process.env.CHROMIUM_REMOTE_EXEC_PATH) {
-        throw new Error("CHROMIUM_REMOTE_EXEC_PATH is not set");
-      }
-
-      executablePath = await chromium.executablePath(
-        process.env.CHROMIUM_REMOTE_EXEC_PATH
-      );
-    }
-
-    browser = await puppeteer.launch({
-      args: isDev ? [] : chromium.args,
-      defaultViewport: { width: 1280, height: 800 },
-      executablePath,
-      headless: true,
-    });
+    browser = await createBrowser();
 
     const page = await browser.newPage();
 
@@ -363,16 +323,14 @@ export async function POST(request: NextRequest) {
 
     const counts = countByImpact(results.violations ?? []);
 
+    // Limit erst erhöhen, wenn der Scan wirklich erfolgreich war.
+    const rateLimitAfterScan = await consumeFreeScan(ip);
+
     return NextResponse.json({
       success: true,
       url: validUrl,
       scannedAt: new Date().toISOString(),
-      rateLimit: {
-        limit: rateLimit.limit,
-        remaining: rateLimit.remaining,
-        used: rateLimit.used,
-        resetTime: toSafeIsoString(rateLimit.resetTime),
-      },
+      rateLimit: serializeRateLimit(rateLimitAfterScan),
       counts,
       violations: (results.violations ?? []).map((violation) => ({
         id: violation.id ?? "",
@@ -393,37 +351,7 @@ export async function POST(request: NextRequest) {
     console.error("Scan error:", err);
 
     const raw = err instanceof Error ? err.message : String(err);
-
-    let friendly =
-      "This website could not be scanned. Please try again or enter a different URL.";
-
-    if (
-      /Could not find Chrome|Browser was not found|executablePath/i.test(raw)
-    ) {
-      friendly =
-        "The scan browser could not be started. Please check the browser configuration.";
-    } else if (/TimeoutError|timeout|net::ERR_TIMED_OUT/i.test(raw)) {
-      friendly =
-        "This website could not be reached in time. Please check the URL and try again.";
-    } else if (
-      /Navigation|ERR_NAME_NOT_RESOLVED|ERR_CONNECTION|ERR_CONNECTION_REFUSED|ERR_CONNECTION_CLOSED/i.test(
-        raw
-      )
-    ) {
-      friendly =
-        "This website could not be found. Please check the URL and try again.";
-    } else if (/ERR_CERT|SSL|TLS/i.test(raw)) {
-      friendly =
-        "This website could not be scanned because of an SSL or certificate issue.";
-    } else if (/AXE_NOT_LOADED/i.test(raw)) {
-      friendly =
-        "The accessibility engine could not be loaded for this page. Please try again.";
-    } else if (
-      /toLowerCase|Cannot read prop|Cannot read properties|undefined/i.test(raw)
-    ) {
-      friendly =
-        "This website could not be scanned. It may be blocking automated access. Please try a different URL.";
-    }
+    const friendly = getFriendlyErrorMessage(raw);
 
     return NextResponse.json(
       {
