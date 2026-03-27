@@ -67,7 +67,7 @@ const metricTiles = [
 
 export default function AccessiveManualAuditSection() {
   return (
-    <section className="relative overflow-hidden bg-[#06101a] py-20 text-white sm:py-24 lg:py-32">
+    <section className="relative overflow-hidden bg-[#06101a] pt-10 pb-20 text-white sm:pt-12 sm:pb-24 lg:pt-14 lg:pb-32">
       <div aria-hidden="true" className="pointer-events-none absolute inset-0">
         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(6,16,26,0.92)_0%,rgba(6,16,26,0.98)_100%)]" />
         <div className="absolute left-[-12%] top-[6%] h-[320px] w-[320px] rounded-full bg-cyan-400/7 blur-[120px]" />
