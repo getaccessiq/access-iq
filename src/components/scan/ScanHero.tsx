@@ -365,8 +365,7 @@ export default function ScanHero({ onScan, error }: ScanHeroProps) {
                       </div>
 
                       <div className="mt-6 rounded-2xl border border-cyan-400/12 bg-cyan-400/5 px-4 py-4 text-[13px] leading-6 text-cyan-100/78 sm:text-[14px]">
-                        For legal-grade validation, remediation planning, and issue
-                        documentation, pair the free scan with an expert accessibility audit.
+                        For legal-grade validation and remediation planning, pair the free scan with an expert accessibility audit.
                       </div>
                     </div>
                   </div>

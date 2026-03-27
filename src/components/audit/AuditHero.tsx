@@ -129,7 +129,7 @@ const AuditHero = () => {
                 <div className="relative rounded-[30px] border border-[#2aaeff]/30 bg-[linear-gradient(180deg,rgba(11,20,35,0.96),rgba(10,18,32,0.86))] p-[10px] shadow-[0_28px_80px_rgba(0,0,0,0.45),0_0_0_1px_rgba(34,207,255,0.06)]">
                   <div className="overflow-hidden rounded-[22px] border border-white/10 bg-white shadow-[inset_0_1px_0_rgba(255,255,255,0.45)]">
                     <Image
-                      src="/images/Dashboard_i34345.png"
+                      src="/images/Dashboard/Accessibility Issues Over Time2.png"
                       alt="Preview of an accessibility audit dashboard showing compliance metrics, issue counts, and reporting data"
                       width={1600}
                       height={1100}

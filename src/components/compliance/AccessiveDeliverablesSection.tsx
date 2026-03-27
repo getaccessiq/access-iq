@@ -156,9 +156,7 @@ export default function AccessiveDeliverablesSection() {
                 </h3>
 
                 <p className="mt-4 max-w-[64ch] text-[15px] leading-7 text-slate-300 sm:text-base sm:leading-8">
-                  Every deliverable is designed to reduce ambiguity, accelerate
-                  remediation, and help your organization move from findings to
-                  measurable accessibility progress with less friction.
+                  Every deliverable is designed to reduce ambiguity, accelerate remediation, and help your organization move from findings to measurable accessibility progress.
                 </p>
               </div>
 
