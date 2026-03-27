@@ -43,6 +43,14 @@ interface ScanErrorResponse {
   error?: string;
 }
 
+interface ScanCheckResponse {
+  success?: boolean;
+  allowed?: boolean;
+  url?: string;
+  message?: string;
+  error?: string;
+}
+
 const MIN_SCAN_DURATION_MS = 8000;
 
 export default function ScanPage() {
@@ -60,31 +68,46 @@ export default function ScanPage() {
     setScanState("idle");
 
     try {
+      const checkResponse = await fetch("/api/scan-unlimited", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url, mode: "check" }),
+      });
+
+      const checkData = (await checkResponse.json()) as ScanCheckResponse;
+
+      if (!checkResponse.ok) {
+        throw new Error(
+          checkData.error ||
+            checkData.message ||
+            "Unable to verify this website. Please try again."
+        );
+      }
+
+      setScanState("scanning");
       const startedAt = Date.now();
 
       const response = await fetch("/api/scan-unlimited", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url }),
+        body: JSON.stringify({ url, mode: "scan" }),
       });
 
       const data = (await response.json()) as
         | ScanResultsData
         | ScanErrorResponse;
 
-      if (!response.ok) {
-        throw new Error(
-          ("error" in data && data.error) || "Scan failed. Please try again."
-        );
-      }
-
-      setScanState("scanning");
-
       const elapsed = Date.now() - startedAt;
       const remaining = Math.max(MIN_SCAN_DURATION_MS - elapsed, 0);
 
       if (remaining > 0) {
         await new Promise((resolve) => setTimeout(resolve, remaining));
+      }
+
+      if (!response.ok) {
+        throw new Error(
+          ("error" in data && data.error) || "Scan failed. Please try again."
+        );
       }
 
       setResults(data as ScanResultsData);
@@ -94,7 +117,7 @@ export default function ScanPage() {
 
       const message =
         raw &&
-        /valid website URL|website URL|not reachable|not be reached|not be found|different URL|could not be scanned|ssl|certificate|timeout/i.test(
+        /valid website URL|website URL|not reachable|not be reached|not be found|different URL|could not be scanned|ssl|certificate|timeout|verify this website/i.test(
           raw
         )
           ? raw
