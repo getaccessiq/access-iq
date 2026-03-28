@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ScanHero from "@/components/NeustartUSA/ScanHero";
@@ -50,6 +50,18 @@ function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+function normalizeUrl(input: string) {
+  const trimmed = input.trim();
+
+  if (!trimmed) return "";
+
+  if (/^https?:\/\//i.test(trimmed)) {
+    return trimmed;
+  }
+
+  return `https://${trimmed}`;
+}
+
 function isScanResultsData(data: unknown): data is ScanResultsData {
   if (!data || typeof data !== "object") return false;
 
@@ -61,22 +73,61 @@ function isScanResultsData(data: unknown): data is ScanResultsData {
     typeof value.passes === "number" &&
     typeof value.incomplete === "number" &&
     typeof value.counts === "object" &&
+    value.counts !== null &&
     Array.isArray(value.violations)
   );
+}
+
+function getFriendlyErrorMessage(rawMessage?: string) {
+  const message = rawMessage?.trim();
+
+  if (!message) {
+    return "This website could not be scanned. Please try again or enter a different URL.";
+  }
+
+  if (/please enter a website url|valid website url|invalid url/i.test(message)) {
+    return "Please enter a valid website URL.";
+  }
+
+  if (/not reachable|not be reached|not be found|dns|unavailable/i.test(message)) {
+    return "This website could not be reached. Please check the URL and try again.";
+  }
+
+  if (/ssl|certificate/i.test(message)) {
+    return "This website has an SSL or certificate issue and could not be scanned.";
+  }
+
+  if (/timeout/i.test(message)) {
+    return "The scan took too long to complete. Please try again.";
+  }
+
+  if (/refused the connection|blocked|captcha|bot|challenge/i.test(message)) {
+    return "This website appears to block automated scans.";
+  }
+
+  if (/invalid scan response/i.test(message)) {
+    return "The scan returned an invalid response. Please try again.";
+  }
+
+  if (/could not be scanned|cannot be scanned/i.test(message)) {
+    return message;
+  }
+
+  return "This website could not be scanned. Please try again or enter a different URL.";
 }
 
 export default function ScanPage() {
   const [scanState, setScanState] = useState<ScanState>("idle");
   const [currentUrl, setCurrentUrl] = useState("");
   const [results, setResults] = useState<ScanResultsData | null>(null);
-  const [errorMessage, setErrorMessage] = useState<string | undefined>(
-    undefined
-  );
+  const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined);
 
-  const handleScan = async (url: string) => {
-    const trimmedUrl = url.trim();
+  const activeRequestRef = useRef(0);
 
-    if (!trimmedUrl) {
+  const handleScan = useCallback(async (url: string) => {
+    const normalizedUrl = normalizeUrl(url);
+
+    if (!normalizedUrl) {
       setCurrentUrl("");
       setResults(null);
       setErrorMessage("Please enter a website URL.");
@@ -84,7 +135,10 @@ export default function ScanPage() {
       return;
     }
 
-    setCurrentUrl(trimmedUrl);
+    const requestId = Date.now();
+    activeRequestRef.current = requestId;
+
+    setCurrentUrl(normalizedUrl);
     setResults(null);
     setErrorMessage(undefined);
     setScanState("scanning");
@@ -94,19 +148,23 @@ export default function ScanPage() {
     try {
       const response = await fetch("/api/scan-unlimited", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url: trimmedUrl }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ url: normalizedUrl }),
       });
 
-      const data = (await response.json()) as
-        | ScanResultsData
-        | ScanErrorResponse;
+      const data = (await response.json()) as ScanResultsData | ScanErrorResponse;
+
+      if (activeRequestRef.current !== requestId) {
+        return;
+      }
 
       if (!response.ok) {
-        throw new Error(
-          ("error" in data && data.error) ||
-            "This website could not be scanned. Please try again."
-        );
+        const serverMessage =
+          "error" in data && typeof data.error === "string" ? data.error : undefined;
+
+        throw new Error(serverMessage || "This website could not be scanned.");
       }
 
       if (!isScanResultsData(data)) {
@@ -120,30 +178,32 @@ export default function ScanPage() {
         await sleep(remaining);
       }
 
+      if (activeRequestRef.current !== requestId) {
+        return;
+      }
+
       setResults(data);
       setScanState("complete");
-    } catch (err) {
-      const raw = err instanceof Error ? err.message : "";
+    } catch (error) {
+      if (activeRequestRef.current !== requestId) {
+        return;
+      }
 
-      const message =
-        raw &&
-        /please enter a website url|valid website url|website url|not reachable|not be reached|not be found|different url|could not be scanned|ssl|certificate|timeout|verify this website|cannot be scanned|refused the connection|unavailable|invalid scan response/i.test(
-          raw.toLowerCase()
-        )
-          ? raw
-          : "This website could not be scanned. Please try again or enter a different URL.";
+      const rawMessage = error instanceof Error ? error.message : undefined;
 
-      setErrorMessage(message);
+      setResults(null);
+      setErrorMessage(getFriendlyErrorMessage(rawMessage));
       setScanState("error");
     }
-  };
+  }, []);
 
-  const handleRescan = () => {
+  const handleRescan = useCallback(() => {
+    activeRequestRef.current = 0;
     setScanState("idle");
     setResults(null);
     setErrorMessage(undefined);
     setCurrentUrl("");
-  };
+  }, []);
 
   if (scanState === "scanning") {
     return (

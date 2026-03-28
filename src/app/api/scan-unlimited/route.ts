@@ -14,6 +14,15 @@ const AXE_SOURCE = readFileSync(
 const USER_AGENT =
   "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36";
 
+const VIEWPORT = {
+  width: 1440,
+  height: 900,
+  deviceScaleFactor: 1,
+};
+
+const NAVIGATION_TIMEOUT = 30000;
+const WAIT_FOR_READY_STATE_TIMEOUT = 10000;
+
 interface AxeViolation {
   id: string;
   description: string;
@@ -77,6 +86,12 @@ function normalizeUrl(input: string) {
   return `https://${trimmed}`;
 }
 
+function shouldRetryNavigation(raw: string) {
+  return /TimeoutError|Navigation timeout|ERR_TIMED_OUT|frame detached|net::ERR_ABORTED/i.test(
+    raw
+  );
+}
+
 function getFriendlyError(raw: string) {
   let friendly =
     "This website could not be scanned. Please try again or enter a different URL.";
@@ -128,16 +143,11 @@ function getFriendlyError(raw: string) {
 }
 
 async function preparePage(page: Page) {
-  page.setDefaultNavigationTimeout(30000);
-  page.setDefaultTimeout(30000);
+  page.setDefaultNavigationTimeout(NAVIGATION_TIMEOUT);
+  page.setDefaultTimeout(NAVIGATION_TIMEOUT);
 
   await page.setUserAgent(USER_AGENT);
-
-  await page.setViewport({
-    width: 1440,
-    height: 900,
-    deviceScaleFactor: 1,
-  });
+  await page.setViewport(VIEWPORT);
 
   await page.setExtraHTTPHeaders({
     "accept-language": "en-US,en;q=0.9,de;q=0.8",
@@ -157,14 +167,94 @@ async function gotoWithFallback(
   try {
     return await page.goto(url, {
       waitUntil: "networkidle2",
-      timeout: 30000,
+      timeout: NAVIGATION_TIMEOUT,
     });
-  } catch {
+  } catch (error) {
+    const raw = error instanceof Error ? error.message : String(error);
+
+    if (!shouldRetryNavigation(raw)) {
+      throw error;
+    }
+
     return await page.goto(url, {
       waitUntil: "domcontentloaded",
-      timeout: 30000,
+      timeout: NAVIGATION_TIMEOUT,
     });
   }
+}
+
+async function launchBrowser(): Promise<Browser> {
+  const chromium = (await import("@sparticuz/chromium")).default;
+  const puppeteer = (await import("puppeteer-core")).default;
+
+  const isDev = process.env.NODE_ENV !== "production";
+
+  let executablePath: string | undefined;
+
+  if (process.env.PUPPETEER_EXECUTABLE_PATH) {
+    executablePath = process.env.PUPPETEER_EXECUTABLE_PATH;
+  } else if (!isDev) {
+    if (!process.env.CHROMIUM_REMOTE_EXEC_PATH) {
+      throw new Error("CHROMIUM_REMOTE_EXEC_PATH is not set");
+    }
+
+    executablePath = await chromium.executablePath(
+      process.env.CHROMIUM_REMOTE_EXEC_PATH
+    );
+  }
+
+  return puppeteer.launch({
+    args: isDev
+      ? [
+          "--no-sandbox",
+          "--disable-setuid-sandbox",
+          "--disable-dev-shm-usage",
+          "--disable-gpu",
+          "--no-first-run",
+          "--no-zygote",
+          "--disable-blink-features=AutomationControlled",
+        ]
+      : [
+          ...chromium.args,
+          "--disable-blink-features=AutomationControlled",
+        ],
+    defaultViewport: VIEWPORT,
+    executablePath,
+    headless: true,
+  });
+}
+
+async function runAxe(page: Page): Promise<AxeResults> {
+  await page.evaluate(AXE_SOURCE);
+
+  return page.evaluate(async () => {
+    const axeGlobal = (
+      window as Window & {
+        axe?: {
+          run: (
+            context?: Element | Document,
+            options?: Record<string, unknown>
+          ) => Promise<AxeResults>;
+        };
+      }
+    ).axe;
+
+    if (!axeGlobal) {
+      throw new Error("AXE_NOT_LOADED");
+    }
+
+    return axeGlobal.run(document, {
+      resultTypes: ["violations", "incomplete", "passes"],
+      iframes: false,
+    });
+  });
+}
+
+function isSoft404(title: string, text: string) {
+  const soft404Pattern =
+    /404|not found|page not found|seite nicht gefunden|nicht verfügbar|no longer available/i;
+
+  return soft404Pattern.test(title) || soft404Pattern.test(text);
 }
 
 export async function GET() {
@@ -223,41 +313,7 @@ export async function POST(request: NextRequest) {
   let browser: Browser | null = null;
 
   try {
-    const chromium = (await import("@sparticuz/chromium")).default;
-    const puppeteer = (await import("puppeteer-core")).default;
-
-    const isDev = process.env.NODE_ENV !== "production";
-
-    let executablePath: string | undefined;
-
-    if (process.env.PUPPETEER_EXECUTABLE_PATH) {
-      executablePath = process.env.PUPPETEER_EXECUTABLE_PATH;
-    } else if (!isDev) {
-      if (!process.env.CHROMIUM_REMOTE_EXEC_PATH) {
-        throw new Error("CHROMIUM_REMOTE_EXEC_PATH is not set");
-      }
-
-      executablePath = await chromium.executablePath(
-        process.env.CHROMIUM_REMOTE_EXEC_PATH
-      );
-    }
-
-    browser = await puppeteer.launch({
-      args: isDev
-        ? [
-            "--no-sandbox",
-            "--disable-setuid-sandbox",
-            "--disable-dev-shm-usage",
-            "--disable-blink-features=AutomationControlled",
-          ]
-        : [
-            ...chromium.args,
-            "--disable-blink-features=AutomationControlled",
-          ],
-      defaultViewport: { width: 1440, height: 900 },
-      executablePath,
-      headless: true,
-    });
+    browser = await launchBrowser();
 
     const page = await browser.newPage();
     await preparePage(page);
@@ -271,7 +327,9 @@ export async function POST(request: NextRequest) {
       throw new Error("INVALID_FINAL_URL");
     }
 
+    const inputParsed = new URL(validUrl);
     const finalParsed = new URL(finalUrl);
+
     if (!["http:", "https:"].includes(finalParsed.protocol)) {
       throw new Error("INVALID_FINAL_URL");
     }
@@ -285,7 +343,7 @@ export async function POST(request: NextRequest) {
         () =>
           document.readyState === "complete" ||
           document.readyState === "interactive",
-        { timeout: 10000 }
+        { timeout: WAIT_FOR_READY_STATE_TIMEOUT }
       )
       .catch(() => null);
 
@@ -294,36 +352,11 @@ export async function POST(request: NextRequest) {
       return document.body?.innerText?.slice(0, 3000) ?? "";
     });
 
-    const soft404Pattern =
-      /404|not found|page not found|seite nicht gefunden|nicht verfügbar|no longer available/i;
-
-    if (soft404Pattern.test(pageTitle) || soft404Pattern.test(pageText)) {
+    if (isSoft404(pageTitle, pageText)) {
       throw new Error("SOFT_404_PAGE");
     }
 
-    await page.evaluate(AXE_SOURCE);
-
-    const results: AxeResults = await page.evaluate(async () => {
-      const axeGlobal = (
-        window as Window & {
-          axe?: {
-            run: (
-              context?: Element | Document,
-              options?: Record<string, unknown>
-            ) => Promise<AxeResults>;
-          };
-        }
-      ).axe;
-
-      if (!axeGlobal) {
-        throw new Error("AXE_NOT_LOADED");
-      }
-
-      return axeGlobal.run(document, {
-        resultTypes: ["violations", "incomplete", "passes"],
-      });
-    });
-
+    const results = await runAxe(page);
     const counts = countByImpact(results.violations ?? []);
 
     return NextResponse.json({
@@ -331,6 +364,10 @@ export async function POST(request: NextRequest) {
       inputUrl: validUrl,
       url: finalUrl,
       redirected: finalUrl !== validUrl,
+      inputHostname: inputParsed.hostname,
+      finalHostname: finalParsed.hostname,
+      redirectedToDifferentHostname:
+        inputParsed.hostname !== finalParsed.hostname,
       scannedAt: new Date().toISOString(),
       counts,
       violations: (results.violations ?? []).map((v) => ({
@@ -363,7 +400,7 @@ export async function POST(request: NextRequest) {
     );
   } finally {
     if (browser) {
-      await browser.close();
+      await browser.close().catch(() => null);
     }
   }
 }
