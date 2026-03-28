@@ -608,7 +608,7 @@ export default function ScanResults({ results, onRescan }: ScanResultsProps) {
         <div className="relative z-10 mx-auto w-full max-w-6xl px-4 sm:px-6">
           <header className="mb-7 flex flex-col items-center pt-2 text-center sm:mb-8 sm:pt-3">
             <div
-              className="mb-4 mt-1 inline-flex rounded-full p-[1px] shadow-[0_0_22px_rgba(0,212,170,0.08)]"
+              className="mb-4 mt-4 inline-flex rounded-full p-[1px] shadow-[0_0_22px_rgba(0,212,170,0.08)]"
               style={{ background: "linear-gradient(135deg, #00d4aa, #0ea5e9)" }}
             >
               <div className="inline-flex items-center gap-2 rounded-full bg-[#091120]/95 px-4 py-2 backdrop-blur-xl sm:px-5">

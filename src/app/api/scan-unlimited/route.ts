@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { readFileSync } from "fs";
 import path from "path";
-import type { Browser } from "puppeteer-core";
+import type { Browser, HTTPResponse, Page } from "puppeteer-core";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -77,40 +77,93 @@ function normalizeUrl(input: string) {
   return `https://${trimmed}`;
 }
 
-async function checkWebsiteReachable(url: string) {
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 5000);
+function getFriendlyError(raw: string) {
+  let friendly =
+    "This website could not be scanned. Please try again or enter a different URL.";
 
+  if (/INVALID_URL/i.test(raw)) {
+    friendly = "Please enter a valid website URL.";
+  } else if (/UNSUPPORTED_PROTOCOL/i.test(raw)) {
+    friendly = "URL must use http or https.";
+  } else if (/ERR_NAME_NOT_RESOLVED|ENOTFOUND/i.test(raw)) {
+    friendly =
+      "This website could not be found. Please check the URL and try again.";
+  } else if (/ERR_CONNECTION_REFUSED|ECONNREFUSED/i.test(raw)) {
+    friendly =
+      "This website refused the connection. Please try again or enter a different URL.";
+  } else if (/ERR_CERT|SSL|TLS/i.test(raw)) {
+    friendly =
+      "This website could not be scanned because of an SSL or certificate issue.";
+  } else if (/TimeoutError|timeout|ERR_TIMED_OUT/i.test(raw)) {
+    friendly =
+      "This website could not be reached in time. Please try again.";
+  } else if (/PAGE_HTTP_404/i.test(raw)) {
+    friendly =
+      "This website could not be found. Please check the URL and try again.";
+  } else if (/PAGE_HTTP_403/i.test(raw)) {
+    friendly =
+      "This website is blocking automated access right now. Please try again or use an expert audit.";
+  } else if (/PAGE_HTTP_5\d{2}/i.test(raw)) {
+    friendly =
+      "This website is currently unavailable. Please try again later.";
+  } else if (/SOFT_404_PAGE/i.test(raw)) {
+    friendly =
+      "This page appears to be unavailable or not found. Please check the URL and try again.";
+  } else if (/INVALID_FINAL_URL/i.test(raw)) {
+    friendly =
+      "This website could not be opened correctly. Please check the URL and try again.";
+  } else if (/AXE_NOT_LOADED/i.test(raw)) {
+    friendly =
+      "The accessibility engine could not be loaded for this page. Please try again.";
+  } else if (
+    /Could not find Chrome|Browser was not found|executablePath|CHROMIUM_REMOTE_EXEC_PATH/i.test(
+      raw
+    )
+  ) {
+    friendly =
+      "The scan browser could not be started. Please check the browser configuration.";
+  }
+
+  return friendly;
+}
+
+async function preparePage(page: Page) {
+  page.setDefaultNavigationTimeout(30000);
+  page.setDefaultTimeout(30000);
+
+  await page.setUserAgent(USER_AGENT);
+
+  await page.setViewport({
+    width: 1440,
+    height: 900,
+    deviceScaleFactor: 1,
+  });
+
+  await page.setExtraHTTPHeaders({
+    "accept-language": "en-US,en;q=0.9,de;q=0.8",
+  });
+
+  await page.evaluateOnNewDocument(() => {
+    Object.defineProperty(navigator, "webdriver", {
+      get: () => false,
+    });
+  });
+}
+
+async function gotoWithFallback(
+  page: Page,
+  url: string
+): Promise<HTTPResponse | null> {
   try {
-    let response: Response;
-
-    try {
-      response = await fetch(url, {
-        method: "HEAD",
-        redirect: "follow",
-        signal: controller.signal,
-        headers: {
-          "user-agent": USER_AGENT,
-        },
-      });
-    } catch {
-      response = await fetch(url, {
-        method: "GET",
-        redirect: "follow",
-        signal: controller.signal,
-        headers: {
-          "user-agent": USER_AGENT,
-        },
-      });
-    }
-
-    return {
-      ok: response.ok,
-      status: response.status,
-      statusText: response.statusText,
-    };
-  } finally {
-    clearTimeout(timeout);
+    return await page.goto(url, {
+      waitUntil: "networkidle2",
+      timeout: 30000,
+    });
+  } catch {
+    return await page.goto(url, {
+      waitUntil: "domcontentloaded",
+      timeout: 30000,
+    });
   }
 }
 
@@ -150,71 +203,17 @@ export async function POST(request: NextRequest) {
     const parsed = new URL(normalizedUrl);
 
     if (!["http:", "https:"].includes(parsed.protocol)) {
-      return NextResponse.json(
-        { success: false, error: "URL must use http or https" },
-        { status: 400 }
-      );
+      throw new Error("UNSUPPORTED_PROTOCOL");
     }
 
     validUrl = parsed.toString();
-  } catch {
-    return NextResponse.json(
-      { success: false, error: "Please enter a valid website URL." },
-      { status: 400 }
-    );
-  }
-
-  try {
-    const reachability = await checkWebsiteReachable(validUrl);
-
-    if (!reachability.ok) {
-      let friendly =
-        "This website is not reachable right now. Please check the URL and try again.";
-
-      if (reachability.status === 404) {
-        friendly =
-          "This website could not be found. Please check the URL and try again.";
-      } else if (reachability.status === 403) {
-        friendly =
-          "This website is blocking access right now. Please try again or enter a different URL.";
-      } else if (reachability.status >= 500) {
-        friendly =
-          "This website is currently unavailable. Please try again later.";
-      }
-
-      return NextResponse.json(
-        {
-          success: false,
-          error: friendly,
-          debug: `Reachability check failed with status ${reachability.status} ${reachability.statusText}`,
-        },
-        { status: 400 }
-      );
-    }
-  } catch (err) {
-    const raw = err instanceof Error ? err.message : String(err);
-
-    let friendly =
-      "This website is not reachable right now. Please check the URL and try again.";
-
-    if (/ENOTFOUND|ERR_NAME_NOT_RESOLVED/i.test(raw)) {
-      friendly =
-        "This website could not be found. Please check the URL and try again.";
-    } else if (/ECONNREFUSED|ERR_CONNECTION_REFUSED/i.test(raw)) {
-      friendly =
-        "This website refused the connection. Please try again or enter a different URL.";
-    } else if (/abort|timeout|timed out/i.test(raw)) {
-      friendly =
-        "This website could not be reached in time. Please check the URL and try again.";
-    } else if (/ERR_CERT|SSL|TLS/i.test(raw)) {
-      friendly =
-        "This website could not be reached because of an SSL or certificate issue.";
-    }
+  } catch (error) {
+    const raw = error instanceof Error ? error.message : "INVALID_URL";
 
     return NextResponse.json(
       {
         success: false,
-        error: friendly,
+        error: getFriendlyError(raw),
         debug: raw,
       },
       { status: 400 }
@@ -244,23 +243,26 @@ export async function POST(request: NextRequest) {
     }
 
     browser = await puppeteer.launch({
-      args: isDev ? [] : chromium.args,
-      defaultViewport: { width: 1280, height: 800 },
+      args: isDev
+        ? [
+            "--no-sandbox",
+            "--disable-setuid-sandbox",
+            "--disable-dev-shm-usage",
+            "--disable-blink-features=AutomationControlled",
+          ]
+        : [
+            ...chromium.args,
+            "--disable-blink-features=AutomationControlled",
+          ],
+      defaultViewport: { width: 1440, height: 900 },
       executablePath,
       headless: true,
     });
 
     const page = await browser.newPage();
+    await preparePage(page);
 
-    page.setDefaultNavigationTimeout(15000);
-    page.setDefaultTimeout(15000);
-
-    await page.setUserAgent(USER_AGENT);
-
-    const navigationResponse = await page.goto(validUrl, {
-      waitUntil: "domcontentloaded",
-      timeout: 15000,
-    });
+    const navigationResponse = await gotoWithFallback(page, validUrl);
 
     const finalUrl = page.url();
     const status = navigationResponse?.status() ?? 0;
@@ -269,17 +271,31 @@ export async function POST(request: NextRequest) {
       throw new Error("INVALID_FINAL_URL");
     }
 
+    const finalParsed = new URL(finalUrl);
+    if (!["http:", "https:"].includes(finalParsed.protocol)) {
+      throw new Error("INVALID_FINAL_URL");
+    }
+
     if (status >= 400) {
       throw new Error(`PAGE_HTTP_${status}`);
     }
 
+    await page
+      .waitForFunction(
+        () =>
+          document.readyState === "complete" ||
+          document.readyState === "interactive",
+        { timeout: 10000 }
+      )
+      .catch(() => null);
+
     const pageTitle = await page.title();
     const pageText = await page.evaluate(() => {
-      return document.body?.innerText?.slice(0, 2000) ?? "";
+      return document.body?.innerText?.slice(0, 3000) ?? "";
     });
 
     const soft404Pattern =
-      /404|not found|page not found|seite nicht gefunden|error|fehler|nicht verfügbar|no longer available/i;
+      /404|not found|page not found|seite nicht gefunden|nicht verfügbar|no longer available/i;
 
     if (soft404Pattern.test(pageTitle) || soft404Pattern.test(pageText)) {
       throw new Error("SOFT_404_PAGE");
@@ -287,11 +303,14 @@ export async function POST(request: NextRequest) {
 
     await page.evaluate(AXE_SOURCE);
 
-    const results: AxeResults = await page.evaluate(() => {
+    const results: AxeResults = await page.evaluate(async () => {
       const axeGlobal = (
         window as Window & {
           axe?: {
-            run: () => Promise<AxeResults>;
+            run: (
+              context?: Element | Document,
+              options?: Record<string, unknown>
+            ) => Promise<AxeResults>;
           };
         }
       ).axe;
@@ -300,14 +319,18 @@ export async function POST(request: NextRequest) {
         throw new Error("AXE_NOT_LOADED");
       }
 
-      return axeGlobal.run();
+      return axeGlobal.run(document, {
+        resultTypes: ["violations", "incomplete", "passes"],
+      });
     });
 
     const counts = countByImpact(results.violations ?? []);
 
     return NextResponse.json({
       success: true,
+      inputUrl: validUrl,
       url: finalUrl,
+      redirected: finalUrl !== validUrl,
       scannedAt: new Date().toISOString(),
       counts,
       violations: (results.violations ?? []).map((v) => ({
@@ -330,56 +353,10 @@ export async function POST(request: NextRequest) {
 
     const raw = err instanceof Error ? err.message : String(err);
 
-    let friendly =
-      "This website could not be scanned. Please try again or enter a different URL.";
-
-    if (/PAGE_HTTP_404/i.test(raw)) {
-      friendly =
-        "This website could not be found. Please check the URL and try again.";
-    } else if (/PAGE_HTTP_403/i.test(raw)) {
-      friendly =
-        "This website is blocking access right now. Please try again or enter a different URL.";
-    } else if (/PAGE_HTTP_5\d{2}/i.test(raw)) {
-      friendly =
-        "This website is currently unavailable. Please try again later.";
-    } else if (/SOFT_404_PAGE/i.test(raw)) {
-      friendly =
-        "This page appears to be unavailable or not found. Please check the URL and try again.";
-    } else if (/INVALID_FINAL_URL/i.test(raw)) {
-      friendly =
-        "This website could not be opened correctly. Please check the URL and try again.";
-    } else if (
-      /Could not find Chrome|Browser was not found|executablePath/i.test(raw)
-    ) {
-      friendly =
-        "The scan browser could not be started. Please check the browser configuration.";
-    } else if (/TimeoutError|timeout|net::ERR_TIMED_OUT/i.test(raw)) {
-      friendly =
-        "This website could not be reached in time. Please check the URL and try again.";
-    } else if (
-      /Navigation|ERR_NAME_NOT_RESOLVED|ERR_CONNECTION|ERR_CONNECTION_REFUSED|ERR_CONNECTION_CLOSED/i.test(
-        raw
-      )
-    ) {
-      friendly =
-        "This website could not be found. Please check the URL and try again.";
-    } else if (/ERR_CERT|SSL|TLS/i.test(raw)) {
-      friendly =
-        "This website could not be scanned because of an SSL or certificate issue.";
-    } else if (/AXE_NOT_LOADED/i.test(raw)) {
-      friendly =
-        "The accessibility engine could not be loaded for this page. Please try again.";
-    } else if (
-      /toLowerCase|Cannot read prop|Cannot read properties|undefined/i.test(raw)
-    ) {
-      friendly =
-        "This website could not be scanned. It may be blocking automated access. Please try a different URL.";
-    }
-
     return NextResponse.json(
       {
         success: false,
-        error: friendly,
+        error: getFriendlyError(raw),
         debug: raw,
       },
       { status: 500 }
