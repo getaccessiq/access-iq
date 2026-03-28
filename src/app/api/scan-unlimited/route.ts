@@ -2,6 +2,12 @@ import { NextRequest, NextResponse } from "next/server";
 import { readFileSync } from "fs";
 import path from "path";
 import type { Browser, HTTPResponse, Page } from "puppeteer-core";
+import {
+  consumeFreeScan,
+  FREE_SCAN_DAILY_LIMIT,
+  formatRemainingTime,
+  getRateLimitStatus,
+} from "@/lib/scan-rate-limit";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -23,6 +29,12 @@ const VIEWPORT = {
 const NAVIGATION_TIMEOUT = 30000;
 const WAIT_FOR_READY_STATE_TIMEOUT = 10000;
 
+const SOFT_404_PATTERN =
+  /(^|\b)(404|not found|page not found|seite nicht gefunden|nicht verfügbar|no longer available|content not found|page unavailable)(\b|$)/i;
+
+const BOT_PROTECTION_PATTERN =
+  /(captcha|robot check|verify you are human|unusual traffic|automated access|bot detection|challenge)/i;
+
 interface AxeViolation {
   id: string;
   description: string;
@@ -36,6 +48,13 @@ interface AxeResults {
   violations: AxeViolation[];
   passes: Array<unknown>;
   incomplete: Array<unknown>;
+}
+
+interface RateLimitPayload {
+  limit: number;
+  remaining: number;
+  used: number;
+  resetTime: string;
 }
 
 function countByImpact(violations: AxeViolation[]) {
@@ -71,6 +90,45 @@ function countByImpact(violations: AxeViolation[]) {
     moderate,
     minor,
     total: critical + serious + moderate + minor,
+  };
+}
+
+function getClientIp(request: NextRequest) {
+  const forwardedFor = request.headers.get("x-forwarded-for");
+  const realIp = request.headers.get("x-real-ip");
+
+  return forwardedFor?.split(",")[0]?.trim() || realIp || "unknown";
+}
+
+function toSafeIsoString(resetTime: unknown) {
+  const safeResetTime =
+    typeof resetTime === "number" && Number.isFinite(resetTime)
+      ? resetTime
+      : Date.now() + 24 * 60 * 60 * 1000;
+
+  return new Date(safeResetTime).toISOString();
+}
+
+function getRemainingMs(resetTime: unknown) {
+  const safeResetTime =
+    typeof resetTime === "number" && Number.isFinite(resetTime)
+      ? resetTime
+      : Date.now() + 24 * 60 * 60 * 1000;
+
+  return Math.max(safeResetTime - Date.now(), 0);
+}
+
+function serializeRateLimit(rateLimit: {
+  limit: number;
+  remaining: number;
+  used: number;
+  resetTime: unknown;
+}): RateLimitPayload {
+  return {
+    limit: rateLimit.limit,
+    remaining: rateLimit.remaining,
+    used: rateLimit.used,
+    resetTime: toSafeIsoString(rateLimit.resetTime),
   };
 }
 
@@ -110,8 +168,7 @@ function getFriendlyError(raw: string) {
     friendly =
       "This website could not be scanned because of an SSL or certificate issue.";
   } else if (/TimeoutError|timeout|ERR_TIMED_OUT/i.test(raw)) {
-    friendly =
-      "This website could not be reached in time. Please try again.";
+    friendly = "This website could not be reached in time. Please try again.";
   } else if (/PAGE_HTTP_404/i.test(raw)) {
     friendly =
       "This website could not be found. Please check the URL and try again.";
@@ -119,17 +176,15 @@ function getFriendlyError(raw: string) {
     friendly =
       "This website is blocking automated access right now. Please try again or use an expert audit.";
   } else if (/PAGE_HTTP_5\d{2}/i.test(raw)) {
-    friendly =
-      "This website is currently unavailable. Please try again later.";
-  } else if (/SOFT_404_PAGE/i.test(raw)) {
-    friendly =
-      "This page appears to be unavailable or not found. Please check the URL and try again.";
+    friendly = "This website is currently unavailable. Please try again later.";
   } else if (/INVALID_FINAL_URL/i.test(raw)) {
     friendly =
       "This website could not be opened correctly. Please check the URL and try again.";
   } else if (/AXE_NOT_LOADED/i.test(raw)) {
     friendly =
       "The accessibility engine could not be loaded for this page. Please try again.";
+  } else if (/DAILY_SCAN_LIMIT_REACHED/i.test(raw)) {
+    friendly = raw;
   } else if (
     /Could not find Chrome|Browser was not found|executablePath|CHROMIUM_REMOTE_EXEC_PATH/i.test(
       raw
@@ -147,15 +202,25 @@ async function preparePage(page: Page) {
   page.setDefaultTimeout(NAVIGATION_TIMEOUT);
 
   await page.setUserAgent(USER_AGENT);
+  await page.setJavaScriptEnabled(true);
   await page.setViewport(VIEWPORT);
 
   await page.setExtraHTTPHeaders({
     "accept-language": "en-US,en;q=0.9,de;q=0.8",
+    "upgrade-insecure-requests": "1",
   });
 
   await page.evaluateOnNewDocument(() => {
     Object.defineProperty(navigator, "webdriver", {
       get: () => false,
+    });
+
+    Object.defineProperty(navigator, "languages", {
+      get: () => ["en-US", "en", "de"],
+    });
+
+    Object.defineProperty(navigator, "platform", {
+      get: () => "Win32",
     });
   });
 }
@@ -250,21 +315,47 @@ async function runAxe(page: Page): Promise<AxeResults> {
   });
 }
 
-function isSoft404(title: string, text: string) {
-  const soft404Pattern =
-    /404|not found|page not found|seite nicht gefunden|nicht verfügbar|no longer available/i;
+function detectSoft404(title: string, text: string, status: number) {
+  if (status === 404) {
+    return true;
+  }
 
-  return soft404Pattern.test(title) || soft404Pattern.test(text);
+  return SOFT_404_PATTERN.test(title) && SOFT_404_PATTERN.test(text);
+}
+
+function buildWarning(
+  title: string,
+  text: string,
+  html: string,
+  soft404Detected: boolean
+) {
+  const combined = `${title}\n${text}\n${html}`.slice(0, 10000);
+
+  if (BOT_PROTECTION_PATTERN.test(combined)) {
+    return "This website appears to be showing a bot-protection or verification page. Scan results may reflect that page instead of the full public site.";
+  }
+
+  if (soft404Detected) {
+    return "This page contains signals similar to an unavailable or error page. The scan continued, but results may be incomplete.";
+  }
+
+  return undefined;
 }
 
 export async function GET() {
   return NextResponse.json({
     success: true,
-    message: "Scan API is running. Use POST /api/scan-unlimited with { url }.",
+    message: "Scan API is running. Use POST /api/scan with { url }.",
+    freeScanLimit: {
+      limit: FREE_SCAN_DAILY_LIMIT,
+      windowHours: 24,
+    },
   });
 }
 
 export async function POST(request: NextRequest) {
+  const ip = getClientIp(request);
+
   let body: { url?: string };
 
   try {
@@ -310,6 +401,22 @@ export async function POST(request: NextRequest) {
     );
   }
 
+  const rateLimit = await getRateLimitStatus(ip);
+
+  if (!rateLimit.allowed) {
+    return NextResponse.json(
+      {
+        success: false,
+        code: "DAILY_SCAN_LIMIT_REACHED",
+        error: `Daily free scan limit reached. Try again in ${formatRemainingTime(
+          getRemainingMs(rateLimit.resetTime)
+        )} or upgrade.`,
+        rateLimit: serializeRateLimit(rateLimit),
+      },
+      { status: 429 }
+    );
+  }
+
   let browser: Browser | null = null;
 
   try {
@@ -318,7 +425,27 @@ export async function POST(request: NextRequest) {
     const page = await browser.newPage();
     await preparePage(page);
 
-    const navigationResponse = await gotoWithFallback(page, validUrl);
+    let navigationResponse: HTTPResponse | null = null;
+
+    try {
+      navigationResponse = await gotoWithFallback(page, validUrl);
+    } catch (error) {
+      const raw = error instanceof Error ? error.message : String(error);
+
+      if (/ERR_NAME_NOT_RESOLVED|ENOTFOUND/i.test(raw)) {
+        throw new Error("PAGE_HTTP_404");
+      }
+
+      if (/ERR_CERT|SSL|TLS/i.test(raw)) {
+        throw error;
+      }
+
+      if (/timeout|ERR_TIMED_OUT/i.test(raw)) {
+        throw error;
+      }
+
+      throw error;
+    }
 
     const finalUrl = page.url();
     const status = navigationResponse?.status() ?? 0;
@@ -334,8 +461,16 @@ export async function POST(request: NextRequest) {
       throw new Error("INVALID_FINAL_URL");
     }
 
-    if (status >= 400) {
+    if (status === 404) {
+      throw new Error("PAGE_HTTP_404");
+    }
+
+    if (status >= 500) {
       throw new Error(`PAGE_HTTP_${status}`);
+    }
+
+    if (status === 403) {
+      throw new Error("PAGE_HTTP_403");
     }
 
     await page
@@ -351,13 +486,14 @@ export async function POST(request: NextRequest) {
     const pageText = await page.evaluate(() => {
       return document.body?.innerText?.slice(0, 3000) ?? "";
     });
+    const html = await page.content();
 
-    if (isSoft404(pageTitle, pageText)) {
-      throw new Error("SOFT_404_PAGE");
-    }
+    const soft404Detected = detectSoft404(pageTitle, pageText, status);
+    const warning = buildWarning(pageTitle, pageText, html, soft404Detected);
 
     const results = await runAxe(page);
     const counts = countByImpact(results.violations ?? []);
+    const rateLimitAfterScan = await consumeFreeScan(ip);
 
     return NextResponse.json({
       success: true,
@@ -369,7 +505,17 @@ export async function POST(request: NextRequest) {
       redirectedToDifferentHostname:
         inputParsed.hostname !== finalParsed.hostname,
       scannedAt: new Date().toISOString(),
+      rateLimit: serializeRateLimit(rateLimitAfterScan),
       counts,
+      warning,
+      metadata: {
+        httpStatus: status || null,
+        title: pageTitle || "",
+        soft404Detected,
+        botProtected: BOT_PROTECTION_PATTERN.test(
+          `${pageTitle}\n${pageText}\n${html}`
+        ),
+      },
       violations: (results.violations ?? []).map((v) => ({
         id: v.id ?? "",
         description: v.description ?? "",
