@@ -406,11 +406,11 @@ const Header = () => {
               </div>
 
               <h2 className="mt-4 text-2xl font-semibold leading-tight text-white md:text-[30px]">
-                Sign-in access is launching soon
+                Sign-in accessiv is launching soon
               </h2>
 
               <p className="mx-auto mt-4 max-w-md text-[15px] leading-7 text-slate-300">
-                Enter your email and we’ll let you know as soon as the AccessIQ
+                Enter your email and we’ll let you know as soon as the Accessive
                 sign-in portal is available.
               </p>
 
